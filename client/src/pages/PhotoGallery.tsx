@@ -4,6 +4,8 @@ import { Image as ImageIcon, X, ChevronLeft, ChevronRight, Camera, Sparkles, Lay
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 
+import axios from 'axios';
+
 const categories = ['All Archive', 'Convocation', 'Campus Life', 'Placements', 'Laboratory'];
 
 const staticGalleryImages = [
@@ -35,9 +37,8 @@ export const PhotoGallery = () => {
   const [dynamicImages, setDynamicImages] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/gallery')
-      .then(res => res.json())
-      .then(data => setDynamicImages(data.map((img: any) => ({ ...img, category: 'Uploads' }))));
+    axios.get('/api/gallery')
+      .then(res => setDynamicImages(res.data.map((img: any) => ({ ...img, category: 'Uploads' }))));
   }, []);
 
   const allImages = [...dynamicImages, ...staticGalleryImages];

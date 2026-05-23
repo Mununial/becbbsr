@@ -4,15 +4,16 @@ import { Plane, Rocket, Wind, Zap, Microscope, LayoutGrid, Calendar, ArrowRight,
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 
+import axios from 'axios';
+
 export const AeroClub = () => {
   const [activities, setActivities] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/aeroclub')
-      .then(res => res.json())
-      .then(data => {
-        setActivities(data);
+    axios.get('/api/aeroclub')
+      .then(res => {
+        setActivities(res.data);
         setIsLoading(false);
       })
       .catch(err => {

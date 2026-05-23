@@ -35,7 +35,9 @@ export const AdminDashboard = () => {
 
 
 
-  const API_URL = 'http://localhost:5000/api';
+  const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'
+    : '/api';
 
   useState(() => {
      fetch(`${API_URL}/achievements`)

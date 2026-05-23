@@ -49,7 +49,7 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
       formData.append('file', file); // Field name expected by server
 
       try {
-         const res = await axios.post(`http://${window.location.hostname}:5000/api/upload`, formData, {
+         const res = await axios.post(`/api/upload`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
          });
 
@@ -62,7 +62,7 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
          }
       } catch (error) {
          console.error("Upload failed", error);
-         alert("File upload failed. Please ensure the server is running on port 5000.");
+         alert("File upload failed. Please ensure the server is running.");
       } finally {
          setUploading(false);
       }

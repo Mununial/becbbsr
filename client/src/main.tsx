@@ -5,7 +5,9 @@ import axios from 'axios'
 import './index.css'
 
 // Configure global API endpoint
-axios.defaults.baseURL = `http://${window.location.hostname}:5000`;
+axios.defaults.baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? `http://${window.location.hostname}:5000`
+  : `${window.location.protocol}//${window.location.hostname}`;
 import App from './App'
 
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })))

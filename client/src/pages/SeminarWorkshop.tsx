@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { PageLayout } from '../components/PageLayout';
 import { BellRing, Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -33,9 +34,8 @@ export const SeminarWorkshop = () => {
   const [dynamicImages, setDynamicImages] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/workshop')
-      .then(res => res.json())
-      .then(data => setDynamicImages(data));
+    axios.get('/api/workshop')
+      .then(res => setDynamicImages(res.data));
   }, []);
 
   const allImages = [...dynamicImages, ...staticWorkshopImages];

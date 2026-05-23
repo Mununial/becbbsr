@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { PageLayout } from '../components/PageLayout';
 import { Trophy, Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,9 +26,8 @@ export const SportsGames = () => {
   const [dynamicImages, setDynamicImages] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/sports')
-      .then(res => res.json())
-      .then(data => setDynamicImages(data));
+    axios.get('/api/sports')
+      .then(res => setDynamicImages(res.data));
   }, []);
 
   const allImages = [...dynamicImages, ...staticSportsImages];

@@ -4,6 +4,8 @@ import { Award, Trophy, Star, Target, GraduationCap, Zap, Search } from 'lucide-
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 
+import axios from 'axios';
+
 const collegeAchievements = [
   {
     title: "Best Engineering College Award",
@@ -48,10 +50,9 @@ export const Achievements = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-     fetch('http://localhost:5000/api/achievements')
-       .then(res => res.json())
-       .then(data => {
-          if (Array.isArray(data)) setStudentAchievements(data);
+     axios.get('/api/achievements')
+       .then(res => {
+          if (Array.isArray(res.data)) setStudentAchievements(res.data);
        })
        .catch(err => console.error("Error fetching achievements:", err));
   }, []);

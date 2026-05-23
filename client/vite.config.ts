@@ -11,15 +11,11 @@ export default defineConfig({
     viteCompression({ algorithm: 'brotliCompress', ext: '.br' }),
     viteCompression({ algorithm: 'gzip', ext: '.gz' }),
   ],
+  esbuild: {
+    drop: ['console', 'debugger']
+  },
   build: {
     target: 'esnext',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    },
     rollupOptions: {
       output: {
         manualChunks(id) {
