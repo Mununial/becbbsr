@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,400;1,500;1,600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1E3A8A;
+  --color-accent: #06B6D4;
+  --color-bg-soft: #F8FAFC;
+  --color-navy-950: #0F172A;
+  
+  --font-inter: "Inter", ui-sans-serif, system-ui;
+  --font-poppins: "Poppins", sans-serif;
+
+  --radius-xl: 12px;
+  --radius-2xl: 20px;
+  --radius-3xl: 32px;
+
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-slide-up: slideUp 0.5s ease-out forwards;
+  --animate-marquee: marquee 25s linear infinite;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-33.33%); }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply antialiased text-[#0F172A] bg-bg-soft font-inter;
+    overflow-x: hidden;
+    line-height: 1.7; /* Improved line-height */
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins font-semibold tracking-tight text-primary; /* Reduced from bold to semibold */
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply py-12 px-6 lg:px-8 max-w-7xl mx-auto; /* Reduced vertical spacing */
+  }
+
+  .section-title {
+    @apply text-3xl md:text-[38px] font-semibold text-primary mb-6 leading-tight tracking-tight font-poppins capitalize;
+  }
+
+  .section-subtitle {
+    @apply text-sm md:text-base text-slate-500 font-medium max-w-2xl leading-relaxed mt-4;
+  }
+
+  .btn-primary {
+    @apply px-8 py-3 bg-primary text-white font-bold rounded-xl transition-all duration-500 shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 active:scale-95 text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3;
+  }
+
+  .btn-secondary {
+    @apply px-8 py-3 bg-white text-primary font-bold border border-slate-100 rounded-xl transition-all duration-500 shadow-md hover:shadow-xl hover:-translate-y-1 active:scale-95 text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3;
+  }
+
+  .card-premium {
+    @apply bg-white border border-slate-100 rounded-[32px] overflow-hidden transition-all duration-500 hover:shadow-[0_20px_50px_-12px_rgba(30,58,138,0.12)] hover:-translate-y-2;
+  }
+
+  .image-overlay {
+    @apply absolute inset-0 bg-black/40 transition-opacity duration-500; /* Darker overlay for readability */
+  }
+
+  .stitch-badge {
+    @apply border border-accent/20 bg-accent/5 text-accent rounded-full px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] transition-all;
+  }
+
+  .stitch-badge-white {
+    @apply border border-white/20 bg-white/5 text-white rounded-full px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] transition-all;
+  }
+
+  /* Improved Highlight Utility */
+  .highlight {
+    @apply text-accent underline decoration-accent/10 underline-offset-8;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-50;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
+  }
+}
