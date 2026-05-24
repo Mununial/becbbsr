@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -197,15 +199,12 @@ export const App = () => {
 
 
   useEffect(() => {
-    import('aos').then((AOS) => {
-      import('aos/dist/aos.css');
-      AOS.default.init({
-        duration: 800,
-        easing: 'ease-in-out',
-        once: true,
-        offset: 100,
-        delay: 50
-      });
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+      offset: 100,
+      delay: 50
     });
 
     const timer = setTimeout(() => {
