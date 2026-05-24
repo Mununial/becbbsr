@@ -1,6 +1,6 @@
 [
   {
-    "id": "1779644701579",
+    "id": "1779645116408",
     "title": "ATFOOJYUP5BLQON9MZFU",
     "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042537/bec_web_assets/atfoojyup5blqon9mzfu.jpg",
     "desc": "BEC Event highlights and student activities.",
@@ -8,23 +8,15 @@
     "category": "Event"
   },
   {
-    "id": "1779644699591",
-    "title": "EHCGRH4MMWEDAEXAMMGV",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042390/bec_web_assets/ehcgrh4mmwedaexammgv.jpg",
+    "id": "1779645113420",
+    "title": "UCX9RUTFLKZE9VUBTQMM",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042222/bec_web_assets/ucx9rutflkze9vubtqmm.jpg",
     "desc": "BEC Event highlights and student activities.",
     "date": "2026-04-24",
     "category": "Event"
   },
   {
-    "id": "1779644697592",
-    "title": "ULZFZOMXII1RJHUIX8NT",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042107/bec_web_assets/ulzfzomxii1rjhuix8nt.jpg",
-    "desc": "BEC Event highlights and student activities.",
-    "date": "2026-04-24",
-    "category": "Event"
-  },
-  {
-    "id": "1779644695592",
+    "id": "1779645110420",
     "title": "SJXDJUJEMZVG1FNV3YTA",
     "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777041949/bec_web_assets/sjxdjujemzvg1fnv3yta.jpg",
     "desc": "BEC Event highlights and student activities.",
@@ -32,49 +24,33 @@
     "category": "Event"
   },
   {
-    "id": "1779644693592",
-    "title": "CAMPUS INTERIOR",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629486/becweb/campus_interior.jpg",
+    "id": "1779645107420",
+    "title": "CAMPUS EXTERIOR",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629485/becweb/campus_exterior.jpg",
     "desc": "BEC Event highlights and student activities.",
     "date": "2026-04-19",
     "category": "Event"
   },
   {
-    "id": "1779644691592",
-    "title": "BUILDING FRONT",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629484/becweb/building_front.jpg",
+    "id": "1779645101421",
+    "title": "NEWS ENGLISH",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629477/becweb/news_english.jpg",
     "desc": "BEC Event highlights and student activities.",
     "date": "2026-04-19",
     "category": "Event"
   },
   {
-    "id": "1779644687592",
-    "title": "NEWS ODIA",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629478/becweb/news_odia.png",
+    "id": "1779645095421",
+    "title": "CHAIRMAN",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg",
     "desc": "BEC Event highlights and student activities.",
     "date": "2026-04-19",
     "category": "Event"
   },
   {
-    "id": "1779644685592",
-    "title": "NEWS A",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629476/becweb/news_a.jpg",
-    "desc": "BEC Event highlights and student activities.",
-    "date": "2026-04-19",
-    "category": "Event"
-  },
-  {
-    "id": "1779644681592",
-    "title": "DIRECTOR",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg",
-    "desc": "BEC Event highlights and student activities.",
-    "date": "2026-04-19",
-    "category": "Event"
-  },
-  {
-    "id": "1779644679592",
-    "title": "CAMPUS BG",
-    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+    "id": "1779645035421",
+    "title": "895884WIPRO2018",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629393/becweb/895884wipro2018.png",
     "desc": "BEC Event highlights and student activities.",
     "date": "2026-04-19",
     "category": "Event"

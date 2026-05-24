@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "id": "1779645114420",
+    "title": "EHCGRH4MMWEDAEXAMMGV",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042390/bec_web_assets/ehcgrh4mmwedaexammgv.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-24",
+    "category": "Event"
+  },
+  {
+    "id": "1779645111420",
+    "title": "TR5HSNQEE5E1KHTU66IR",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042083/bec_web_assets/tr5hsnqee5e1khtu66ir.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-24",
+    "category": "Event"
+  },
+  {
+    "id": "1779645108420",
+    "title": "CAMPUS INTERIOR",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629486/becweb/campus_interior.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779645102421",
+    "title": "NEWS ODIA",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629478/becweb/news_odia.png",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779645099421",
+    "title": "NEWS B",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629474/becweb/news_b.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779645096421",
+    "title": "DIRECTOR",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779645093421",
+    "title": "HERO BG",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629462/becweb/hero-bg.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779645081421",
+    "title": "TECH",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629447/becweb/Tech.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  }
+]
