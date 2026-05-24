@@ -1,4 +1,61 @@
+import { useState } from 'react';
 import { type SelectedStudent } from '../types';
+
+// Fallback component for student photos
+const StudentPhoto = ({ src, name }: { src: string; name: string }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError || !src) {
+    const initials = name
+      ? name
+          .trim()
+          .split(/\s+/)
+          .map((n) => n[0])
+          .filter(Boolean)
+          .slice(0, 2)
+          .join('')
+          .toUpperCase()
+      : '?';
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-950 text-white font-black text-xl tracking-wider select-none">
+        {initials}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      loading="lazy"
+      src={src}
+      alt={name}
+      className="w-full h-full object-cover"
+      onError={() => setHasError(true)}
+    />
+  );
+};
+
+// Fallback component for company logos
+const CompanyLogo = ({ src, companyName }: { src: string; companyName: string }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError || !src) {
+    return (
+      <div className="px-5 py-2.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 text-xs font-black uppercase tracking-wider text-center select-none shadow-sm min-w-[140px] max-w-[200px] truncate group-hover:bg-slate-100 transition-colors duration-300">
+        {companyName}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      loading="lazy"
+      src={src}
+      alt={`${companyName} Logo`}
+      className="h-full w-full object-contain filter group-hover:grayscale-0 transition-all duration-500"
+      onError={() => setHasError(true)}
+    />
+  );
+};
 
 const defaultStudents: SelectedStudent[] = [
   {
@@ -253,7 +310,7 @@ export const SelectedStudents = ({ students = [] }: { students?: SelectedStudent
                     <div className="flex items-center justify-between mb-6">
                        {/* Circular Student Photo */}
                        <div className="w-20 h-20 shrink-0 rounded-full border-4 border-white/30 shadow-2xl overflow-hidden group-hover:scale-105 transition-transform duration-700">
-                          <img loading="lazy" src={student.photo} alt={student.name} className="w-full h-full object-cover" />
+                          <StudentPhoto src={student.photo} name={student.name} />
                        </div>
 
                        {/* White Info Card Section */}
@@ -286,7 +343,7 @@ export const SelectedStudents = ({ students = [] }: { students?: SelectedStudent
 
                   {/* Large Company Logo Section */}
                   <div className="bg-white py-6 px-10 flex items-center justify-center h-24 border-t border-gray-50">
-                    <img loading="lazy" src={student.companyLogo || '/images/events/tata.jpg'} alt="Company Logo" className="h-full w-full object-contain filter group-hover:grayscale-0 transition-all duration-500" />
+                    <CompanyLogo src={student.companyLogo} companyName={student.companyRole} />
                   </div>
                 </div>
               ))}
