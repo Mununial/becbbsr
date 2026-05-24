@@ -1,1 +1,82 @@
-[]
+[
+  {
+    "id": "1779644701579",
+    "title": "ATFOOJYUP5BLQON9MZFU",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042537/bec_web_assets/atfoojyup5blqon9mzfu.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-24",
+    "category": "Event"
+  },
+  {
+    "id": "1779644699591",
+    "title": "EHCGRH4MMWEDAEXAMMGV",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042390/bec_web_assets/ehcgrh4mmwedaexammgv.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-24",
+    "category": "Event"
+  },
+  {
+    "id": "1779644697592",
+    "title": "ULZFZOMXII1RJHUIX8NT",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042107/bec_web_assets/ulzfzomxii1rjhuix8nt.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-24",
+    "category": "Event"
+  },
+  {
+    "id": "1779644695592",
+    "title": "SJXDJUJEMZVG1FNV3YTA",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777041949/bec_web_assets/sjxdjujemzvg1fnv3yta.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-24",
+    "category": "Event"
+  },
+  {
+    "id": "1779644693592",
+    "title": "CAMPUS INTERIOR",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629486/becweb/campus_interior.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779644691592",
+    "title": "BUILDING FRONT",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629484/becweb/building_front.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779644687592",
+    "title": "NEWS ODIA",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629478/becweb/news_odia.png",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779644685592",
+    "title": "NEWS A",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629476/becweb/news_a.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779644681592",
+    "title": "DIRECTOR",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  },
+  {
+    "id": "1779644679592",
+    "title": "CAMPUS BG",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+    "desc": "BEC Event highlights and student activities.",
+    "date": "2026-04-19",
+    "category": "Event"
+  }
+]
