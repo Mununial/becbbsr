@@ -44,6 +44,7 @@ app.use(compression());
 app.use(cors());
 app.use(helmet({
   crossOriginResourcePolicy: false,
+  contentSecurityPolicy: false,
 }));
 app.use(morgan('dev'));
 app.use(express.json());
