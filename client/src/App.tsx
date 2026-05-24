@@ -28,28 +28,28 @@ const DEFAULT_HIGHLIGHTS: Highlight[] = [
     id: '1',
     title: 'Admission Open 2026-27',
     date: 'Enroll Now',
-    image: '/images/enroll-bg.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg',
     link: '/admission_query'
   },
   {
     id: '2',
     title: 'Research & Innovation Cell',
     date: 'Bhubaneswar',
-    image: '/images/student-works.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629486/becweb/campus_interior.jpg',
     link: '/seminar-workshop'
   },
   {
     id: '3',
     title: 'Placement Highlights 2024',
     date: 'View Report',
-    image: '/images/events/tech-mahindra.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629470/becweb/placement_hero.jpg',
     link: '/about_placement'
   },
   {
     id: '4',
     title: 'Alumni Meet 2026',
     date: 'Global Network',
-    image: '/images/alumni2.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629462/becweb/hero-bg.jpg',
     link: '/photo-gallery'
   }
 ];
