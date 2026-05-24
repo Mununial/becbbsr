@@ -9,22 +9,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 
 const staticWorkshopImages = [
-  { photo: "https://becbbsr.ac.in/photogallery/bec-seminar1.jpg", title: "Technical Seminar" },
-  { photo: "https://becbbsr.ac.in/photogallery/bec-seminar4.jpg", title: "Workshop Session" },
-  { photo: "https://becbbsr.ac.in/photogallery/DSC_6147.JPG", title: "Guest Lecture" },
-  { photo: "https://becbbsr.ac.in/photogallery/DSC_6161.JPG", title: "Student Workshop" },
-  { photo: "https://becbbsr.ac.in/photogallery/DSC_6225.JPG", title: "Academic Seminar" },
-  { photo: "https://becbbsr.ac.in/photogallery/DSC_6433.JPG", title: "Hands-on Training" },
-  { photo: "https://becbbsr.ac.in/photogallery/DSC_6410.JPG", title: "Skill Development" },
-  { photo: "https://becbbsr.ac.in/photogallery/DSC_0082.JPG", title: "Campus Workshop" },
-  { photo: "https://becbbsr.ac.in/photogallery/1716784991888.jpg", title: "Technical Workshop" },
-  { photo: "https://becbbsr.ac.in/photogallery/1716784383423.jpg", title: "Innovation Seminar" },
-  { photo: "https://becbbsr.ac.in/photogallery/1716784403238.jpg", title: "Workshop Highlights" },
-  { photo: "https://becbbsr.ac.in/photogallery/1716785036364.jpg", title: "Seminar Highlights" },
-  { photo: "https://becbbsr.ac.in/photogallery/MAHENDRA SKILL TRAINING-1.jpg", title: "Mahendra Skill Training" },
-  { photo: "https://becbbsr.ac.in/photogallery/MAHENDRA SKILL TRAINING-4.jpg", title: "Training Session" },
-  { photo: "https://becbbsr.ac.in/photogallery/MAHENDRA SKILL TRAINING-6.jpg", title: "Skill Workshop" },
-  { photo: "https://becbbsr.ac.in/photogallery/MAHENDRA SKILL TRAINING-7.jpg", title: "Training Completion" },
+  { photo: "/photogallery/bec-seminar1.jpg", title: "Technical Seminar" },
+  { photo: "/photogallery/bec-seminar4.jpg", title: "Workshop Session" },
+  { photo: "/photogallery/DSC_6147.JPG", title: "Guest Lecture" },
+  { photo: "/photogallery/DSC_6161.JPG", title: "Student Workshop" },
+  { photo: "/photogallery/DSC_6225.JPG", title: "Academic Seminar" },
+  { photo: "/photogallery/DSC_6433.JPG", title: "Hands-on Training" },
+  { photo: "/photogallery/DSC_6410.JPG", title: "Skill Development" },
+  { photo: "/photogallery/DSC_0082.JPG", title: "Campus Workshop" },
+  { photo: "/photogallery/1716784991888.jpg", title: "Technical Workshop" },
+  { photo: "/photogallery/1716784383423.jpg", title: "Innovation Seminar" },
+  { photo: "/photogallery/1716784403238.jpg", title: "Workshop Highlights" },
+  { photo: "/photogallery/1716785036364.jpg", title: "Seminar Highlights" },
+  { photo: "/photogallery/MAHENDRA SKILL TRAINING-1.jpg", title: "Mahendra Skill Training" },
+  { photo: "/photogallery/MAHENDRA SKILL TRAINING-4.jpg", title: "Training Session" },
+  { photo: "/photogallery/MAHENDRA SKILL TRAINING-6.jpg", title: "Skill Workshop" },
+  { photo: "/photogallery/MAHENDRA SKILL TRAINING-7.jpg", title: "Training Completion" },
 ];
 
 
@@ -92,7 +92,7 @@ export const SeminarWorkshop = () => {
                  </button>
               </div>
               <div className="w-full md:w-1/3 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 aspect-video group self-center">
-                 <img src="https://becbbsr.ac.in/images/slider/slider-bg6.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                 <img src="/images/slider/slider-bg6.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
               </div>
            </div>
         </section>

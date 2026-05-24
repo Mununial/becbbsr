@@ -21,17 +21,17 @@ const PLACEMENT_DATA: YearData[] = [
   {
     year: "2026 (Live)",
     companies: [
-      { name: "TECH MAHINDRA", logo: "https://becbbsr.ac.in/images/events/tech-mahindra.jpg", branches: "CSE,ECE,EE,AERO,CIVIL,MECHANICAL", stats: "42", package: "4.5-8.2" },
-      { name: "INFOSYS", logo: "https://becbbsr.ac.in/images/events/infosys.jpg", branches: "AERO,MECHANICAL,CSE,CIVIL,EE", stats: "28", package: "4.0-9.2" },
-      { name: "IBS SOFTWARE", logo: "https://becbbsr.ac.in/images/events/IBS.jpg", branches: "CSE,EE,EEE,AERO", stats: "15", package: "4.5-7.5" },
-      { name: "TATA STEEL", logo: "https://becbbsr.ac.in/images/events/tata.jpg", branches: "MECHANICAL,EE,EEE,CIVIL", stats: "18", package: "3.8-6.5" },
-      { name: "INTERGLOBE (INDIGO)", logo: "https://becbbsr.ac.in/images/events/interglobe.jpg", branches: "AERONAUTICAL,CSE,MECH", stats: "12", package: "4.0-10.0" },
-      { name: "BYJU'S", logo: "https://becbbsr.ac.in/images/events/byjus.jpg", branches: "MBA,CSE,CE,MECH", stats: "22", package: "6.0-12.0" },
-      { name: "ZETA", logo: "https://becbbsr.ac.in/images/events/zeta.jpg", branches: "CSE,IT", stats: "08", package: "8.5-14.0" },
-      { name: "GENPACT", logo: "https://becbbsr.ac.in/images/events/genpact.jpg", branches: "MBA,CSE", stats: "14", package: "3.5-5.5" },
-      { name: "JOHNNETTE TECHNOLOGIES", logo: "https://becbbsr.ac.in/images/events/john.jpg", branches: "AERONAUTICAL", stats: "05", package: "5.0-11.0" },
-      { name: "QH", logo: "https://becbbsr.ac.in/images/events/qh.jpg", branches: "MECHANICAL,EE", stats: "09", package: "3.2-4.8" },
-      { name: "PNB METLIFE", logo: "https://becbbsr.ac.in/images/events/pnblifetime.jpg", branches: "MBA", stats: "07", package: "4.2-6.0" }
+      { name: "TECH MAHINDRA", logo: "/images/events/tech-mahindra.jpg", branches: "CSE,ECE,EE,AERO,CIVIL,MECHANICAL", stats: "42", package: "4.5-8.2" },
+      { name: "INFOSYS", logo: "/images/events/infosys.jpg", branches: "AERO,MECHANICAL,CSE,CIVIL,EE", stats: "28", package: "4.0-9.2" },
+      { name: "IBS SOFTWARE", logo: "/images/events/IBS.jpg", branches: "CSE,EE,EEE,AERO", stats: "15", package: "4.5-7.5" },
+      { name: "TATA STEEL", logo: "/images/events/tata.jpg", branches: "MECHANICAL,EE,EEE,CIVIL", stats: "18", package: "3.8-6.5" },
+      { name: "INTERGLOBE (INDIGO)", logo: "/images/events/interglobe.jpg", branches: "AERONAUTICAL,CSE,MECH", stats: "12", package: "4.0-10.0" },
+      { name: "BYJU'S", logo: "/images/events/byjus.jpg", branches: "MBA,CSE,CE,MECH", stats: "22", package: "6.0-12.0" },
+      { name: "ZETA", logo: "/images/events/zeta.jpg", branches: "CSE,IT", stats: "08", package: "8.5-14.0" },
+      { name: "GENPACT", logo: "/images/events/genpact.jpg", branches: "MBA,CSE", stats: "14", package: "3.5-5.5" },
+      { name: "JOHNNETTE TECHNOLOGIES", logo: "/images/events/john.jpg", branches: "AERONAUTICAL", stats: "05", package: "5.0-11.0" },
+      { name: "QH", logo: "/images/events/qh.jpg", branches: "MECHANICAL,EE", stats: "09", package: "3.2-4.8" },
+      { name: "PNB METLIFE", logo: "/images/events/pnblifetime.jpg", branches: "MBA", stats: "07", package: "4.2-6.0" }
     ]
   },
   {
@@ -331,17 +331,17 @@ export const Placement = () => {
            
            <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-12 opacity-60 hover:opacity-100 transition-opacity duration-700 max-w-6xl mx-auto">
               {[
-                "https://becbbsr.ac.in/images/events/IBS.jpg",
-                "https://becbbsr.ac.in/images/events/tech-mahindra.jpg",
-                "https://becbbsr.ac.in/images/events/infosys.jpg",
-                "https://becbbsr.ac.in/images/events/interglobe.jpg",
-                "https://becbbsr.ac.in/images/events/tata.jpg",
-                "https://becbbsr.ac.in/images/events/zeta.jpg",
-                "https://becbbsr.ac.in/images/events/byjus.jpg",
-                "https://becbbsr.ac.in/images/events/genpact.jpg",
-                "https://becbbsr.ac.in/images/events/john.jpg",
-                "https://becbbsr.ac.in/images/events/qh.jpg",
-                "https://becbbsr.ac.in/images/events/pnblifetime.jpg"
+                "/images/events/IBS.jpg",
+                "/images/events/tech-mahindra.jpg",
+                "/images/events/infosys.jpg",
+                "/images/events/interglobe.jpg",
+                "/images/events/tata.jpg",
+                "/images/events/zeta.jpg",
+                "/images/events/byjus.jpg",
+                "/images/events/genpact.jpg",
+                "/images/events/john.jpg",
+                "/images/events/qh.jpg",
+                "/images/events/pnblifetime.jpg"
               ].map((logo, i) => (
                 <motion.div
                   key={i}

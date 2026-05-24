@@ -7,18 +7,18 @@ import { cn } from '../lib/utils';
 
 
 const staticSportsImages = [
-  { photo: "https://becbbsr.ac.in/photogallery/20230121_095905_017.jpg", title: "Sports Meet 2023" },
-  { photo: "https://becbbsr.ac.in/photogallery/WhatsApp%20Image%202023-02-07%20at%202.42.45%20PM%20(1).jpeg", title: "Cricket Tournament" },
-  { photo: "https://becbbsr.ac.in/photogallery/20230120_100045_017.jpg", title: "Atheletics Event" },
-  { photo: "https://becbbsr.ac.in/photogallery/WhatsApp%20Image%202023-02-07%20at%202.42.47%20PM.jpeg", title: "Team Spirit" },
-  { photo: "https://becbbsr.ac.in/photogallery/20230119_094521.jpg", title: "Football Match" },
-  { photo: "https://becbbsr.ac.in/photogallery/1674270022218.jpg", title: "Sports Day Highlights" },
-  { photo: "https://becbbsr.ac.in/photogallery/IMG_20230119_20200709.jpg", title: "Indoor Games" },
-  { photo: "https://becbbsr.ac.in/photogallery/WhatsApp%20Image%202023-02-07%20at%202.42.48%20PM%20(1).jpeg", title: "Championship" },
-  { photo: "https://becbbsr.ac.in/photogallery/1716785118532.jpg", title: "Track and Field" },
-  { photo: "https://becbbsr.ac.in/photogallery/1716785130518.jpg", title: "Outdoor Sports" },
-  { photo: "https://becbbsr.ac.in/photogallery/1716784336322.jpg", title: "Annual Meet 2024" },
-  { photo: "https://becbbsr.ac.in/photogallery/WhatsApp%20Image%202024-05-28%20at%2008.23.08.jpeg", title: "Sports Excellence" },
+  { photo: "/photogallery/20230121_095905_017.jpg", title: "Sports Meet 2023" },
+  { photo: "/photogallery/WhatsApp%20Image%202023-02-07%20at%202.42.45%20PM%20(1).jpeg", title: "Cricket Tournament" },
+  { photo: "/photogallery/20230120_100045_017.jpg", title: "Atheletics Event" },
+  { photo: "/photogallery/WhatsApp%20Image%202023-02-07%20at%202.42.47%20PM.jpeg", title: "Team Spirit" },
+  { photo: "/photogallery/20230119_094521.jpg", title: "Football Match" },
+  { photo: "/photogallery/1674270022218.jpg", title: "Sports Day Highlights" },
+  { photo: "/photogallery/IMG_20230119_20200709.jpg", title: "Indoor Games" },
+  { photo: "/photogallery/WhatsApp%20Image%202023-02-07%20at%202.42.48%20PM%20(1).jpeg", title: "Championship" },
+  { photo: "/photogallery/1716785118532.jpg", title: "Track and Field" },
+  { photo: "/photogallery/1716785130518.jpg", title: "Outdoor Sports" },
+  { photo: "/photogallery/1716784336322.jpg", title: "Annual Meet 2024" },
+  { photo: "/photogallery/WhatsApp%20Image%202024-05-28%20at%2008.23.08.jpeg", title: "Sports Excellence" },
 ];
 
 export const SportsGames = () => {

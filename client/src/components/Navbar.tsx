@@ -21,7 +21,7 @@ const navItems: NavItem[] = [
        { name: "Chairman Message", href: "/chairman-ayush-msg" },
        { name: "Trust Members", href: "/trusty" },
        { name: "Director Profile", href: "/director-profile" },
-       { name: "Mandatory Disclosure", href: "https://becbbsr.ac.in/official_documents/Mandatory%20Disclosure.pdf", target: "_blank" }
+       { name: "Mandatory Disclosure", href: "/official_documents/Mandatory%20Disclosure.pdf", target: "_blank" }
     ]
   },
   { 

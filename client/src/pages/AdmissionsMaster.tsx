@@ -25,7 +25,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Academic Programmes',
     subtitle: 'Choose your path to a successful engineering career',
     icon: GraduationCap,
-    image: 'https://becbbsr.ac.in/images/events/tata.jpg',
+    image: '/images/events/tata.jpg',
     content: [
       {
         heading: 'B.Tech (Bachelor of Technology)',
@@ -48,7 +48,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Admission Procedure',
     subtitle: 'Simple steps to join the BEC legacy',
     icon: ClipboardCheck,
-    image: 'https://becbbsr.ac.in/images/student-works.jpg',
+    image: '/images/student-works.jpg',
     content: [
       {
         heading: '1. Initial Inquiry',
@@ -72,7 +72,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Documents Required',
     subtitle: 'Essential checklist for your admission file',
     icon: FileCheck,
-    image: 'https://becbbsr.ac.in/images/activities/aero7.jpg',
+    image: '/images/activities/aero7.jpg',
     content: [
       {
         heading: 'Mandatory Certificates',
@@ -98,7 +98,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Bank Loan Procedures',
     subtitle: 'Financial support for your academic journey',
     icon: Landmark,
-    image: 'https://becbbsr.ac.in/images/tour-exterior.jpg',
+    image: '/images/tour-exterior.jpg',
     content: [
       {
         heading: 'Education Loan Support',
@@ -118,7 +118,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Scholarship Schemes',
     subtitle: 'Rewarding merit and supporting every dream',
     icon: Trophy,
-    image: 'https://becbbsr.ac.in/images/activities/aero1.jpg',
+    image: '/images/activities/aero1.jpg',
     content: [
       {
         heading: 'Government Scholarships',
@@ -140,7 +140,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Admission Contacts',
     subtitle: 'Reach out to our expert counselors',
     icon: Phone,
-    image: 'https://becbbsr.ac.in/images/activities/aero11.jpg',
+    image: '/images/activities/aero11.jpg',
     content: [
       {
         heading: 'City Office (Bhubaneswar)',
@@ -158,7 +158,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Download Prospectus',
     subtitle: 'Everything about BEC in one neat file',
     icon: Download,
-    image: 'https://becbbsr.ac.in/images/events/zeta.jpg',
+    image: '/images/events/zeta.jpg',
     content: [
       {
         heading: 'Academic Brochure 2026-27',

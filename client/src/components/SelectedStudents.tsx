@@ -9,8 +9,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/tata.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni2.jpg",
+    companyLogo: "/images/events/tata.jpg",
+    photo: "/images/alumni2.jpg",
     bgColor: "from-blue-600 to-cyan-500"
   },
   {
@@ -21,8 +21,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/infosys.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni3.jpg",
+    companyLogo: "/images/events/infosys.jpg",
+    photo: "/images/alumni3.jpg",
     bgColor: "from-purple-600 to-pink-500"
   },
   {
@@ -33,8 +33,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/zeta.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni5.jpg",
+    companyLogo: "/images/events/zeta.jpg",
+    photo: "/images/alumni5.jpg",
     bgColor: "from-cyan-600 to-blue-500"
   },
   {
@@ -45,8 +45,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Elite Record",
-    companyLogo: "https://becbbsr.ac.in/images/events/byjus.jpg",
-    photo: "https://becbbsr.ac.in/images/ROHIT%20KUMAR,MECH,AMAZON.jpg",
+    companyLogo: "/images/events/byjus.jpg",
+    photo: "/images/ROHIT%20KUMAR,MECH,AMAZON.jpg",
     bgColor: "from-orange-600 to-yellow-500"
   },
   {
@@ -57,8 +57,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/IBS.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni8.jpg",
+    companyLogo: "/images/events/IBS.jpg",
+    photo: "/images/alumni8.jpg",
     bgColor: "from-indigo-600 to-purple-500"
   },
   {
@@ -69,8 +69,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/tech-mahindra.jpg",
-    photo: "https://becbbsr.ac.in/images/Ashit%20Minz-CSE(Tech%20Mahindra).jpg",
+    companyLogo: "/images/events/tech-mahindra.jpg",
+    photo: "/images/Ashit%20Minz-CSE(Tech%20Mahindra).jpg",
     bgColor: "from-red-600 to-orange-500"
   },
   {
@@ -81,8 +81,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/interglobe.jpg",
-    photo: "https://becbbsr.ac.in/images/RAVISANKAR%20PAL-AERO%20(IndiGo).jpg",
+    companyLogo: "/images/events/interglobe.jpg",
+    photo: "/images/RAVISANKAR%20PAL-AERO%20(IndiGo).jpg",
     bgColor: "from-blue-800 to-blue-400"
   },
   {
@@ -93,8 +93,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/infosys.jpg",
-    photo: "https://becbbsr.ac.in/images/BIPLAB%20KUMAR%20SAMANTARAY-Aero(Infosys).jpg",
+    companyLogo: "/images/events/infosys.jpg",
+    photo: "/images/BIPLAB%20KUMAR%20SAMANTARAY-Aero(Infosys).jpg",
     bgColor: "from-blue-600 to-indigo-400"
   },
   {
@@ -105,8 +105,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/genpact.jpg",
-    photo: "https://becbbsr.ac.in/images/IPSITA%20KUMARI,CSE,Wipro.jpg",
+    companyLogo: "/images/events/genpact.jpg",
+    photo: "/images/IPSITA%20KUMARI,CSE,Wipro.jpg",
     bgColor: "from-purple-700 to-indigo-500"
   },
   {
@@ -117,8 +117,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/tata.jpg",
-    photo: "https://becbbsr.ac.in/images/ROJALIN%20PHOTO,%20CIVIL,Piramal%20Group.jpg",
+    companyLogo: "/images/events/tata.jpg",
+    photo: "/images/ROJALIN%20PHOTO,%20CIVIL,Piramal%20Group.jpg",
     bgColor: "from-teal-600 to-cyan-500"
   },
   {
@@ -129,8 +129,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/infosys.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni7.jpg",
+    companyLogo: "/images/events/infosys.jpg",
+    photo: "/images/alumni7.jpg",
     bgColor: "from-blue-700 to-blue-400"
   },
   {
@@ -141,8 +141,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/john.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni12.jpg",
+    companyLogo: "/images/events/john.jpg",
+    photo: "/images/alumni12.jpg",
     bgColor: "from-emerald-600 to-teal-500"
   },
   {
@@ -153,8 +153,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/tech-mahindra.jpg",
-    photo: "https://becbbsr.ac.in/images/K.Sweta%20Madhuri(Tech%20Mahindra).jpg",
+    companyLogo: "/images/events/tech-mahindra.jpg",
+    photo: "/images/K.Sweta%20Madhuri(Tech%20Mahindra).jpg",
     bgColor: "from-red-700 to-rose-500"
   },
   {
@@ -165,8 +165,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/tata.jpg",
-    photo: "https://becbbsr.ac.in/images/ASHIS%20PANY-MECH(Piramal%20Group).jpg",
+    companyLogo: "/images/events/tata.jpg",
+    photo: "/images/ASHIS%20PANY-MECH(Piramal%20Group).jpg",
     bgColor: "from-blue-600 to-indigo-500"
   },
   {
@@ -177,8 +177,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/infosys.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni4.jpg",
+    companyLogo: "/images/events/infosys.jpg",
+    photo: "/images/alumni4.jpg",
     bgColor: "from-blue-700 to-cyan-600"
   },
   {
@@ -189,8 +189,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/tata.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni6.jpg",
+    companyLogo: "/images/events/tata.jpg",
+    photo: "/images/alumni6.jpg",
     bgColor: "from-emerald-700 to-teal-500"
   },
   {
@@ -201,8 +201,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/genpact.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni9.jpg",
+    companyLogo: "/images/events/genpact.jpg",
+    photo: "/images/alumni9.jpg",
     bgColor: "from-blue-900 to-sky-600"
   },
   {
@@ -213,8 +213,8 @@ const defaultStudents: SelectedStudent[] = [
     degree: "BTech",
     batch: "2024",
     packageInfo: "Placed",
-    companyLogo: "https://becbbsr.ac.in/images/events/IBS.jpg",
-    photo: "https://becbbsr.ac.in/images/alumni11.jpg",
+    companyLogo: "/images/events/IBS.jpg",
+    photo: "/images/alumni11.jpg",
     bgColor: "from-indigo-700 to-blue-500"
   }
 ];
@@ -286,7 +286,7 @@ export const SelectedStudents = ({ students = [] }: { students?: SelectedStudent
 
                   {/* Large Company Logo Section */}
                   <div className="bg-white py-6 px-10 flex items-center justify-center h-24 border-t border-gray-50">
-                    <img loading="lazy" src={student.companyLogo || 'https://becbbsr.ac.in/images/events/tata.jpg'} alt="Company Logo" className="h-full w-full object-contain filter group-hover:grayscale-0 transition-all duration-500" />
+                    <img loading="lazy" src={student.companyLogo || '/images/events/tata.jpg'} alt="Company Logo" className="h-full w-full object-contain filter group-hover:grayscale-0 transition-all duration-500" />
                   </div>
                 </div>
               ))}

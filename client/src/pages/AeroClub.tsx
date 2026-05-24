@@ -36,7 +36,7 @@ export const AeroClub = () => {
         {/* Cinematic Hero Section */}
         <section className="relative h-[500px] rounded-[3rem] overflow-hidden group">
            <img 
-             src="https://becbbsr.ac.in/photogallery/bec-aero-club.jpg" 
+             src="/photogallery/bec-aero-club.jpg" 
              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
              alt="Aero Club"
            />
@@ -164,7 +164,7 @@ export const AeroClub = () => {
         <section className="bg-navy-950 -mx-6 lg:-mx-12 px-6 lg:px-12 py-24 rounded-[4rem] text-white overflow-hidden relative">
            <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
               <div className="absolute inset-0 bg-gradient-to-l from-navy-950 via-transparent to-transparent z-10" />
-              <img src="https://becbbsr.ac.in/images/slider/slider-bg5.jpg" className="w-full h-full object-cover grayscale" alt="" />
+              <img src="/images/slider/slider-bg5.jpg" className="w-full h-full object-cover grayscale" alt="" />
            </div>
 
            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -205,7 +205,7 @@ export const AeroClub = () => {
                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                    className="relative z-10 bg-white/5 backdrop-blur-3xl p-4 rounded-[3rem] border border-white/10 shadow-2xl"
                  >
-                    <img src="https://becbbsr.ac.in/photogallery/bec-aero-club.jpg" className="rounded-[2.5rem] shadow-2xl" alt="" />
+                    <img src="/photogallery/bec-aero-club.jpg" className="rounded-[2.5rem] shadow-2xl" alt="" />
                  </motion.div>
                  <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/20 rounded-full blur-[80px]" />
                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-[80px]" />

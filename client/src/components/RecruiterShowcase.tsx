@@ -2,17 +2,17 @@ import { motion } from 'framer-motion';
 import { Building2, Users, GraduationCap, ChevronRight, Briefcase } from 'lucide-react';
 
 const RECRUITERS = [
-  "https://becbbsr.ac.in/images/events/IBS.jpg",
-  "https://becbbsr.ac.in/images/events/tech-mahindra.jpg",
-  "https://becbbsr.ac.in/images/events/infosys.jpg",
-  "https://becbbsr.ac.in/images/events/interglobe.jpg",
-  "https://becbbsr.ac.in/images/events/tata.jpg",
-  "https://becbbsr.ac.in/images/events/zeta.jpg",
-  "https://becbbsr.ac.in/images/events/byjus.jpg",
-  "https://becbbsr.ac.in/images/events/genpact.jpg",
-  "https://becbbsr.ac.in/images/events/john.jpg",
-  "https://becbbsr.ac.in/images/events/qh.jpg",
-  "https://becbbsr.ac.in/images/events/pnblifetime.jpg"
+  "/images/events/IBS.jpg",
+  "/images/events/tech-mahindra.jpg",
+  "/images/events/infosys.jpg",
+  "/images/events/interglobe.jpg",
+  "/images/events/tata.jpg",
+  "/images/events/zeta.jpg",
+  "/images/events/byjus.jpg",
+  "/images/events/genpact.jpg",
+  "/images/events/john.jpg",
+  "/images/events/qh.jpg",
+  "/images/events/pnblifetime.jpg"
 ];
 
 const STATS = [

@@ -10,7 +10,7 @@ const feesCategories = [
       bank: "Canara Bank",
       accNo: "80193070001027",
       ifsc: "CNRB0003366",
-      qr: "https://becbbsr.ac.in/photogallery/btechMba_qr.jpg",
+      qr: "/photogallery/btechMba_qr.jpg",
       upi: "234723692001027@cnrb",
       icon: Building,
       color: "from-blue-600 to-cyan-400"
@@ -21,7 +21,7 @@ const feesCategories = [
       bank: "Canara Bank",
       accNo: "80193070001383",
       ifsc: "CNRB0003366",
-      qr: "https://becbbsr.ac.in/photogallery/diploma_qr.jpg",
+      qr: "/photogallery/diploma_qr.jpg",
       upi: "80193070001383@cnrb",
       icon: FileText,
       color: "from-purple-600 to-pink-400"
@@ -32,7 +32,7 @@ const feesCategories = [
       bank: "Canara Bank",
       accNo: "80193070001590",
       ifsc: "CNRB0003366",
-      qr: "https://becbbsr.ac.in/photogallery/hostelFees_qr.jpg",
+      qr: "/photogallery/hostelFees_qr.jpg",
       upi: "240290300001590@cnrb",
       icon: Home,
       color: "from-emerald-500 to-teal-400"
@@ -43,7 +43,7 @@ const feesCategories = [
       bank: "Canara Bank",
       accNo: "80193070000941",
       ifsc: "CNRB0003366",
-      qr: "https://becbbsr.ac.in/photogallery/transportFees_qr.jpg",
+      qr: "/photogallery/transportFees_qr.jpg",
       upi: "234431287000941@cnrb",
       icon: Bus,
       color: "from-orange-500 to-amber-400"
