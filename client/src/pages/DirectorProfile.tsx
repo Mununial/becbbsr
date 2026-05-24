@@ -141,7 +141,7 @@ export const DirectorProfile = () => {
               <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg" alt="Director" className="w-12 h-12 rounded-full object-cover object-top border-2 border-primary/30 shadow" />
               <div>
                 <span className="font-black text-navy-950 text-base uppercase tracking-widest block">Prof. Dr. B.N. Biswal</span>
-                <span className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Director — Bhubaneswar Engineering College</span>
+                <span className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Director — Bhubaneswar Engineering College (BEC)</span>
               </div>
             </div>
           </div>

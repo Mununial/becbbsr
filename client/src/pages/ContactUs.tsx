@@ -58,7 +58,7 @@ export const ContactUs = () => {
                  <div>
                     <h4 className="font-black uppercase tracking-widest text-sm mb-2">Campus Address</h4>
                     <p className="text-white/60 text-lg leading-relaxed">
-                       Bhubaneswar Engineering College<br />
+                       Bhubaneswar Engineering College (BEC)<br />
                        Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha, INDIA
                     </p>
                  </div>

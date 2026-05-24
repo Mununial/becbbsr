@@ -29,7 +29,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     content: [
       {
         heading: 'B.Tech (Bachelor of Technology)',
-        text: 'Bhubaneswar Engineering College offers a 4-year undergraduate B.Tech program in various elite disciplines. Our curriculum is designed to merge historical engineering principles with future technology requirements like AI, Data Science, and Additive Manufacturing.',
+        text: 'Bhubaneswar Engineering College (BEC) offers a 4-year undergraduate B.Tech program in various elite disciplines. Our curriculum is designed to merge historical engineering principles with future technology requirements like AI, Data Science, and Additive Manufacturing.',
         bullets: ['Aeronautical Engineering', 'Computer Science & Engineering', 'Civil & Environmental Engineering', 'Electrical & Computer Science', 'Mechanical Engineering', 'Agriculture Engineering']
       },
       {

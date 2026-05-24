@@ -76,7 +76,7 @@ export const AdmissionPopup = () => {
               </h2>
               
               <p className="text-slate-500 font-medium text-sm mb-6 leading-relaxed">
-                Shape your future at Bhubaneswar Engineering College. Apply now for our flagship programs.
+                Shape your future at Bhubaneswar Engineering College (BEC). Apply now for our flagship programs.
               </p>
 
               <div className="flex flex-col gap-3 mb-8">

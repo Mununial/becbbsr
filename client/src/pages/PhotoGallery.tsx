@@ -200,7 +200,7 @@ export const PhotoGallery = () => {
                             {filteredImages[selectedImage].title}
                          </h3>
                          <p className="text-white/40 text-xs font-bold uppercase tracking-[0.4em] max-w-xl">
-                            Institutional masterpiece capturing the vibrant legacy of Bhubaneswar Engineering College Campus Archives.
+                            Institutional masterpiece capturing the vibrant legacy of Bhubaneswar Engineering College (BEC) Campus Archives.
                          </p>
                       </div>
                       <div className="flex flex-col items-end gap-4 scale-75 md:scale-100 origin-right">

@@ -50,7 +50,7 @@ export const LeadershipSection = ({ leaders }: LeadershipSectionProps) => {
             Elite <span className="highlight underline decoration-accent/20 underline-offset-8">Leadership</span> Cabinet
           </h2>
           <p className="text-slate-400 text-[10px] md:text-xs font-medium mt-2 md:mt-3 font-inter leading-relaxed max-w-xl mx-auto opacity-70" data-aos="fade-up" data-aos-delay="100">
-            Meet the distinguished leaders guiding <span className="text-accent underline decoration-accent/10 underline-offset-4">Bhubaneswar Engineering College</span>.
+            Meet the distinguished leaders guiding <span className="text-accent underline decoration-accent/10 underline-offset-4">Bhubaneswar Engineering College (BEC)</span>.
           </p>
         </div>
 

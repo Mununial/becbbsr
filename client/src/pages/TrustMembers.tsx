@@ -31,7 +31,7 @@ const trustees = [
     name: "Prof. (Dr.) B.N. Biswal",
     role: "Director",
     tag: "Academic Head",
-    organization: "Bhubaneswar Engineering College",
+    organization: "Bhubaneswar Engineering College (BEC)",
     description: "A pioneering academician with 27+ years of experience, driving research-led education and ensuring that BEC students become industry-ready technocrats.",
     image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg",
     gradient: "from-teal-500 to-cyan-600",
@@ -52,7 +52,7 @@ export const TrustMembers = () => {
   return (
     <PageLayout
       title="Members of Trust"
-      subtitle="The visionary leaders driving innovation and excellence at Bhubaneswar Engineering College."
+      subtitle="The visionary leaders driving innovation and excellence at Bhubaneswar Engineering College (BEC)."
       badge="Ayush Group of Institutions"
     >
       <div className="flex flex-col gap-14">

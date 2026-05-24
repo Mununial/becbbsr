@@ -54,7 +54,7 @@ export const NewsAndEvents = () => {
               Campus <span className="text-secondary">Highlights</span>
             </h2>
             <p className="text-slate-500 font-medium leading-relaxed">
-              Experience the vibrant life at Bhubaneswar Engineering College through our latest workshops, seminars, and cultural celebrations.
+              Experience the vibrant life at Bhubaneswar Engineering College (BEC) through our latest workshops, seminars, and cultural celebrations.
             </p>
           </div>
           

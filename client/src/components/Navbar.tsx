@@ -171,6 +171,7 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
 
 export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -220,8 +221,8 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
               className="w-20 h-20 md:w-24 md:h-24 object-contain transition-all duration-500 group-hover:scale-105" 
             />
             <div className="flex flex-col">
-              <h1 className="font-black text-2xl md:text-4xl leading-tight tracking-tighter text-primary uppercase font-poppins">
-                Bhubaneswar <span className="text-accent">Engineering</span> College
+              <h1 className="font-black text-2xl md:text-4xl leading-tight tracking-tighter text-primary uppercase font-poppins flex items-center flex-wrap gap-x-2">
+                Bhubaneswar <span className="text-accent">Engineering</span> College (BEC)
               </h1>
               <div className="mt-2 flex flex-col gap-1">
                 <span className="text-[18px] font-black text-primary/70 tracking-wide font-odia leading-none drop-shadow-sm">ଭୁବନେଶ୍ୱର ଇଞ୍ଜିନିୟରିଂ କଲେଜ</span>
@@ -286,7 +287,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                    Bhubaneswar
                  </span>
                  <span className="text-[9px] font-black text-accent tracking-[0.3em] uppercase -mt-0.5 font-poppins opacity-90">
-                   Engineering College
+                   Engineering College (BEC)
                  </span>
                </motion.div>
              </Link>
@@ -365,35 +366,79 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
               <div className="flex-1 overflow-y-auto p-8 space-y-8">
                 {navItems.map((item) => (
                   <div key={item.name} className="space-y-4">
-                    <div className="flex justify-between items-center group/m" onClick={() => { if(!item.dropdown) { setIsOpen(false); window.location.href = item.href; } }}>
-                      <span className="text-lg font-black uppercase tracking-tighter text-primary font-poppins group-hover/m:text-accent transition-colors">{item.name}</span>
-                      {item.dropdown && <ChevronDown className="w-5 h-5 text-accent" />}
-                    </div>
-                    {item.dropdown && (
-                      <div className="grid grid-cols-1 gap-3 pl-4 border-l-2 border-slate-100">
-                        {item.dropdown.map((sub) => (
-                          sub.href.startsWith('http') ? (
-                            <a 
-                              key={sub.name} 
-                              href={sub.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-slate-400 hover:text-primary font-bold text-xs uppercase tracking-widest transition-colors py-1"
-                            >
-                              {sub.name}
-                            </a>
-                          ) : (
-                            <Link 
-                              key={sub.name} 
-                              to={sub.href}
-                              onClick={() => setIsOpen(false)}
-                              className="text-slate-400 hover:text-primary font-bold text-xs uppercase tracking-widest transition-colors py-1"
-                            >
-                              {sub.name}
-                            </Link>
-                          )
-                        ))}
+                    {!item.dropdown ? (
+                      item.href.startsWith('http') ? (
+                        <a
+                          href={item.href}
+                          target={item.target || "_blank"}
+                          rel="noopener noreferrer"
+                          onClick={() => setIsOpen(false)}
+                          className="text-lg font-black uppercase tracking-tighter text-primary font-poppins hover:text-accent transition-colors flex justify-between items-center w-full"
+                        >
+                          {item.name}
+                        </a>
+                      ) : (
+                        <Link
+                          to={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className="text-lg font-black uppercase tracking-tighter text-primary font-poppins hover:text-accent transition-colors flex justify-between items-center w-full"
+                        >
+                          {item.name}
+                        </Link>
+                      )
+                    ) : (
+                      <div
+                        onClick={() => setActiveDropdown(prev => prev === item.name ? null : item.name)}
+                        className="flex justify-between items-center group/m cursor-pointer w-full"
+                      >
+                        <span className="text-lg font-black uppercase tracking-tighter text-primary font-poppins group-hover/m:text-accent transition-colors">
+                          {item.name}
+                        </span>
+                        <ChevronDown 
+                          className={cn(
+                            "w-5 h-5 text-accent transition-transform duration-300", 
+                            activeDropdown === item.name && "rotate-180"
+                          )} 
+                        />
                       </div>
+                    )}
+                    
+                    {item.dropdown && (
+                      <AnimatePresence initial={false}>
+                        {activeDropdown === item.name && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden pl-4 border-l-2 border-slate-100 flex flex-col gap-3"
+                          >
+                            {item.dropdown.map((sub) => (
+                              sub.href.startsWith('http') ? (
+                                <a 
+                                  key={sub.name} 
+                                  href={sub.href}
+                                  target={sub.target || "_blank"}
+                                  rel="noopener noreferrer"
+                                  onClick={() => setIsOpen(false)}
+                                  className="text-slate-400 hover:text-primary font-bold text-xs uppercase tracking-widest transition-colors py-1 block"
+                                >
+                                  {sub.name}
+                                </a>
+                              ) : (
+                                <Link 
+                                  key={sub.name} 
+                                  to={sub.href}
+                                  onClick={() => setIsOpen(false)}
+                                  className="text-slate-400 hover:text-primary font-bold text-xs uppercase tracking-widest transition-colors py-1 block"
+                                >
+                                  {sub.name}
+                                </Link>
+                              )
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     )}
                   </div>
                 ))}

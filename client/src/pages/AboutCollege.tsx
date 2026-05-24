@@ -50,7 +50,7 @@ export const AboutCollege = () => {
              </h1>
              
              <p className="text-sm md:text-lg font-medium text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-               Bhubaneswar Engineering College is a sanctuary of academic brilliance, nurturing the next generation of global innovators.
+               Bhubaneswar Engineering College (BEC) is a sanctuary of academic brilliance, nurturing the next generation of global innovators.
              </p>
 
              <div className="flex justify-center gap-6 border-t border-white/10 pt-6">
@@ -232,7 +232,7 @@ export const AboutCollege = () => {
                    One <span className="text-[#FFC107]">Engineer</span> at a Time."
                  </h3>
                  <p className="text-white/60 text-sm font-medium italic mb-10 max-w-xl mx-auto">
-                   Join Bhubaneswar Engineering College and start your journey towards a successful global career today.
+                   Join Bhubaneswar Engineering College (BEC) and start your journey towards a successful global career today.
                  </p>
                  <button onClick={() => window.location.href='/admission_query'} className="px-12 py-4 bg-[#FFC107] text-[#0B1D3A] font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all">
                     Start Your Journey

@@ -238,7 +238,7 @@ export const App = () => {
                 <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC Logo" className="w-12 h-12 md:w-16 md:h-16 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-contain brightness-110 drop-shadow-2xl" />
               </div>
               <div className="flex flex-col items-center text-center">
-                <span className="text-white font-bold text-lg md:text-xl tracking-widest uppercase font-poppins">Bhubaneswar Engineering College</span>
+                <span className="text-white font-bold text-lg md:text-xl tracking-widest uppercase font-poppins">Bhubaneswar Engineering College (BEC)</span>
                 <span className="text-accent text-[9px] font-bold uppercase tracking-[0.3em] mt-1.5 font-poppins">Excellence in Innovation</span>
                 {/* Odia College Name */}
                 <span className="text-white/30 text-xs font-bold mt-4 font-odia">ଭୁବନେଶ୍ୱର ଇଞ୍ଜିନିୟରିଂ କଲେଜ</span>

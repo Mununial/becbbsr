@@ -126,7 +126,7 @@ export const Footer = () => {
 
         <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.2em] font-inter">
-            © 2026 Bhubaneswar Engineering College. Digital Nexus by BEC IT.
+            © 2026 Bhubaneswar Engineering College (BEC). Digital Nexus by BEC IT.
           </div>
           <div className="flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] font-inter">
             <a href="#" className="text-slate-600 hover:text-accent transition-colors">Privacy</a>

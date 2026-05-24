@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export const ChairmanBEC = () => {
   return (
-    <PageLayout title="Chairman's Message" subtitle="Bhubaneswar Engineering College">
+    <PageLayout title="Chairman's Message" subtitle="Bhubaneswar Engineering College (BEC)">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ export const ChairmanBEC = () => {
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-navy-950 via-navy-950/80 to-transparent px-5 pt-14 pb-6">
               <p className="text-secondary text-[9px] font-black uppercase tracking-[0.3em] mb-1">Chairman — BEC</p>
               <h3 className="text-white font-black text-lg leading-tight uppercase tracking-tight">Er. Alok Ranjan Mallick</h3>
-              <p className="text-white/50 text-[10px] font-semibold mt-0.5 uppercase tracking-widest">Bhubaneswar Engineering College</p>
+              <p className="text-white/50 text-[10px] font-semibold mt-0.5 uppercase tracking-widest">Bhubaneswar Engineering College (BEC)</p>
             </div>
           </div>
 
@@ -69,7 +69,7 @@ export const ChairmanBEC = () => {
               <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg" alt="Chairman" className="w-12 h-12 rounded-full object-cover object-top border-2 border-secondary/30 shadow" />
               <div>
                 <span className="font-black text-navy-950 text-base uppercase tracking-widest block">Er. Alok Ranjan Mallick</span>
-                <span className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Chairman, Bhubaneswar Engineering College</span>
+                <span className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Chairman, Bhubaneswar Engineering College (BEC)</span>
               </div>
             </div>
           </div>

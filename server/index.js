@@ -110,7 +110,7 @@ app.post('/api/contact', async (req, res) => {
 
   // 2. Send 'Thank You' Auto-Reply to the Student/Applicant
   const studentMailOptions = {
-    from: `"Bhubaneswar Engineering College" <${process.env.EMAIL_USER}>`,
+    from: `"Bhubaneswar Engineering College (BEC)" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: `Thank You for your Inquiry, ${name}! - BEC Admission Cell`,
     html: `
@@ -147,7 +147,7 @@ app.post('/api/contact', async (req, res) => {
           </p>
           <br/>
           <p style="color: #0b1a40; font-size: 16px; font-weight: bold; margin-bottom: 5px;">Best Regards,</p>
-          <p style="color: #666; font-size: 14px; margin-top: 0;"><strong>Admission Cell</strong><br/>Bhubaneswar Engineering College</p>
+          <p style="color: #666; font-size: 14px; margin-top: 0;"><strong>Admission Cell</strong><br/>Bhubaneswar Engineering College (BEC)</p>
         </div>
         
         <!-- Footer -->

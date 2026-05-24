@@ -176,7 +176,7 @@ export const AdmissionBot = () => {
                     <Send className="w-4 h-4" />
                   </button>
                </div>
-               <p className="text-[10px] text-center text-slate-400 mt-2 font-medium">Bhubaneswar Engineering College Admission Portal</p>
+               <p className="text-[10px] text-center text-slate-400 mt-2 font-medium">Bhubaneswar Engineering College (BEC) Admission Portal</p>
             </div>
           </motion.div>
         )}

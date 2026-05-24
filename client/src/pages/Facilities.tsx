@@ -83,7 +83,7 @@ export const Facilities = () => {
            </h2>
            <div className="w-24 h-1.5 bg-secondary mx-auto rounded-full mb-8"></div>
            <p className="text-white/60 font-medium text-lg max-w-2xl mx-auto uppercase tracking-widest text-sm">
-             Bhubaneswar Engineering College Campus
+             Bhubaneswar Engineering College (BEC) Campus
            </p>
         </section>
 
