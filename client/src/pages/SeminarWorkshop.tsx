@@ -92,7 +92,7 @@ export const SeminarWorkshop = () => {
                  </button>
               </div>
               <div className="w-full md:w-1/3 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 aspect-video group self-center">
-                 <img src="/images/slider/slider-bg6.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                 <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629485/becweb/campus_exterior.jpg" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
               </div>
            </div>
         </section>

@@ -25,7 +25,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Academic Programmes',
     subtitle: 'Choose your path to a successful engineering career',
     icon: GraduationCap,
-    image: '/images/events/tata.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg',
     content: [
       {
         heading: 'B.Tech (Bachelor of Technology)',
@@ -48,7 +48,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Admission Procedure',
     subtitle: 'Simple steps to join the BEC legacy',
     icon: ClipboardCheck,
-    image: '/images/student-works.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629486/becweb/campus_interior.jpg',
     content: [
       {
         heading: '1. Initial Inquiry',
@@ -72,7 +72,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Documents Required',
     subtitle: 'Essential checklist for your admission file',
     icon: FileCheck,
-    image: '/images/activities/aero7.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629470/becweb/placement_hero.jpg',
     content: [
       {
         heading: 'Mandatory Certificates',
@@ -98,7 +98,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Bank Loan Procedures',
     subtitle: 'Financial support for your academic journey',
     icon: Landmark,
-    image: '/images/tour-exterior.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629485/becweb/campus_exterior.jpg',
     content: [
       {
         heading: 'Education Loan Support',
@@ -118,7 +118,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Scholarship Schemes',
     subtitle: 'Rewarding merit and supporting every dream',
     icon: Trophy,
-    image: '/images/activities/aero1.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629484/becweb/building_front.jpg',
     content: [
       {
         heading: 'Government Scholarships',
@@ -140,7 +140,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Admission Contacts',
     subtitle: 'Reach out to our expert counselors',
     icon: Phone,
-    image: '/images/activities/aero11.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629487/becweb/stairs.jpg',
     content: [
       {
         heading: 'City Office (Bhubaneswar)',
@@ -158,7 +158,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Download Prospectus',
     subtitle: 'Everything about BEC in one neat file',
     icon: Download,
-    image: '/images/events/zeta.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629462/becweb/hero-bg.jpg',
     content: [
       {
         heading: 'Academic Brochure 2026-27',

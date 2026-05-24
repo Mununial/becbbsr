@@ -162,10 +162,10 @@ export const AeroClub = () => {
 
         {/* Lab Info - Static Refined */}
         <section className="bg-navy-950 -mx-6 lg:-mx-12 px-6 lg:px-12 py-24 rounded-[4rem] text-white overflow-hidden relative">
-           <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
-              <div className="absolute inset-0 bg-gradient-to-l from-navy-950 via-transparent to-transparent z-10" />
-              <img src="/images/slider/slider-bg5.jpg" className="w-full h-full object-cover grayscale" alt="" />
-           </div>
+            <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+               <div className="absolute inset-0 bg-gradient-to-l from-navy-950 via-transparent to-transparent z-10" />
+               <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629484/becweb/building_front.jpg" className="w-full h-full object-cover grayscale" alt="" />
+            </div>
 
            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
               <div className="space-y-12">

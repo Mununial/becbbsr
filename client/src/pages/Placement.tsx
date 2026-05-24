@@ -17,20 +17,41 @@ interface YearData {
   companies: Company[];
 }
 
+const PlacementCompanyLogo = ({ src, name }: { src: string; name: string }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError || !src || src.startsWith('/images/')) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl text-primary text-[10px] font-black uppercase tracking-wider text-center p-2 truncate border border-slate-100 select-none">
+        {name}
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={src} 
+      alt={name} 
+      className="w-full h-full object-contain transition-all duration-700"
+      onError={() => setHasError(true)}
+    />
+  );
+};
+
 const PLACEMENT_DATA: YearData[] = [
   {
     year: "2026 (Live)",
     companies: [
-      { name: "TECH MAHINDRA", logo: "/images/events/tech-mahindra.jpg", branches: "CSE,ECE,EE,AERO,CIVIL,MECHANICAL", stats: "42", package: "4.5-8.2" },
-      { name: "INFOSYS", logo: "/images/events/infosys.jpg", branches: "AERO,MECHANICAL,CSE,CIVIL,EE", stats: "28", package: "4.0-9.2" },
+      { name: "TECH MAHINDRA", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png", branches: "CSE,ECE,EE,AERO,CIVIL,MECHANICAL", stats: "42", package: "4.5-8.2" },
+      { name: "INFOSYS", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629416/becweb/Infosys.png", branches: "AERO,MECHANICAL,CSE,CIVIL,EE", stats: "28", package: "4.0-9.2" },
       { name: "IBS SOFTWARE", logo: "/images/events/IBS.jpg", branches: "CSE,EE,EEE,AERO", stats: "15", package: "4.5-7.5" },
-      { name: "TATA STEEL", logo: "/images/events/tata.jpg", branches: "MECHANICAL,EE,EEE,CIVIL", stats: "18", package: "3.8-6.5" },
-      { name: "INTERGLOBE (INDIGO)", logo: "/images/events/interglobe.jpg", branches: "AERONAUTICAL,CSE,MECH", stats: "12", package: "4.0-10.0" },
-      { name: "BYJU'S", logo: "/images/events/byjus.jpg", branches: "MBA,CSE,CE,MECH", stats: "22", package: "6.0-12.0" },
+      { name: "TATA STEEL", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629443/becweb/TATA_STEEL.png", branches: "MECHANICAL,EE,EEE,CIVIL", stats: "18", package: "3.8-6.5" },
+      { name: "INTERGLOBE (INDIGO)", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629401/becweb/Airdit.jpg", branches: "AERONAUTICAL,CSE,MECH", stats: "12", package: "4.0-10.0" },
+      { name: "BYJU'S", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629352/becweb/180074byjus2019.jpg", branches: "MBA,CSE,CE,MECH", stats: "22", package: "6.0-12.0" },
       { name: "ZETA", logo: "/images/events/zeta.jpg", branches: "CSE,IT", stats: "08", package: "8.5-14.0" },
       { name: "GENPACT", logo: "/images/events/genpact.jpg", branches: "MBA,CSE", stats: "14", package: "3.5-5.5" },
-      { name: "JOHNNETTE TECHNOLOGIES", logo: "/images/events/john.jpg", branches: "AERONAUTICAL", stats: "05", package: "5.0-11.0" },
-      { name: "QH", logo: "/images/events/qh.jpg", branches: "MECHANICAL,EE", stats: "09", package: "3.2-4.8" },
+      { name: "JOHNNETTE TECHNOLOGIES", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629424/becweb/Johnnette_Technologies.png", branches: "AERONAUTICAL", stats: "05", package: "5.0-11.0" },
+      { name: "QH", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776627784/bec_web_assets/cawqhapwvzlogvzsjbka.jpg", branches: "MECHANICAL,EE", stats: "09", package: "3.2-4.8" },
       { name: "PNB METLIFE", logo: "/images/events/pnblifetime.jpg", branches: "MBA", stats: "07", package: "4.2-6.0" }
     ]
   },
@@ -330,19 +351,19 @@ export const Placement = () => {
            </div>
            
            <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-12 opacity-60 hover:opacity-100 transition-opacity duration-700 max-w-6xl mx-auto">
-              {[
-                "/images/events/IBS.jpg",
-                "/images/events/tech-mahindra.jpg",
-                "/images/events/infosys.jpg",
-                "/images/events/interglobe.jpg",
-                "/images/events/tata.jpg",
-                "/images/events/zeta.jpg",
-                "/images/events/byjus.jpg",
-                "/images/events/genpact.jpg",
-                "/images/events/john.jpg",
-                "/images/events/qh.jpg",
-                "/images/events/pnblifetime.jpg"
-              ].map((logo, i) => (
+               {[
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629459/becweb/wipro2018.png",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629416/becweb/Infosys.png",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629401/becweb/Airdit.jpg",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629443/becweb/TATA_STEEL.png",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629433/becweb/Qspiders.png",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629352/becweb/180074byjus2019.jpg",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629405/becweb/Conneqt_Business_Solution.png",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629424/becweb/Johnnette_Technologies.png",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776627784/bec_web_assets/cawqhapwvzlogvzsjbka.jpg",
+                 "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629414/becweb/IDFC.png"
+               ].map((logo, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -435,14 +456,7 @@ export const Placement = () => {
                      {/* Logo Area with Inner Border */}
                      <div className="mb-8 text-center relative mt-2">
                         <div className="w-24 h-24 mx-auto bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.06)] border-[6px] border-slate-50 flex items-center justify-center p-4 group-hover/card:scale-110 group-hover/card:-translate-y-2 transition-all duration-700">
-                          <img 
-                            src={company.logo} 
-                            alt={company.name} 
-                            className="w-full h-full object-contain transition-all duration-700"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = 'https://cdn-icons-png.flaticon.com/512/3061/3061341.png';
-                            }}
-                          />
+                          <PlacementCompanyLogo src={company.logo} name={company.name} />
                        </div>
                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-cyan-100/30 blur-3xl rounded-full opacity-0 group-hover/card:opacity-100 transition-opacity duration-700 pointer-events-none" />
                     </div>

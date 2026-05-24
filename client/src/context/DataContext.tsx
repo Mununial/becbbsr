@@ -38,7 +38,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       setSlides([
         { id: '1', type: 'image', url: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg', title: 'BHUBANESWAR ENGINEERING COLLEGE', subtitle: 'Excellence • Innovation • Leadership', description: 'A Premier Institution for tomorrow\'s global engineering leaders.', ctaText: 'Explore Campus' },
-        { id: '2', type: 'image', url: '/images/slider/slider-bg1.jpg', title: 'EXCELLENCE IN LEARNING', subtitle: 'Aeronautical • Research • Global', description: 'Experience the state-of-the-art infrastructure and vibrant student life at BEC.', ctaText: 'Apply Now' }
+        { id: '2', type: 'image', url: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629470/becweb/placement_hero.jpg', title: 'EXCELLENCE IN LEARNING', subtitle: 'Aeronautical • Research • Global', description: 'Experience the state-of-the-art infrastructure and vibrant student life at BEC.', ctaText: 'Apply Now' }
       ]);
     }
 
