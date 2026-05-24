@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutUs } from './components/AboutUs';
@@ -20,6 +21,7 @@ import { LeadershipSection } from './components/LeadershipSection';
 import { AdmissionPopup } from './components/AdmissionPopup';
 import { FloatingSocials } from './components/FloatingSocials';
 import { useData } from './context/DataContext';
+import { LoginGate } from './components/LoginGate';
 
 import { type SelectedStudent, type Scene, type Leader, type Highlight } from './types';
 
@@ -148,13 +150,12 @@ export const App = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showTour, setShowTour] = useState(false);
 
-  const [scenes, setScenes] = useState(() => {
+  const [scenes, setScenes] = useState<Scene[]>(() => {
     const saved = localStorage.getItem('tour-scenes-v2');
     return saved ? JSON.parse(saved) : DEFAULT_SCENES;
   });
 
   const [students, setStudents] = useState<SelectedStudent[]>(() => {
-    // We clear localStorage to reset to our new default alumni list
     const saved = localStorage.getItem('selected-students-v2');
     return saved ? JSON.parse(saved) : DEFAULT_SELECTED_STUDENTS;
   });
@@ -169,32 +170,64 @@ export const App = () => {
     if (saved) {
       const parsed = JSON.parse(saved) as Leader[];
       const filtered = parsed.filter(l => l.role !== "VICE CHAIRMAN");
-      if (filtered.length !== parsed.length) {
-         localStorage.setItem('leadership-data', JSON.stringify(filtered));
-      }
       return filtered;
     }
     return DEFAULT_LEADERS;
   });
 
+  // Fetch configs from backend on mount
+  useEffect(() => {
+    const loadKey = async (key: string, setFn: (data: any) => void, defaultData: any) => {
+      try {
+        const res = await axios.get(`/api/config/${key}`);
+        if (res.data) {
+          setFn(res.data);
+          localStorage.setItem(key, JSON.stringify(res.data));
+        } else {
+          const local = localStorage.getItem(key);
+          if (local) {
+            const parsed = JSON.parse(local);
+            setFn(parsed);
+            axios.post(`/api/config/${key}`, parsed).catch(() => {});
+          } else {
+            setFn(defaultData);
+            axios.post(`/api/config/${key}`, defaultData).catch(() => {});
+          }
+        }
+      } catch (err) {
+        const local = localStorage.getItem(key);
+        setFn(local ? JSON.parse(local) : defaultData);
+      }
+    };
+
+    loadKey('tour-scenes-v2', setScenes, DEFAULT_SCENES);
+    loadKey('selected-students-v2', setStudents, DEFAULT_SELECTED_STUDENTS);
+    loadKey('events-highlights', setHighlights, DEFAULT_HIGHLIGHTS);
+    loadKey('leadership-data', setLeaders, DEFAULT_LEADERS);
+  }, []);
+
   const updateScenes = (newScenes: Scene[]) => {
     setScenes(newScenes);
     localStorage.setItem('tour-scenes-v2', JSON.stringify(newScenes));
+    axios.post('/api/config/tour-scenes-v2', newScenes).catch(() => {});
   };
 
   const updateStudents = (newStudents: SelectedStudent[]) => {
     setStudents(newStudents);
-    localStorage.setItem('selected-students', JSON.stringify(newStudents));
+    localStorage.setItem('selected-students-v2', JSON.stringify(newStudents));
+    axios.post('/api/config/selected-students-v2', newStudents).catch(() => {});
   };
 
   const updateHighlights = (newHighlights: Highlight[]) => {
     setHighlights(newHighlights);
     localStorage.setItem('events-highlights', JSON.stringify(newHighlights));
+    axios.post('/api/config/events-highlights', newHighlights).catch(() => {});
   };
 
   const updateLeaders = (newLeaders: Leader[]) => {
     setLeaders(newLeaders);
     localStorage.setItem('leadership-data', JSON.stringify(newLeaders));
+    axios.post('/api/config/leadership-data', newLeaders).catch(() => {});
   };
 
 
@@ -252,25 +285,27 @@ export const App = () => {
       <Navbar onAdminClick={() => setShowAdmin(true)} />
 
       {showAdmin && (
-        <AdminDashboard
-          onClose={() => setShowAdmin(false)}
-          slides={slides}
-          onSave={updateSlides}
-          scenes={scenes}
-          onSaveScenes={updateScenes}
-          students={students}
-          onSaveStudents={updateStudents}
-          gallery={gallery}
-          onSaveGallery={updateGallery}
-          highlights={highlights}
-          onSaveHighlights={updateHighlights}
-          leaders={leaders}
-          onSaveLeaders={updateLeaders}
-          notices={notices}
-          onSaveNotices={updateNotices}
-          faculties={faculties}
-          onSaveFaculties={updateFaculties}
-        />
+        <LoginGate onClose={() => setShowAdmin(false)}>
+          <AdminDashboard
+            onClose={() => setShowAdmin(false)}
+            slides={slides}
+            onSave={updateSlides}
+            scenes={scenes}
+            onSaveScenes={updateScenes}
+            students={students}
+            onSaveStudents={updateStudents}
+            gallery={gallery}
+            onSaveGallery={updateGallery}
+            highlights={highlights}
+            onSaveHighlights={updateHighlights}
+            leaders={leaders}
+            onSaveLeaders={updateLeaders}
+            notices={notices}
+            onSaveNotices={updateNotices}
+            faculties={faculties}
+            onSaveFaculties={updateFaculties}
+          />
+        </LoginGate>
       )}
 
       {showTour && <CampusTour onClose={() => setShowTour(false)} scenes={scenes} />}

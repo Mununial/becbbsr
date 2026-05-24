@@ -209,6 +209,49 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 });
 
+
+// Admin Authentication Route
+app.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'becadmin@2026') {
+    res.json({ success: true, token: 'bec_session_token_2026' });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid ID or Password' });
+  }
+});
+
+// Generic Config Persistence Endpoints
+app.get('/api/config/:key', (req, res) => {
+  const key = req.params.key;
+  if (key.includes('..') || key.includes('/') || key.includes('\\')) {
+    return res.status(400).json({ error: 'Invalid key' });
+  }
+  const file = path.join(__dirname, `${key}.json`);
+  if (!fs.existsSync(file)) {
+    return res.json(null);
+  }
+  try {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/config/:key', (req, res) => {
+  const key = req.params.key;
+  if (key.includes('..') || key.includes('/') || key.includes('\\')) {
+    return res.status(400).json({ error: 'Invalid key' });
+  }
+  const file = path.join(__dirname, `${key}.json`);
+  try {
+    fs.writeFileSync(file, JSON.stringify(req.body, null, 2));
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Achievements persistence
 const achievementsFile = path.join(__dirname, 'achievements.json');
 const getAchievements = () => {

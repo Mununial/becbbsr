@@ -5,6 +5,7 @@ import { LayoutDashboard, Users, Newspaper, Image as ImageIcon, Briefcase, Setti
 
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
+import { LoginGate } from '../components/LoginGate';
 
 const sidebarItems = [
   { name: 'Dashboard', icon: LayoutDashboard },
@@ -131,7 +132,8 @@ export const AdminDashboard = () => {
    };
 
   return (
-    <div className="flex min-h-screen bg-slate-100 font-sans selection:bg-primary-light selection:text-white">
+    <LoginGate>
+      <div className="flex min-h-screen bg-slate-100 font-sans selection:bg-primary-light selection:text-white">
       {/* Sidebar */}
       <aside className="w-64 bg-navy-900 text-white flex flex-col fixed h-full z-50">
         <div className="p-8 border-b border-white/5 flex items-center gap-3">
@@ -795,6 +797,7 @@ export const AdminDashboard = () => {
            animation: spin-slow 8s linear infinite;
         }
       `}</style>
-    </div>
+      </div>
+    </LoginGate>
   );
 };
