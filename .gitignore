@@ -7,11 +7,12 @@ dist-ssr/
 build/
 
 # Local env files (extremely important to ignore to prevent leaks)
-
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+server/.env
 
 # Logs
 logs/

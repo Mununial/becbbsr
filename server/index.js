@@ -68,7 +68,7 @@ const upload = multer({
 });
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ message: 'BEC University API is running' });
 });
 
@@ -414,6 +414,14 @@ app.delete('/api/gallery/:id', (req, res) => {
 
 
 
+
+// Serve static assets from React client build folder
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// SPA Routing: any non-API route serves index.html from dist
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
