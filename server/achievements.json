@@ -6,7 +6,7 @@
     "title": "Placed at CTTC-BBSR",
     "desc": "Outstanding performance in mechanical engineering and technical skills led to successful placement at CTTC Bhubaneswar.",
     "award": "Placed at CTTC",
-    "photo": "https://becbbsr.ac.in/images/alumni2.jpg"
+    "photo": "/images/alumni2.jpg"
   },
   {
     "id": "2",
@@ -15,7 +15,7 @@
     "title": "Selected by BUREAU VERITAS",
     "desc": "Expertise in computer science and software principles secured him a position at the prestigious Bureau Veritas.",
     "award": "Bureau Veritas",
-    "photo": "https://becbbsr.ac.in/images/alumni3.jpg"
+    "photo": "/images/alumni3.jpg"
   },
   {
     "id": "3",
@@ -24,7 +24,7 @@
     "title": "Engineer at BUREAU VERITAS",
     "desc": "Demonstrated excellence in technical domains, securing a role in Bureau Veritas through campus placement.",
     "award": "Bureau Veritas",
-    "photo": "https://becbbsr.ac.in/images/alumni4.jpg"
+    "photo": "/images/alumni4.jpg"
   },
   {
     "id": "4",
@@ -33,7 +33,7 @@
     "title": "Software Engineer, QuEST GLOBAL",
     "desc": "Selected for a key engineering role at QuEST Global, reflecting his deep technical knowledge.",
     "award": "QuEST Global",
-    "photo": "https://becbbsr.ac.in/images/alumni5.jpg"
+    "photo": "/images/alumni5.jpg"
   },
   {
     "id": "5",
@@ -42,7 +42,7 @@
     "title": "Engineer at VINDHYA TELELINES",
     "desc": "Civil engineering excellence and project management skills led to his selection at Vindhya Telelines.",
     "award": "Vindhya Telelines",
-    "photo": "https://becbbsr.ac.in/images/alumni6.jpg"
+    "photo": "/images/alumni6.jpg"
   },
   {
     "id": "6",
@@ -51,7 +51,7 @@
     "title": "Selected by CAPGEMINI",
     "desc": "A brilliant academic record and technical proficiency secured her a dream career at Capgemini.",
     "award": "Capgemini",
-    "photo": "https://becbbsr.ac.in/images/alumni7.jpg"
+    "photo": "/images/alumni7.jpg"
   },
   {
     "id": "7",
@@ -60,7 +60,7 @@
     "title": "Developer, IBS SOFTWARE",
     "desc": "His unique skill set in Aeronautical engineering combined with software logic won him a spot at IBS Software.",
     "award": "IBS Software",
-    "photo": "https://becbbsr.ac.in/images/alumni8.jpg"
+    "photo": "/images/alumni8.jpg"
   },
   {
     "id": "8",
@@ -69,7 +69,7 @@
     "title": "Selected by IMS PEOPLE",
     "desc": "Strong mechanical foundation and interpersonal skills recognized by IMS People for an engineering role.",
     "award": "IMS People",
-    "photo": "https://becbbsr.ac.in/images/alumni9.jpg"
+    "photo": "/images/alumni9.jpg"
   },
   {
     "id": "9",
@@ -78,7 +78,7 @@
     "title": "Engineer at IBS SOFTWARE",
     "desc": "Secured a position at IBS Software, proving her mettle in Electrical and Electronics domain.",
     "award": "IBS Software",
-    "photo": "https://becbbsr.ac.in/images/alumni11.jpg"
+    "photo": "/images/alumni11.jpg"
   },
   {
     "id": "10",
@@ -87,7 +87,7 @@
     "title": "Operations at AMAZON",
     "desc": "His mechanical discipline and analytical skills paved the way to a selection at global giant Amazon.",
     "award": "Amazon Selection",
-    "photo": "https://becbbsr.ac.in/images/ROHIT%20KUMAR,MECH,AMAZON.jpg"
+    "photo": "/images/ROHIT%20KUMAR,MECH,AMAZON.jpg"
   },
   {
     "id": "11",
@@ -96,7 +96,7 @@
     "title": "Medical Tech at ERBE MEDICAL",
     "desc": "Excellent understanding of electrical engineering applied to medical systems earned him a position at Erbe Medical.",
     "award": "Erbe Medical",
-    "photo": "https://becbbsr.ac.in/images/alumni12.jpg"
+    "photo": "/images/alumni12.jpg"
   },
   {
     "id": "12",
@@ -105,7 +105,7 @@
     "title": "Engineer, PIRAMAL GROUP",
     "desc": "Selected by the Piramal Group for his technical expertise in mechanical processes and systems.",
     "award": "Piramal Group",
-    "photo": "https://becbbsr.ac.in/images/ASHIS%20PANY-MECH(Piramal%20Group).jpg"
+    "photo": "/images/ASHIS%20PANY-MECH(Piramal%20Group).jpg"
   },
   {
     "id": "13",
@@ -114,7 +114,7 @@
     "title": "Placed at TECH MAHINDRA",
     "desc": "Strong coding skills and system knowledge secured his placement at Tech Mahindra.",
     "award": "Tech Mahindra",
-    "photo": "https://becbbsr.ac.in/images/Ashit%20Minz-CSE(Tech%20Mahindra).jpg"
+    "photo": "/images/Ashit%20Minz-CSE(Tech%20Mahindra).jpg"
   },
   {
     "id": "14",
@@ -123,7 +123,7 @@
     "title": "Systems Engineer, INFOSYS",
     "desc": "The blend of Aeronautical engineering and logical thinking led to a successful career start at Infosys.",
     "award": "Infosys",
-    "photo": "https://becbbsr.ac.in/images/BIPLAB%20KUMAR%20SAMANTARAY-Aero(Infosys).jpg"
+    "photo": "/images/BIPLAB%20KUMAR%20SAMANTARAY-Aero(Infosys).jpg"
   },
   {
     "id": "15",
@@ -132,7 +132,7 @@
     "title": "Software Engineer, WIPRO",
     "desc": "A dedicated student of Computer Science, her skills were sought after by Wipro for their tech team.",
     "award": "Wipro",
-    "photo": "https://becbbsr.ac.in/images/IPSITA%20KUMARI,CSE,Wipro.jpg"
+    "photo": "/images/IPSITA%20KUMARI,CSE,Wipro.jpg"
   },
   {
     "id": "16",
@@ -141,7 +141,7 @@
     "title": "Software Analyst, TECH MAHINDRA",
     "desc": "Recognition of her analytical skills and software knowledge by Tech Mahindra during campus hiring.",
     "award": "Tech Mahindra",
-    "photo": "https://becbbsr.ac.in/images/K.Sweta%20Madhuri(Tech%20Mahindra).jpg"
+    "photo": "/images/K.Sweta%20Madhuri(Tech%20Mahindra).jpg"
   },
   {
     "id": "17",
@@ -150,7 +150,7 @@
     "title": "Aviation Professional, INDIGO",
     "desc": "Secured a position at IndiGo, the leading airline, starting his journey in the aeronautical industry.",
     "award": "IndiGo Selection",
-    "photo": "https://becbbsr.ac.in/images/RAVISANKAR%20PAL-AERO%20(IndiGo).jpg"
+    "photo": "/images/RAVISANKAR%20PAL-AERO%20(IndiGo).jpg"
   },
   {
     "id": "18",
@@ -159,6 +159,6 @@
     "title": "Engineer, PIRAMAL GROUP",
     "desc": "Civil engineering skill set and dedication led to her selection at the diverse Piramal Group.",
     "award": "Piramal Group",
-    "photo": "https://becbbsr.ac.in/images/ROJALIN%20PHOTO,%20CIVIL,Piramal%20Group.jpg"
+    "photo": "/images/ROJALIN%20PHOTO,%20CIVIL,Piramal%20Group.jpg"
   }
 ]

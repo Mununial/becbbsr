@@ -6,6 +6,38 @@ import { cn } from '../lib/utils';
 
 import axios from 'axios';
 
+const StudentPhoto = ({ src, name }: { src: string; name: string }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError || !src || src.startsWith('/images/') || src.includes('becbbsr.ac.in')) {
+    const initials = name
+      ? name
+          .trim()
+          .split(/\s+/)
+          .map((n) => n[0])
+          .filter(Boolean)
+          .slice(0, 2)
+          .join('')
+          .toUpperCase()
+      : '?';
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-950 text-white font-black text-xl tracking-wider select-none">
+        {initials}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      loading="lazy"
+      src={src}
+      alt={name}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+      onError={() => setHasError(true)}
+    />
+  );
+};
+
 const collegeAchievements = [
   {
     title: "Best Engineering College Award",
@@ -172,11 +204,7 @@ export const Achievements = () => {
                      className="group bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-lg hover:shadow-xl transition-all duration-500 h-[420px] flex flex-col"
                    >
                       <div className="relative h-44 shrink-0 overflow-hidden bg-slate-100">
-                         {item.photo ? (
-                           <img src={item.photo} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
-                         ) : (
-                           <div className="w-full h-full flex items-center justify-center text-slate-200"><GraduationCap className="w-12 h-12" /></div>
-                         )}
+                         <StudentPhoto src={item.photo} name={item.name} />
                          <div className="absolute top-5 left-5">
                             <span className="px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-xl text-[8px] font-black text-primary uppercase tracking-widest shadow-md italic">{item.award}</span>
                          </div>

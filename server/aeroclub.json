@@ -3,7 +3,7 @@
     "id": "1",
     "title": "BEC Aero Club Activities",
     "desc": "Students and faculty engaging in various aeronautical design and testing activities at the campus hangar.",
-    "photo": "https://becbbsr.ac.in/photogallery/bec-aero-club2.jpg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042537/bec_web_assets/atfoojyup5blqon9mzfu.jpg",
     "date": "2024-05-20",
     "category": "Event"
   },
@@ -11,7 +11,7 @@
     "id": "2",
     "title": "Aero Modeling Sessions",
     "desc": "Hands-on experience in building scale models and remote-controlled aircraft.",
-    "photo": "https://becbbsr.ac.in/photogallery/bec-aero-club1.jpg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042464/bec_web_assets/hikelmppccbf5cg6qshg.jpg",
     "date": "2024-05-18",
     "category": "Workshop"
   },
@@ -19,7 +19,7 @@
     "id": "3",
     "title": "Aircraft Maintenance Training",
     "desc": "Practical training on aircraft systems and maintenance protocols for students.",
-    "photo": "https://becbbsr.ac.in/photogallery/bec-aero-club.jpg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042390/bec_web_assets/ehcgrh4mmwedaexammgv.jpg",
     "date": "2024-05-15",
     "category": "Training"
   },
@@ -27,7 +27,7 @@
     "id": "4",
     "title": "RC Aircraft Design Contest",
     "desc": "Annual design competition featuring custom-built remote controlled planes by our engineering students.",
-    "photo": "https://becbbsr.ac.in/photogallery/bec-aero-club3-3.jpg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042222/bec_web_assets/ucx9rutflkze9vubtqmm.jpg",
     "date": "2024-05-12",
     "category": "Competition"
   },
@@ -35,7 +35,7 @@
     "id": "5",
     "title": "Field Testing Day",
     "desc": "Outdoor testing session for quadcopters and fixed-wing drones developed in-house.",
-    "photo": "https://becbbsr.ac.in/photogallery/IMG_4286.JPG",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042107/bec_web_assets/ulzfzomxii1rjhuix8nt.jpg",
     "date": "2024-05-10",
     "category": "Event"
   },
@@ -43,7 +43,7 @@
     "id": "6",
     "title": "Aero Engineering Workshop",
     "desc": "Advanced workshop on aerodynamics and fluid dynamics models.",
-    "photo": "https://becbbsr.ac.in/photogallery/IMG_3469.JPG",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777042083/bec_web_assets/tr5hsnqee5e1khtu66ir.jpg",
     "date": "2024-05-08",
     "category": "Workshop"
   },
@@ -51,7 +51,7 @@
     "id": "7",
     "title": "Campus Aero Exhibition",
     "desc": "Showcasing student projects to visiting industry experts and researchers.",
-    "photo": "https://becbbsr.ac.in/photogallery/IMG_4377.JPG",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1777041949/bec_web_assets/sjxdjujemzvg1fnv3yta.jpg",
     "date": "2024-05-05",
     "category": "Event"
   },
@@ -59,7 +59,7 @@
     "id": "8",
     "title": "Drone Mapping Session",
     "desc": "Using autonomous flight systems for campus mapping and surveillance training.",
-    "photo": "https://becbbsr.ac.in/photogallery/IMG_4379.JPG",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776627784/bec_web_assets/cawqhapwvzlogvzsjbka.jpg",
     "date": "2024-05-02",
     "category": "Training"
   },
@@ -67,7 +67,7 @@
     "id": "9",
     "title": "Propulsion System Lab",
     "desc": "Deep dive into aircraft engine mechanics and propulsion technology.",
-    "photo": "https://becbbsr.ac.in/photogallery/1716784077077.jpg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776627781/bec_web_assets/rmcpgfy7ts6xgzg3bk8k.jpg",
     "date": "2024-04-28",
     "category": "Training"
   },
@@ -75,7 +75,7 @@
     "id": "10",
     "title": "Aviation Research Forum",
     "desc": "Biannual forum discussing future trends in sustainable aviation and drone swarm tech.",
-    "photo": "https://becbbsr.ac.in/photogallery/1716784311931.jpg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776627766/bec_web_assets/iuaqtzmgsrlnetvxtg3o.jpg",
     "date": "2024-04-25",
     "category": "Event"
   },
@@ -83,7 +83,7 @@
     "id": "11",
     "title": "Hangar Facility Overview",
     "desc": "Comprehensive walkthrough of our on-campus aeronautical hangar and labs.",
-    "photo": "https://becbbsr.ac.in/photogallery/WhatsApp%20Image%202024-05-28%20at%2008.33.46.jpeg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776627757/bec_web_assets/u1x3c7nhyudivs5fyqqp.jpg",
     "date": "2024-04-22",
     "category": "Event"
   },
@@ -91,7 +91,7 @@
     "id": "12",
     "title": "Aeronautical Team Session",
     "desc": "Collaborative project session for our university's aeronautical engineering teams.",
-    "photo": "https://becbbsr.ac.in/photogallery/20220126_142938.jpg",
+    "photo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776627746/bec_web_assets/bmxocnms7vynkg25hdmg.jpg",
     "date": "2024-04-20",
     "category": "Event"
   }
