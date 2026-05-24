@@ -2,6 +2,15 @@
   RewriteEngine On
   RewriteBase /
 
+  # Prevent caching of index.html so updates are immediate on all devices
+  <FilesMatch "index\.html$">
+      <IfModule mod_headers.c>
+          Header set Cache-Control "no-cache, no-store, must-revalidate"
+          Header set Pragma "no-cache"
+          Header set Expires 0
+      </IfModule>
+  </FilesMatch>
+
   # 1. Bypass rewriting for API requests
   # This allows the Express server (if running via Node.js hosting or Passenger) to process /api routes
   RewriteCond %{REQUEST_URI} ^/api [NC]
