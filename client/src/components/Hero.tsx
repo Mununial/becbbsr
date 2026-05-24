@@ -93,7 +93,7 @@ const AdmissionModal = ({ onClose }: { onClose: ()=>void }) => {
               
               <div className="space-y-4">
                 {[
-                  { icon: Trophy, text: 'NAAC A+ Accredited' },
+                  { icon: Trophy, text: 'AICTE Approved & BPUT Affiliated' },
                   { icon: Star, text: 'Top Placement Records' },
                   { icon: GraduationCap, text: 'World-class Faculty' }
                 ].map((item, i) => (

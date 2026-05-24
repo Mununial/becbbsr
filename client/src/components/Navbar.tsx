@@ -327,7 +327,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                   <Trophy className="w-3.5 h-3.5 text-accent animate-pulse" /> BEC Students secure placements at Amazon, TCS and Infosys
                 </span>
                 <span className="flex items-center gap-3">
-                  <GraduationCap className="w-3.5 h-3.5 text-accent animate-pulse" /> NAAC 'A' Accredited Engineering Campus
+                  <GraduationCap className="w-3.5 h-3.5 text-accent animate-pulse" /> AICTE Approved & BPUT Affiliated College
                 </span>
                 <span className="flex items-center gap-3">
                   <ArrowUpRight className="w-3.5 h-3.5 text-accent animate-pulse" /> Register for Alumni Homecoming 2026

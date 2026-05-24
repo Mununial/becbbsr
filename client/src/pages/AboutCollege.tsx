@@ -64,10 +64,10 @@ export const AboutCollege = () => {
                    <p className="text-[9px] font-bold text-white/50 uppercase tracking-widest">Acres</p>
                 </div>
                 <div className="w-[1px] h-8 bg-white/10" />
-                <div className="text-center">
-                   <p className="text-xl font-bold text-[#FFC107]">NAAC</p>
-                   <p className="text-[9px] font-bold text-white/50 uppercase tracking-widest">Accredited</p>
-                </div>
+                 <div className="text-center">
+                    <p className="text-xl font-bold text-[#FFC107]">AICTE</p>
+                    <p className="text-[9px] font-bold text-white/50 uppercase tracking-widest">Approved</p>
+                 </div>
              </div>
            </motion.div>
         </div>
@@ -94,7 +94,7 @@ export const AboutCollege = () => {
                 As part of the prestigious <span className="text-[#0B1D3A] font-bold">Ayush Group</span>, BEC is managed by experts who understand what the industry needs. We believe that true learning happens when theory meets real-world practice. Our campus is designed to be a "Sanctuary of Learning" where students can focus, create, and succeed.
               </p>
               <p>
-                Whether it is our <span className="text-[#0B1D3A] font-bold">Aeronautical Engineering</span> labs or our modern computer centers, every corner of BEC is built to inspire. We are proud to be <span className="text-[#0B1D3A] font-bold">AICTE Approved</span> and <span className="text-[#0B1D3A] font-bold">NAAC Accredited</span>, ensuring that your degree has value worldwide.
+                Whether it is our <span className="text-[#0B1D3A] font-bold">Aeronautical Engineering</span> labs or our modern computer centers, every corner of BEC is built to inspire. We are proud to be <span className="text-[#0B1D3A] font-bold">AICTE Approved</span> and <span className="text-[#0B1D3A] font-bold">BPUT Affiliated</span>, ensuring that your degree has value worldwide.
               </p>
             </div>
           </div>
@@ -144,7 +144,7 @@ export const AboutCollege = () => {
                    { 
                      icon: ShieldCheck, 
                      title: "Solid Accreditation", 
-                     desc: "Our programs are AICTE Approved and we carry the NAAC Accreditation, which means we never compromise on educational quality and standards." 
+                      desc: "Our programs are AICTE Approved and BPUT Affiliated, which means we never compromise on educational quality and standards." 
                    },
                    { 
                      icon: Users, 

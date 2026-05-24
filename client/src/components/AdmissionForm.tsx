@@ -9,7 +9,7 @@ import {
 
 /* ─── Data ─────────────────────────────────── */
 const WHY_BEC = [
-  { icon: Trophy,        text: 'NAAC A+ • AICTE Approved • BPUT Affiliated' },
+  { icon: Trophy,        text: 'AICTE Approved • BPUT Affiliated' },
   { icon: Star,          text: '90%+ Placements — TCS, Infosys & more' },
   { icon: GraduationCap, text: 'B.Tech | MBA | Diploma | 6 Branches' },
   { icon: Building2,     text: 'Aeronautical Hangar & Modern Labs' },
