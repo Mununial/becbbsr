@@ -35,7 +35,8 @@ export const SeminarWorkshop = () => {
 
   useEffect(() => {
     axios.get('/api/workshop')
-      .then(res => setDynamicImages(res.data));
+      .then(res => setDynamicImages(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setDynamicImages([]));
   }, []);
 
   const allImages = [...dynamicImages, ...staticWorkshopImages];

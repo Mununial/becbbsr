@@ -13,11 +13,14 @@ export const AeroClub = () => {
   useEffect(() => {
     axios.get('/api/aeroclub')
       .then(res => {
-        setActivities(res.data);
+        // Defensive: ensure we always set an array
+        const data = Array.isArray(res.data) ? res.data : [];
+        setActivities(data);
         setIsLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setActivities([]);
         setIsLoading(false);
       });
   }, []);

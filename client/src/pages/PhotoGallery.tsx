@@ -38,7 +38,8 @@ export const PhotoGallery = () => {
 
   useEffect(() => {
     axios.get('/api/gallery')
-      .then(res => setDynamicImages(res.data.map((img: any) => ({ ...img, category: 'Uploads' }))));
+      .then(res => setDynamicImages(Array.isArray(res.data) ? res.data.map((img: any) => ({ ...img, category: 'Uploads' })) : []))
+      .catch(() => setDynamicImages([]));
   }, []);
 
   const allImages = [...dynamicImages, ...staticGalleryImages];

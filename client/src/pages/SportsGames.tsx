@@ -27,7 +27,8 @@ export const SportsGames = () => {
 
   useEffect(() => {
     axios.get('/api/sports')
-      .then(res => setDynamicImages(res.data));
+      .then(res => setDynamicImages(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setDynamicImages([]));
   }, []);
 
   const allImages = [...dynamicImages, ...staticSportsImages];
