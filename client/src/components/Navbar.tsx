@@ -110,7 +110,7 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
             href={item.dropdown ? undefined : item.href}
             target={item.target}
             rel={item.target === '_blank' ? "noopener noreferrer" : undefined}
-            className="nav-link px-3.5 py-1 text-[11px] font-black uppercase tracking-[0.1em] text-white/80 hover:text-white flex items-center gap-1.5 cursor-pointer"
+            className="nav-link px-3.5 py-1 text-xs font-black uppercase tracking-[0.1em] text-white/80 hover:text-white flex items-center gap-1.5 cursor-pointer"
           >
             {item.name}
             {item.dropdown && <ChevronDown className={cn("w-3 h-3 text-white/60 transition-transform duration-300", isHovered && "rotate-180 text-accent")} />}
@@ -118,7 +118,7 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
         ) : (
           <Link
             to={item.href}
-            className="nav-link px-2 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-white/80 hover:text-white flex items-center gap-1 cursor-pointer"
+            className="nav-link px-2 py-1 text-xs font-black uppercase tracking-[0.1em] text-white/80 hover:text-white flex items-center gap-1 cursor-pointer"
           >
             {item.name}
           </Link>
@@ -186,7 +186,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
     <>
       {/* 1. TOP BAR - Clean Info */}
       <div className="hidden lg:block bg-[#0F172A] text-white py-2 border-b border-white/5">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 flex justify-between items-center text-[10px] font-bold tracking-[0.2em] uppercase font-poppins">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 flex justify-between items-center text-xs font-bold tracking-[0.2em] uppercase font-poppins">
           <div className="flex items-center gap-10">
             <a href="mailto:info@becbbsr.ac.in" className="flex items-center gap-2.5 hover:text-accent transition-all duration-300">
               <Mail className="w-3.5 h-3.5 text-accent" /> info@becbbsr.ac.in
@@ -226,7 +226,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
               </h1>
               <div className="mt-2 flex flex-col gap-1">
                 <span className="text-[18px] font-black text-primary/70 tracking-wide font-odia leading-none drop-shadow-sm">ଭୁବନେଶ୍ୱର ଇଞ୍ଜିନିୟରିଂ କଲେଜ</span>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em] leading-tight">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.25em] leading-tight">
                   Approved by AICTE & Affiliated to BPUT and SCTE & VT, Odisha
                 </p>
               </div>
@@ -286,7 +286,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                  >
                    Bhubaneswar
                  </span>
-                 <span className="text-[9px] font-black text-accent tracking-[0.3em] uppercase -mt-0.5 font-poppins opacity-90">
+                 <span className="text-xs font-black text-accent tracking-[0.3em] uppercase -mt-0.5 font-poppins opacity-90">
                    Engineering College (BEC)
                  </span>
                </motion.div>
@@ -304,7 +304,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
           <div className="hidden lg:block pr-6">
             <Link 
               to="/admission_query"
-              className="px-8 py-2.5 bg-accent text-white rounded-xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-white hover:text-primary transition-all duration-500 shadow-xl shadow-accent/20"
+              className="px-8 py-2.5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] hover:bg-white hover:text-primary transition-all duration-500 shadow-xl shadow-accent/20"
             >
               Apply Online
             </Link>
@@ -315,10 +315,10 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
       {/* 4. PREMIUM ANNOUNCEMENT */}
       <div className="bg-white border-b border-slate-100 h-10 flex items-center overflow-hidden relative z-[50]">
         <div className="flex-1 overflow-hidden relative h-full flex items-center">
-          <div className="px-8 h-full bg-[#0F172A] flex items-center gap-3 z-20 shrink-0 font-black text-[10px] uppercase tracking-[0.3em] text-white shadow-[15px_0_40px_rgba(15,23,42,0.4)]">
+          <div className="px-8 h-full bg-[#0F172A] flex items-center gap-3 z-20 shrink-0 font-black text-xs uppercase tracking-[0.3em] text-white shadow-[15px_0_40px_rgba(15,23,42,0.4)]">
             <div className="w-2 h-2 rounded-full bg-accent animate-pulse" /> Latest Board
           </div>
-          <div className="flex animate-marquee whitespace-nowrap gap-20 text-[9px] font-bold text-primary/70 uppercase tracking-widest px-10">
+          <div className="flex animate-marquee whitespace-nowrap gap-20 text-xs font-bold text-primary/70 uppercase tracking-widest px-10">
             {[1, 2, 3, 4, 5].map((i) => (
               <span key={i} className="flex items-center gap-10">
                 <span className="flex items-center gap-3">
@@ -444,7 +444,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                 ))}
               </div>
               <div className="p-8 bg-slate-50 mt-auto flex flex-col gap-4">
-                 <button onClick={() => { onAdminClick(); setIsOpen(false); }} className="w-full py-4 bg-white border border-slate-200 rounded-xl text-primary font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-sm shadow-slate-100">
+                 <button onClick={() => { onAdminClick(); setIsOpen(false); }} className="w-full py-4 bg-white border border-slate-200 rounded-xl text-primary font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-sm shadow-slate-100">
                    <LayoutDashboard className="w-5 h-5 text-accent" /> Student Portal
                  </button>
                  <Link to="/admission_query" className="w-full py-5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-lg shadow-accent/20">

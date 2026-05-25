@@ -44,12 +44,12 @@ export const LeadershipSection = ({ leaders }: LeadershipSectionProps) => {
         <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-4">
           <div className="inline-flex items-center gap-2 mb-3 stitch-badge-white py-1 px-4" data-aos="fade-down">
             <GraduationCap className="w-3.5 h-3.5 text-accent" />
-            <span className="text-white font-bold tracking-[0.3em] text-[8px] md:text-[9px] uppercase font-poppins">Our Visionaries</span>
+            <span className="text-white font-bold tracking-[0.3em] text-xs md:text-xs uppercase font-poppins">Our Visionaries</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-white leading-tight font-poppins uppercase tracking-tighter drop-shadow-2xl" data-aos="fade-up">
             Elite <span className="highlight underline decoration-accent/20 underline-offset-8">Leadership</span> Cabinet
           </h2>
-          <p className="text-slate-400 text-[10px] md:text-xs font-medium mt-2 md:mt-3 font-inter leading-relaxed max-w-xl mx-auto opacity-70" data-aos="fade-up" data-aos-delay="100">
+          <p className="text-slate-400 text-xs md:text-xs font-medium mt-2 md:mt-3 font-inter leading-relaxed max-w-xl mx-auto opacity-70" data-aos="fade-up" data-aos-delay="100">
             Meet the distinguished leaders guiding <span className="text-accent underline decoration-accent/10 underline-offset-4">Bhubaneswar Engineering College (BEC)</span>.
           </p>
         </div>
@@ -63,7 +63,7 @@ export const LeadershipSection = ({ leaders }: LeadershipSectionProps) => {
               className="relative group h-full"
             >
               <div className="absolute top-0 right-5 md:right-6 -translate-y-1/2 z-20 px-3 md:px-4 py-1 bg-accent rounded-[8px] shadow-lg transition-all duration-500 group-hover:-translate-y-2">
-                <span className="text-white font-black text-[7px] md:text-[8px] uppercase tracking-[0.2em] font-poppins">{leader.role}</span>
+                <span className="text-white font-black text-xs md:text-xs uppercase tracking-[0.2em] font-poppins">{leader.role}</span>
               </div>
 
               <div className="h-full bg-white/5 backdrop-blur-2xl rounded-[16px] md:rounded-[20px] border border-white/10 p-3 md:p-4 flex flex-col gap-3 items-center hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-700">
@@ -74,20 +74,20 @@ export const LeadershipSection = ({ leaders }: LeadershipSectionProps) => {
 
                 <div className="flex-1 flex flex-col justify-between py-0.5 text-center w-full">
                   <div className="mb-4">
-                    <span className="text-accent font-black text-[7px] md:text-[8px] tracking-[0.3em] uppercase block mb-1.5 font-poppins">
+                    <span className="text-accent font-black text-xs md:text-xs tracking-[0.3em] uppercase block mb-1.5 font-poppins">
                       {leader.title}
                     </span>
                     <h3 className="text-lg md:text-xl font-black text-white tracking-tighter uppercase leading-tight font-poppins mb-1.5 md:mb-2">
                       {leader.name}
                     </h3>
-                    <p className="text-slate-500 text-[7px] md:text-[9px] font-bold uppercase tracking-[0.1em] font-inter">
+                    <p className="text-slate-500 text-xs md:text-xs font-bold uppercase tracking-[0.1em] font-inter">
                       {leader.subtitle}
                     </p>
                   </div>
 
                   <div className="relative p-4 bg-white/5 rounded-[12px] md:rounded-[16px] border border-white/5 mb-4 italic flex-1 flex flex-col justify-center">
                     <Quote className="absolute top-2 left-2 w-4 h-4 text-accent/20 fill-accent/10" />
-                    <p className="text-slate-300 text-[9px] md:text-[10px] leading-relaxed font-medium font-inter line-clamp-3">
+                    <p className="text-slate-300 text-xs md:text-xs leading-relaxed font-medium font-inter line-clamp-3">
                       "{leader.quote}"
                     </p>
                   </div>
@@ -99,7 +99,7 @@ export const LeadershipSection = ({ leaders }: LeadershipSectionProps) => {
                     </div>
                     
                     <Link to={leader.link} className="inline-flex items-center px-3 md:px-4 py-1.5 bg-white/5 rounded-[6px] md:rounded-[8px] border border-white/5 hover:border-accent/20 transition-all">
-                      <span className="text-white font-black text-[7px] md:text-[8px] uppercase tracking-widest hover:text-accent transition-colors font-poppins">Profile</span>
+                      <span className="text-white font-black text-xs md:text-xs uppercase tracking-widest hover:text-accent transition-colors font-poppins">Profile</span>
                     </Link>
                   </div>
                 </div>

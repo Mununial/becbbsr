@@ -108,7 +108,7 @@ const AdmissionModal = ({ onClose }: { onClose: ()=>void }) => {
             </div>
 
             <div className="relative z-10 pt-12 border-t border-white/10 mt-12">
-              <p className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-2">Need Help?</p>
+              <p className="text-xs uppercase tracking-widest font-bold text-white/40 mb-2">Need Help?</p>
               <div className="flex flex-col gap-1">
                 <a href="tel:+916742556677" className="text-sm font-bold hover:text-accent transition-colors">+91 674 2556677</a>
                 <a href="mailto:info@becbbsr.ac.in" className="text-sm font-medium text-white/60">info@becbbsr.ac.in</a>
@@ -137,25 +137,25 @@ const AdmissionModal = ({ onClose }: { onClose: ()=>void }) => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold text-primary/60 uppercase ml-1">Full Name</label>
+                      <label className="text-xs font-bold text-primary/60 uppercase ml-1">Full Name</label>
                       <input name="name" value={form.name} onChange={change} required placeholder="Your Name" className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 focus:border-primary focus:bg-white outline-none transition-all text-sm font-semibold" />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold text-primary/60 uppercase ml-1">Phone Number</label>
+                      <label className="text-xs font-bold text-primary/60 uppercase ml-1">Phone Number</label>
                       <input name="phone" value={form.phone} onChange={change} required placeholder="Your Phone" className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 focus:border-primary focus:bg-white outline-none transition-all text-sm font-semibold" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold text-primary/60 uppercase ml-1">Course Interest</label>
+                      <label className="text-xs font-bold text-primary/60 uppercase ml-1">Course Interest</label>
                       <select name="course" value={form.course} onChange={change} required className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 outline-none transition-all text-sm font-semibold">
                         <option value="">Select Course</option>
                         {COURSES.map(c => <option key={c} value={c}>{c}</option>)}
                       </select>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[11px] font-bold text-primary/60 uppercase ml-1">Preferred Branch</label>
+                      <label className="text-xs font-bold text-primary/60 uppercase ml-1">Preferred Branch</label>
                       <select name="branch" value={form.branch} onChange={change} required className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 outline-none transition-all text-sm font-semibold">
                         <option value="">Select Branch</option>
                         {BRANCHES.map(b => <option key={b} value={b}>{b}</option>)}
@@ -164,7 +164,7 @@ const AdmissionModal = ({ onClose }: { onClose: ()=>void }) => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-primary/60 uppercase ml-1">Captcha: {captcha.q} = ?</label>
+                    <label className="text-xs font-bold text-primary/60 uppercase ml-1">Captcha: {captcha.q} = ?</label>
                     <div className="flex gap-4">
                       <input type="number" value={captchaInput} onChange={e=>setCaptchaInput(e.target.value)} required placeholder="Answer" className="w-32 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 outline-none transition-all text-sm font-semibold text-center" />
                       <button type="submit" disabled={status==='loading'} className="flex-1 px-8 py-4 bg-primary text-white rounded-xl font-black uppercase text-xs tracking-widest shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
@@ -265,7 +265,7 @@ export const Hero = ({ slides, onTourClick }: { slides: Slide[], onTourClick: ()
           >
             <div className="inline-flex items-center gap-3 mb-12 stitch-badge-white py-2 px-6 bg-white/5 border-white/10 backdrop-blur-2xl transition-all hover:bg-white/10" data-aos="fade-down">
               <Sparkles className="w-4 h-4 text-accent animate-pulse" />
-              <span className="text-white font-black tracking-[0.4em] text-[10px] uppercase font-poppins">Admissions Open 2026-27</span>
+              <span className="text-white font-black tracking-[0.4em] text-xs uppercase font-poppins">Admissions Open 2026-27</span>
             </div>
             
             <h1 className="text-4xl md:text-6xl lg:text-[84px] font-black text-white mb-10 leading-[1] uppercase tracking-tighter font-poppins drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
@@ -294,7 +294,7 @@ export const Hero = ({ slides, onTourClick }: { slides: Slide[], onTourClick: ()
                 onClick={onTourClick}
                 whileHover={{ scale: 1.05, translateY: -8, backgroundColor: "rgba(255,255,255,1)", color: "#1E3A8A" }}
                 whileTap={{ scale: 0.95 }}
-                className="min-w-[220px] py-5 bg-white/5 text-white border border-white/20 backdrop-blur-2xl rounded-[16px] font-black uppercase text-[11px] tracking-[0.3em] flex items-center justify-center gap-4 transition-all duration-700 hover:shadow-2xl hover:shadow-white/5"
+                className="min-w-[220px] py-5 bg-white/5 text-white border border-white/20 backdrop-blur-2xl rounded-[16px] font-black uppercase text-xs tracking-[0.3em] flex items-center justify-center gap-4 transition-all duration-700 hover:shadow-2xl hover:shadow-white/5"
               >
                 Campus Tour <MapNavigation className="w-5 h-5" />
               </motion.button>
@@ -305,9 +305,9 @@ export const Hero = ({ slides, onTourClick }: { slides: Slide[], onTourClick: ()
         {/* Global Stats - Subtle */}
         <div className="absolute bottom-16 left-12 right-12 z-40 hidden lg:flex justify-between items-center opacity-40 hover:opacity-100 transition-opacity duration-700">
            <div className="flex gap-12 font-poppins text-white">
-              <div className="flex flex-col"><span className="text-2xl font-black">2008</span><span className="text-[9px] uppercase tracking-widest text-slate-400">Founded Entrance</span></div>
-              <div className="flex flex-col"><span className="text-2xl font-black">40+</span><span className="text-[9px] uppercase tracking-widest text-slate-400">Acre Campus</span></div>
-              <div className="flex flex-col"><span className="text-2xl font-black">250+</span><span className="text-[9px] uppercase tracking-widest text-slate-400">Top Recruiters</span></div>
+              <div className="flex flex-col"><span className="text-2xl font-black">2008</span><span className="text-xs uppercase tracking-widest text-slate-400">Founded Entrance</span></div>
+              <div className="flex flex-col"><span className="text-2xl font-black">40+</span><span className="text-xs uppercase tracking-widest text-slate-400">Acre Campus</span></div>
+              <div className="flex flex-col"><span className="text-2xl font-black">250+</span><span className="text-xs uppercase tracking-widest text-slate-400">Top Recruiters</span></div>
            </div>
 
            {/* Progress Indicator */}

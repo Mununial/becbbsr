@@ -29,7 +29,7 @@ export const PlacementCell = () => {
           >
             <div className="inline-flex items-center gap-3 mb-10 stitch-badge-white py-2.5 px-6" data-aos="fade-down">
               <Award className="w-4 h-4 text-accent" />
-              <span className="text-white font-bold tracking-[0.3em] text-[10px] uppercase font-poppins">Elite Career Hub</span>
+              <span className="text-white font-bold tracking-[0.3em] text-xs uppercase font-poppins">Elite Career Hub</span>
             </div>
             
             <h2 className="text-4xl md:text-6xl font-black text-white leading-tight mb-10 uppercase tracking-tighter font-poppins drop-shadow-2xl">
@@ -47,7 +47,7 @@ export const PlacementCell = () => {
                     <stat.icon className="w-7 h-7 text-accent group-hover:text-white transition-colors" />
                   </div>
                   <div className="text-4xl font-black text-white mb-2 font-poppins tracking-tighter">{stat.value}</div>
-                  <div className="text-[10px] uppercase tracking-[0.3em] font-black text-slate-500 font-poppins leading-none">{stat.label}</div>
+                  <div className="text-xs uppercase tracking-[0.3em] font-black text-slate-500 font-poppins leading-none">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -72,7 +72,7 @@ export const PlacementCell = () => {
               <div className="grid grid-cols-3 gap-6">
                 {companies.slice(0, 12).map((company, index) => (
                   <div key={index} className="aspect-[3/2] bg-slate-50 hover:bg-primary transition-all duration-700 rounded-[24px] flex items-center justify-center p-6 border border-slate-100 group shadow-sm overflow-hidden text-center cursor-default">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-white transition-all leading-tight font-poppins">
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-white transition-all leading-tight font-poppins">
                       {company}
                     </span>
                   </div>
@@ -86,7 +86,7 @@ export const PlacementCell = () => {
                       <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Student" className="w-full h-full object-cover" />
                     </div>
                   ))}
-                  <div className="w-14 h-14 rounded-full border-4 border-white bg-accent flex items-center justify-center text-[10px] font-black text-white shadow-xl ring-1 ring-slate-100">
+                  <div className="w-14 h-14 rounded-full border-4 border-white bg-accent flex items-center justify-center text-xs font-black text-white shadow-xl ring-1 ring-slate-100">
                     +500
                   </div>
                 </div>

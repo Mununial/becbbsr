@@ -19,7 +19,7 @@ export const NewsMedia = () => {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-primary font-black text-[9px] uppercase tracking-[0.4em] mb-2"
+            className="text-primary font-black text-xs uppercase tracking-[0.4em] mb-2"
           >
             Institutional Archive
           </motion.div>
@@ -59,12 +59,12 @@ export const NewsMedia = () => {
                   </div>
                   {/* Card Content Footer */}
                   <div className="py-4 px-5 bg-white text-left border-t border-slate-50">
-                     <div className="flex items-center gap-2 text-emerald-600 font-black text-[9px] uppercase tracking-widest mb-1.5">
+                     <div className="flex items-center gap-2 text-emerald-600 font-black text-xs uppercase tracking-widest mb-1.5">
                         <Award className="w-4 h-4" />
                         1st Prize Winner
                      </div>
-                     <div className="text-[11px] font-black text-navy-950 uppercase tracking-tight mb-0.5">{news.source} Archive</div>
-                     <p className="text-slate-400 text-[10px] font-bold leading-tight uppercase">
+                     <div className="text-xs font-black text-navy-950 uppercase tracking-tight mb-0.5">{news.source} Archive</div>
+                     <p className="text-slate-400 text-xs font-bold leading-tight uppercase">
                         BEC Won International Project Innovation Award 2026
                      </p>
                   </div>
@@ -82,8 +82,8 @@ export const NewsMedia = () => {
            >
               {[1, 2].map(i => (
                 <div key={i} className="flex items-center gap-12">
-                  <span className="text-navy-950 font-black uppercase tracking-widest text-[8px]">Global Achievement:</span>
-                  <span className="text-slate-400 font-bold uppercase tracking-widest text-[8px] italic">BEC Team Won 1st Prize in International Project Competition - Featured Worldwide.</span>
+                  <span className="text-navy-950 font-black uppercase tracking-widest text-xs">Global Achievement:</span>
+                  <span className="text-slate-400 font-bold uppercase tracking-widest text-xs italic">BEC Team Won 1st Prize in International Project Competition - Featured Worldwide.</span>
                   <div className="w-1 h-1 rounded-full bg-orange-500" />
                 </div>
               ))}

@@ -37,7 +37,7 @@ export const LatestEvents = ({ notices = [] }: LatestEventsProps) => {
             <p className="text-slate-500 text-sm font-medium leading-relaxed mb-10 max-w-md">
               Bhubaneswar Engineering College (BEC) is a fast growing Engineering College, situated on the Southern belt of the capital city of Odisha, Bhubaneswar. It was established in the year 2009 with the most promising task of imparting high quality technical education to its students. 
             </p>
-            <Link to="/about" className="inline-flex items-center justify-center gap-3 bg-[#FF5733] hover:bg-primary text-white w-fit px-8 py-4 rounded-lg font-black text-[11px] uppercase tracking-widest transition-all duration-300 shadow-xl shadow-[#FF5733]/20 group">
+            <Link to="/about" className="inline-flex items-center justify-center gap-3 bg-[#FF5733] hover:bg-primary text-white w-fit px-8 py-4 rounded-lg font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl shadow-[#FF5733]/20 group">
               Read More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -82,7 +82,7 @@ export const LatestEvents = ({ notices = [] }: LatestEventsProps) => {
                           {notice.title}
                         </h4>
                         {notice.isNew && (
-                          <span className="inline-block mt-2 bg-[#FFBD00] text-black text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm">New</span>
+                          <span className="inline-block mt-2 bg-[#FFBD00] text-black text-xs font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm">New</span>
                         )}
                       </div>
                     </div>
@@ -92,7 +92,7 @@ export const LatestEvents = ({ notices = [] }: LatestEventsProps) => {
             </div>
 
             <div className="p-8 bg-slate-50 z-20 border-t border-slate-100">
-              <Link to="/activities" className="inline-flex items-center justify-center gap-3 bg-[#BA1631] hover:bg-primary text-white w-full py-4 rounded-xl font-black text-[11px] uppercase tracking-widest transition-all duration-300 shadow-xl shadow-[#BA1631]/20 group">
+              <Link to="/activities" className="inline-flex items-center justify-center gap-3 bg-[#BA1631] hover:bg-primary text-white w-full py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl shadow-[#BA1631]/20 group">
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /> View All Notices
               </Link>
             </div>

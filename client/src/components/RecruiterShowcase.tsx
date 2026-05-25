@@ -36,7 +36,7 @@ export const RecruiterShowcase = () => {
                whileInView={{ opacity: 1, x: 0 }}
                viewport={{ once: true }}
              >
-                <div className="flex items-center gap-3 text-cyan-600 font-black uppercase tracking-[0.4em] text-[10px] mb-6">
+                <div className="flex items-center gap-3 text-cyan-600 font-black uppercase tracking-[0.4em] text-xs mb-6">
                   <div className="w-12 h-[2px] bg-cyan-600" />
                   BEC Recruiter Network
                 </div>
@@ -55,7 +55,7 @@ export const RecruiterShowcase = () => {
                         </div>
                         <div>
                            <div className="text-2xl font-black text-navy-950 tracking-tight leading-none mb-1">{stat.value}</div>
-                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.label}</div>
+                           <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">{stat.label}</div>
                         </div>
                      </div>
                    ))}

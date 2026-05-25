@@ -316,28 +316,28 @@ export const SelectedStudents = ({ students = [] }: { students?: SelectedStudent
                        {/* White Info Card Section */}
                        <div className="bg-white rounded-[1.2rem] p-3.5 shadow-lg flex-1 ml-4 space-y-1">
                           <div className="flex gap-2 items-baseline">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-tight w-12">Name :</span>
-                             <span className="text-[10px] font-black text-navy-900 uppercase truncate">{student.name}</span>
+                             <span className="text-xs font-black text-gray-400 uppercase tracking-tight w-12">Name :</span>
+                             <span className="text-xs font-black text-navy-900 uppercase truncate">{student.name}</span>
                           </div>
                           <div className="flex gap-2 items-baseline">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-tight w-12">Branch :</span>
-                             <span className="text-[10px] font-black text-navy-900 uppercase truncate">{student.branch}</span>
+                             <span className="text-xs font-black text-gray-400 uppercase tracking-tight w-12">Branch :</span>
+                             <span className="text-xs font-black text-navy-900 uppercase truncate">{student.branch}</span>
                           </div>
                           <div className="flex gap-2 items-baseline">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-tight w-12">Degree :</span>
-                             <span className="text-[10px] font-black text-navy-900 uppercase truncate">{student.degree}</span>
+                             <span className="text-xs font-black text-gray-400 uppercase tracking-tight w-12">Degree :</span>
+                             <span className="text-xs font-black text-navy-900 uppercase truncate">{student.degree}</span>
                           </div>
                           <div className="flex gap-2 items-baseline">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-tight w-12">Batch :</span>
-                             <span className="text-[10px] font-black text-navy-900 uppercase truncate">{student.batch}</span>
+                             <span className="text-xs font-black text-gray-400 uppercase tracking-tight w-12">Batch :</span>
+                             <span className="text-xs font-black text-navy-900 uppercase truncate">{student.batch}</span>
                           </div>
                        </div>
                     </div>
 
                     {/* Salary Package Display */}
-                    <div className="text-center font-black text-white text-[10px] uppercase tracking-tighter mt-1 flex flex-col items-center">
+                    <div className="text-center font-black text-white text-xs uppercase tracking-tighter mt-1 flex flex-col items-center">
                        <span className="mb-0.5">{student.packageInfo.split('\n')[0]}</span>
-                       <span className="text-[8px] font-bold text-white/60 lowercase italic">{student.packageInfo.split('\n')[1] || ''}</span>
+                       <span className="text-xs font-bold text-white/60 lowercase italic">{student.packageInfo.split('\n')[1] || ''}</span>
                     </div>
                   </div>
 

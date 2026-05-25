@@ -307,7 +307,7 @@ export const App = () => {
               </div>
               <div className="flex flex-col items-center text-center">
                 <span className="text-white font-bold text-lg md:text-xl tracking-widest uppercase font-poppins">Bhubaneswar Engineering College (BEC)</span>
-                <span className="text-accent text-[9px] font-bold uppercase tracking-[0.3em] mt-1.5 font-poppins">Excellence in Innovation</span>
+                <span className="text-accent text-xs font-bold uppercase tracking-[0.3em] mt-1.5 font-poppins">Excellence in Innovation</span>
                 {/* Odia College Name */}
                 <span className="text-white/30 text-xs font-bold mt-4 font-odia">ଭୁବନେଶ୍ୱର ଇଞ୍ଜିନିୟରିଂ କଲେଜ</span>
               </div>
