@@ -161,8 +161,17 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 5. Placed Alumni
     const unsubStudents = setupListener('selected-students-v2', setStudents, [
-      { id: "1", companyRole: "CTTC-BBSR", name: "ANKIT MOHAPATRA", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "/images/events/tata.jpg", photo: "/images/alumni2.jpg", bgColor: "from-blue-600 to-cyan-500" }
+      { id: "1", companyRole: "PIRAMAL GROUP", name: "ASHIS PANY", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629432/becweb/Piramal.png", photo: "/images/ASHIS PANY-MECH(Piramal Group).jpg", bgColor: "from-blue-700 to-blue-500" },
+      { id: "2", companyRole: "TECH MAHINDRA", name: "ASHIT MINZ", branch: "CSE", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png", photo: "/images/Ashit Minz-CSE(Tech Mahindra).jpg", bgColor: "from-red-600 to-orange-500" },
+      { id: "3", companyRole: "INFOSYS", name: "BIPLAB KUMAR SAMANTARAY", branch: "AERO", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629416/becweb/Infosys.png", photo: "/images/BIPLAB KUMAR SAMANTARAY-Aero(Infosys).jpg", bgColor: "from-indigo-700 to-indigo-500" },
+      { id: "4", companyRole: "WIPRO", name: "IPSITA KUMARI", branch: "CSE", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629459/becweb/wipro2018.png", photo: "/images/IPSITA KUMARI,CSE,Wipro.jpg", bgColor: "from-cyan-700 to-cyan-500" },
+      { id: "5", companyRole: "TECH MAHINDRA", name: "K. SWETA MADHURI", branch: "CSE", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png", photo: "/images/K.Sweta Madhuri(Tech Mahindra).jpg", bgColor: "from-red-700 to-rose-500" },
+      { id: "6", companyRole: "INDIGO (INTERGLOBE)", name: "RAVISANKAR PAL", branch: "AERO", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629401/becweb/Airdit.jpg", photo: "/images/RAVISANKAR PAL-AERO (IndiGo).jpg", bgColor: "from-sky-700 to-sky-500" },
+      { id: "7", companyRole: "AMAZON", name: "ROHIT KUMAR", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "/images/alumni1.jpg", photo: "/images/ROHIT KUMAR,MECH,AMAZON.jpg", bgColor: "from-amber-700 to-yellow-500" },
+      { id: "8", companyRole: "PIRAMAL GROUP", name: "ROJALIN PHOTO", branch: "CIVIL", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629432/becweb/Piramal.png", photo: "/images/ROJALIN PHOTO, CIVIL,Piramal Group.jpg", bgColor: "from-emerald-700 to-green-500" },
+      { id: "9", companyRole: "CTTC-BBSR", name: "ANKIT MOHAPATRA", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "/images/events/tata.jpg", photo: "/images/alumni2.jpg", bgColor: "from-blue-600 to-cyan-500" }
     ]);
+
 
     // 6. Tour Panorama VR Scenes
     const unsubScenes = setupListener('tour-scenes-v2', setScenes, [
