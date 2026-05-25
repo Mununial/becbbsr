@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, User, Loader2, X, ShieldAlert, Eye, EyeOff, KeyRound } from 'lucide-react';
 import axios from 'axios';
 import { auth } from '../lib/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 interface LoginGateProps {
   children: React.ReactNode;
@@ -52,6 +52,28 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
     } catch (err: any) {
       console.warn('Firebase Auth standard login skipped or error occurred, using bypass fallback:', err);
       
+      // Auto-provision default admin credentials in Firebase Auth if they don't exist yet
+      const loginErrCode = err.code || '';
+      if (loginErrCode.includes('auth/user-not-found') || loginErrCode.includes('auth/invalid-credential')) {
+        try {
+          const email = username.includes('@') ? username.trim() : `${username.trim()}@becbbsr.ac.in`;
+          const normalizedUser = username.trim().toLowerCase();
+          if ((normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && password === 'becadmin@2026') {
+            console.log('Auto-provisioning default admin credentials in Firebase Auth...');
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            if (userCredential.user) {
+              console.log('Firebase Auth admin credentials successfully auto-provisioned!');
+              sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
+              setIsAuthorized(true);
+              setLoading(false);
+              return;
+            }
+          }
+        } catch (regErr: any) {
+          console.warn('Firebase Auth admin credentials auto-provision failed:', regErr);
+        }
+      }
+
       // 2. Client-side fallback check (instant bypass local credentials fallback)
       const normalizedUser = username.trim().toLowerCase();
       if ((normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && password === 'becadmin@2026') {

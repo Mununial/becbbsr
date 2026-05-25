@@ -71,13 +71,16 @@ export const AdminDashboard = () => {
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Universal Media Upload via Express Server's Cloudinary endpoint (extremely robust and bypasses Firebase Auth constraints)
+  // Triple-Failsafe Media Upload (Express Proxy -> Direct Firebase Storage -> Client-Side Cloudinary Unsigned)
   const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    
+    // Failsafe 1: Attempt upload via local Express server endpoint (if online and reverse proxied)
     try {
+      console.log("Failsafe 1: Attempting upload via local Express server...");
       const formData = new FormData();
       formData.append('file', file);
 
@@ -87,14 +90,60 @@ export const AdminDashboard = () => {
         }
       });
 
-      if (response.data && response.data.success && response.data.url) {
+      // Verify that we received a valid JSON response with a URL, not an index.html redirection
+      if (response.data && response.data.success && typeof response.data.url === 'string' && response.data.url.startsWith('http')) {
+        console.log("Failsafe 1 Success! File uploaded successfully via Express backend.");
         callback(response.data.url);
+        setUploading(false);
+        return;
       } else {
-        throw new Error('Upload failed on server');
+        throw new Error("Express upload returned invalid response format (HTML redirect or missing URL).");
       }
-    } catch (err: any) {
-      console.error("Media Upload to Cloudinary failed:", err);
-      alert("Failed to upload media. Please try again. " + (err.response?.data?.error || err.message || ''));
+    } catch (expressErr: any) {
+      console.warn("Failsafe 1 (Express Upload) failed or returned invalid response. Attempting Failsafe 2...", expressErr);
+      
+      // Failsafe 2: Direct serverless client-side upload to Firebase Storage (fully integrated, robust, works offline/online)
+      try {
+        console.log("Failsafe 2: Attempting serverless upload directly to Firebase Storage...");
+        const cleanFileName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+        const uniquePath = `bec_assets/${Date.now()}_${cleanFileName}`;
+        const storageRef = ref(storage, uniquePath);
+        
+        await uploadBytes(storageRef, file);
+        const downloadUrl = await getDownloadURL(storageRef);
+        
+        console.log("Failsafe 2 Success! File uploaded directly to Firebase Storage: ", downloadUrl);
+        callback(downloadUrl);
+        setUploading(false);
+        return;
+      } catch (firebaseErr: any) {
+        console.warn("Failsafe 2 (Firebase Storage) failed. Attempting Failsafe 3 (Unsigned Cloudinary)...", firebaseErr);
+        
+        // Failsafe 3: Direct browser-side unsigned Cloudinary upload using their standard public API endpoint
+        try {
+          console.log("Failsafe 3: Attempting browser-side unsigned Cloudinary upload...");
+          const cloudName = "dpogq7cbe"; // Retrieved from standard active cloud configuration
+          const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
+          
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('upload_preset', 'ml_default'); // Default unsigned preset for direct browser upload
+          
+          const response = await axios.post(cloudinaryUrl, formData);
+          
+          if (response.data && response.data.secure_url) {
+            console.log("Failsafe 3 Success! File uploaded directly to Cloudinary: ", response.data.secure_url);
+            callback(response.data.secure_url);
+            setUploading(false);
+            return;
+          } else {
+            throw new Error("Cloudinary Direct API returned invalid response format.");
+          }
+        } catch (cloudinaryErr: any) {
+          console.error("All 3 Failsafe media upload pipelines failed:", { Express: expressErr, Firebase: firebaseErr, Cloudinary: cloudinaryErr });
+          alert(`Failed to upload media. Please try again. Detailed errors:\n1. Express: ${expressErr.message}\n2. Firebase Storage: ${firebaseErr.message}\n3. Cloudinary: ${cloudinaryErr.message}`);
+        }
+      }
     } finally {
       setUploading(false);
     }

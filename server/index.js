@@ -257,7 +257,12 @@ app.post('/api/config/:key', (req, res) => {
 const achievementsFile = path.join(__dirname, 'achievements.json');
 const getAchievements = () => {
   if (!fs.existsSync(achievementsFile)) return [];
-  return JSON.parse(fs.readFileSync(achievementsFile, 'utf8'));
+  try {
+    const data = JSON.parse(fs.readFileSync(achievementsFile, 'utf8'));
+    return Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : []);
+  } catch (e) {
+    return [];
+  }
 };
 
 const saveAchievements = (data) => {
@@ -267,7 +272,12 @@ const saveAchievements = (data) => {
 const aeroClubFile = path.join(__dirname, 'aeroclub.json');
 const getAeroClub = () => {
   if (!fs.existsSync(aeroClubFile)) return [];
-  return JSON.parse(fs.readFileSync(aeroClubFile, 'utf8'));
+  try {
+    const data = JSON.parse(fs.readFileSync(aeroClubFile, 'utf8'));
+    return Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : []);
+  } catch (e) {
+    return [];
+  }
 };
 
 const saveAeroClub = (data) => {
@@ -277,7 +287,12 @@ const saveAeroClub = (data) => {
 const workshopFile = path.join(__dirname, 'workshop.json');
 const getWorkshopGallery = () => {
   if (!fs.existsSync(workshopFile)) return [];
-  return JSON.parse(fs.readFileSync(workshopFile, 'utf8'));
+  try {
+    const data = JSON.parse(fs.readFileSync(workshopFile, 'utf8'));
+    return Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : []);
+  } catch (e) {
+    return [];
+  }
 };
 
 const saveWorkshopGallery = (data) => {
@@ -287,7 +302,12 @@ const saveWorkshopGallery = (data) => {
 const sportsFile = path.join(__dirname, 'sports.json');
 const getSportsGallery = () => {
   if (!fs.existsSync(sportsFile)) return [];
-  return JSON.parse(fs.readFileSync(sportsFile, 'utf8'));
+  try {
+    const data = JSON.parse(fs.readFileSync(sportsFile, 'utf8'));
+    return Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : []);
+  } catch (e) {
+    return [];
+  }
 };
 
 const saveSportsGallery = (data) => {
@@ -297,7 +317,12 @@ const saveSportsGallery = (data) => {
 const galleryFile = path.join(__dirname, 'gallery.json');
 const getPhotoGallery = () => {
   if (!fs.existsSync(galleryFile)) return [];
-  return JSON.parse(fs.readFileSync(galleryFile, 'utf8'));
+  try {
+    const data = JSON.parse(fs.readFileSync(galleryFile, 'utf8'));
+    return Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : []);
+  } catch (e) {
+    return [];
+  }
 };
 
 const savePhotoGallery = (data) => {

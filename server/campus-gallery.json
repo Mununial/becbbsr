@@ -1,8 +1,16 @@
-[
-  {
-    "id": "1",
-    "url": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
-    "title": "Main Campus",
-    "category": "Infrastructure"
-  }
-]
+{
+  "items": [
+    {
+      "id": "1779738172329",
+      "url": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1779738166/bec_web_assets/b2qhq7gl9dz5z4rk9wdv.jpg",
+      "title": "",
+      "category": "Events"
+    },
+    {
+      "id": "1",
+      "url": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+      "title": "Main Campus",
+      "category": "Infrastructure"
+    }
+  ]
+}

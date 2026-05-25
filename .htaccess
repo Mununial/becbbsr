@@ -11,10 +11,15 @@
       </IfModule>
   </FilesMatch>
 
-  # 1. Bypass rewriting for API requests
-  # This allows the Express server (if running via Node.js hosting or Passenger) to process /api routes
-  RewriteCond %{REQUEST_URI} ^/api [NC]
-  RewriteRule ^(.*)$ - [L]
+  # 1. Bypass rewriting for API requests & reverse-proxy to Node Express server on port 5000 if mod_proxy is available
+  <IfModule mod_proxy.c>
+      RewriteCond %{REQUEST_URI} ^/api [NC]
+      RewriteRule ^api/(.*)$ http://localhost:5000/api/$1 [P,L]
+  </IfModule>
+  <IfModule !mod_proxy.c>
+      RewriteCond %{REQUEST_URI} ^/api [NC]
+      RewriteRule ^(.*)$ - [L]
+  </IfModule>
 
   # 2. Rewrite root traffic to the React built files in client/dist/
   # If a file exists under client/dist/, rewrite to it
