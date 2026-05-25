@@ -57,6 +57,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
     const setupListener = (key: string, setFn: (data: any[]) => void, defaultData: any) => {
+      // Track if the Express server has already provided fresh data (server = ground truth)
+      let serverHasResponded = false;
+
       // 1. Synchronously load from localStorage first (offline-first, prevents layout shift/resets)
       const local = localStorage.getItem(key);
       let initialData = defaultData;
@@ -70,17 +73,21 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       }
       setFn(initialData);
 
+      // Helper to parse server response
+      const parseServerItems = (data: any): any[] | null => {
+        const isHtml = typeof data === 'string' && (data.includes('<!DOCTYPE') || data.includes('<html') || data.includes('<head'));
+        if (isHtml) return null;
+        if (data && Array.isArray(data.items) && data.items.length > 0) return data.items;
+        if (Array.isArray(data) && data.length > 0) return data;
+        return null;
+      };
+
       // 2. Fetch live config from the local Express server immediately on mount to override with server data if available
       axios.get(`/api/config/${key}`)
         .then(res => {
-          // Detect if the response data is a rewritten HTML document (e.g. Apache index.html redirect due to missing mod_proxy)
-          const isHtml = typeof res.data === 'string' && (res.data.includes('<!DOCTYPE') || res.data.includes('<html') || res.data.includes('<head'));
-          
-          const serverItems = (!isHtml && res.data && Array.isArray(res.data.items))
-            ? res.data.items 
-            : (!isHtml && Array.isArray(res.data) ? res.data : null);
-
+          const serverItems = parseServerItems(res.data);
           if (serverItems) {
+            serverHasResponded = true;
             setFn(serverItems);
             localStorage.setItem(key, JSON.stringify(serverItems));
           }
@@ -91,13 +98,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       const pollInterval = setInterval(() => {
         axios.get(`/api/config/${key}`)
           .then(res => {
-            const isHtml = typeof res.data === 'string' && (res.data.includes('<!DOCTYPE') || res.data.includes('<html') || res.data.includes('<head'));
-            
-            const serverItems = (!isHtml && res.data && Array.isArray(res.data.items))
-              ? res.data.items 
-              : (!isHtml && Array.isArray(res.data) ? res.data : null);
-
+            const serverItems = parseServerItems(res.data);
             if (serverItems) {
+              serverHasResponded = true;
               setFn(serverItems);
               localStorage.setItem(key, JSON.stringify(serverItems));
             }
@@ -105,13 +108,18 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
           .catch(() => {});
       }, 3000);
 
-      // 3. Parallel live Firestore websocket listener
+      // 4. Parallel live Firestore websocket listener
+      // Only update from Firestore if server hasn't responded yet (avoids stale Firestore data overwriting fresh server data)
       const docRef = doc(db, "configs", key);
       const unsubFirestore = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
           const items = docSnap.data().items;
-          setFn(items);
-          localStorage.setItem(key, JSON.stringify(items));
+          // Only apply Firestore data if Express server hasn't loaded anything yet
+          // This prevents old Firestore data from overwriting newer server JSON files
+          if (!serverHasResponded) {
+            setFn(items);
+            localStorage.setItem(key, JSON.stringify(items));
+          }
         }
       }, (err) => {
         console.warn(`Firestore live sync suspended for key ${key}: ${err.message}`);
@@ -123,6 +131,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         unsubFirestore();
       };
     };
+
 
     // 1. Home Slides
     const unsubSlides = setupListener('hero-slides', setSlides, [
@@ -174,7 +183,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 8. Leadership Quotes
     const unsubLeaders = setupListener('leadership-data', setLeaders, [
-      { id: '1', role: "CHAIRMAN", title: "VISIONARY FOUNDER", name: "Er. Alok Ranjan Mallick", subtitle: "Chairman, Ayush Group", quote: "Bhubaneswar Engineering College (BEC) is more than just an academic institution...", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg", color: "from-amber-400 to-amber-600" }
+      { id: '1', role: "CHAIRMAN", title: "VISIONARY FOUNDER", name: "Er. Alok Ranjan Mallick", subtitle: "Chairman, Ayush Group", quote: "Bhubaneswar Engineering College (BEC) is more than just an academic institution — it is a launchpad for visionaries who will shape the future of our nation.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg", link: "/chairman", color: "from-amber-400 to-amber-600" },
+      { id: '2', role: "DIRECTOR", title: "ACADEMICS & ADMINISTRATION", name: "Prof. Dr. B.N. Biswal", subtitle: "Director, BEC Bhubaneswar", quote: "At the end of your journey with BEC, we are certain that you will turn out to be a confident technocrat and stay blessed in all sphere of life.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg", link: "/director", color: "from-blue-400 to-blue-600" }
     ]);
 
     // 9. Achievements Roll
