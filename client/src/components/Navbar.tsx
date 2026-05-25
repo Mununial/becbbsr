@@ -244,7 +244,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                 key={logo.id}
                 src={logo.src} 
                 alt={logo.name} 
-                className="h-10 w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-help" 
+                className="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-all duration-500 cursor-pointer" 
                 title={logo.name}
               />
             ))}
