@@ -57,37 +57,45 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
     const setupListener = (key: string, setFn: (data: any[]) => void, defaultData: any) => {
-      // 1. Fetch live config from the local Express server immediately on mount to prevent any permission gaps
+      // 1. Synchronously load from localStorage first (offline-first, prevents layout shift/resets)
+      const local = localStorage.getItem(key);
+      let initialData = defaultData;
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed)) {
+            initialData = parsed;
+          }
+        } catch (_) {}
+      }
+      setFn(initialData);
+
+      // 2. Fetch live config from the local Express server immediately on mount to override with server data if available
       axios.get(`/api/config/${key}`)
         .then(res => {
-          const serverItems = (res.data && Array.isArray(res.data.items))
+          // Detect if the response data is a rewritten HTML document (e.g. Apache index.html redirect due to missing mod_proxy)
+          const isHtml = typeof res.data === 'string' && (res.data.includes('<!DOCTYPE') || res.data.includes('<html') || res.data.includes('<head'));
+          
+          const serverItems = (!isHtml && res.data && Array.isArray(res.data.items))
             ? res.data.items 
-            : (Array.isArray(res.data) ? res.data : null);
+            : (!isHtml && Array.isArray(res.data) ? res.data : null);
 
           if (serverItems) {
             setFn(serverItems);
             localStorage.setItem(key, JSON.stringify(serverItems));
-          } else {
-            setFn(defaultData);
           }
         })
-        .catch(() => {
-          // Offline storage fallback
-          const local = localStorage.getItem(key);
-          if (local) {
-            try { setFn(JSON.parse(local)); } catch (_) {}
-          } else {
-            setFn(defaultData);
-          }
-        });
+        .catch(() => {});
 
-      // 2. Start backup background polling loop on local server JSON file (ensures reload-free cross-device updates even if Firestore is blocked)
+      // 3. Start backup background polling loop on local server JSON file (ensures reload-free cross-device updates)
       const pollInterval = setInterval(() => {
         axios.get(`/api/config/${key}`)
           .then(res => {
-            const serverItems = (res.data && Array.isArray(res.data.items))
+            const isHtml = typeof res.data === 'string' && (res.data.includes('<!DOCTYPE') || res.data.includes('<html') || res.data.includes('<head'));
+            
+            const serverItems = (!isHtml && res.data && Array.isArray(res.data.items))
               ? res.data.items 
-              : (Array.isArray(res.data) ? res.data : null);
+              : (!isHtml && Array.isArray(res.data) ? res.data : null);
 
             if (serverItems) {
               setFn(serverItems);
