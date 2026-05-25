@@ -213,7 +213,8 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 // Admin Authentication Route
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
-  if (username === 'admin' && password === 'becadmin@2026') {
+  const normalizedUser = username ? username.trim().toLowerCase() : '';
+  if ((normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && password === 'becadmin@2026') {
     res.json({ success: true, token: 'bec_session_token_2026' });
   } else {
     res.status(401).json({ success: false, message: 'Invalid ID or Password' });
