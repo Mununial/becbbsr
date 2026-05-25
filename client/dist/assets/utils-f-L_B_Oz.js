@@ -1,1 +1,0 @@
-import{n as e,t}from"./vendor-Cv7ci8lf.js";function n(...n){return t(e(n))}export{n as t};

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, User, Loader2, X, ShieldAlert, Eye, EyeOff, KeyRound } from 'lucide-react';
 import axios from 'axios';
+import { auth } from '../lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 interface LoginGateProps {
   children: React.ReactNode;
@@ -46,17 +48,33 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
     }
 
     try {
-      const res = await axios.post('/api/admin/login', { username, password });
-      if (res.data.success && res.data.token) {
-        sessionStorage.setItem('bec_admin_token', res.data.token);
+      const email = username.includes('@') ? username.trim() : `${username.trim()}@becbbsr.ac.in`;
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      if (userCredential.user) {
+        sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
         setIsAuthorized(true);
       }
     } catch (err: any) {
-      console.error('Login error:', err);
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
+      console.error('Firebase Auth error:', err);
+      // Fallback to standard Express API check if Firebase Auth has issues or backend check is needed
+      try {
+        const res = await axios.post('/api/admin/login', { username, password });
+        if (res.data.success && res.data.token) {
+          sessionStorage.setItem('bec_admin_token', res.data.token);
+          setIsAuthorized(true);
+          setLoading(false);
+          return;
+        }
+      } catch (backendErr) {}
+
+      // Handle Firebase error messages clearly
+      const errorCode = err.code || '';
+      if (errorCode.includes('auth/invalid-credential') || errorCode.includes('auth/user-not-found') || errorCode.includes('auth/wrong-password')) {
+        setError('Invalid ID or Password. Please check your credentials.');
+      } else if (errorCode.includes('auth/network-request-failed')) {
+        setError('Network error. Please check your internet connection.');
       } else {
-        setError('Invalid ID or Password. Please try again.');
+        setError(err.message || 'Authentication failed. Please try again.');
       }
     } finally {
       setLoading(false);
