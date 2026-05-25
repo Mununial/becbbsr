@@ -3,27 +3,11 @@ import { PageLayout } from '../components/PageLayout';
 import { Plane, Rocket, Wind, Zap, Microscope, LayoutGrid, Calendar, ArrowRight, ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
-
-import axios from 'axios';
+import { useData } from '../context/DataContext';
 
 export const AeroClub = () => {
-  const [activities, setActivities] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    axios.get('/api/aeroclub')
-      .then(res => {
-        // Defensive: ensure we always set an array
-        const data = Array.isArray(res.data) ? res.data : [];
-        setActivities(data);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setActivities([]);
-        setIsLoading(false);
-      });
-  }, []);
+  const { aeroclub: activities } = useData();
+  const isLoading = false;
 
   const features = [
     { title: "RC Design", icon: Plane, color: "text-blue-500", bg: "bg-blue-50" },

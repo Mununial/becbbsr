@@ -1,1 +1,0 @@
-import{d as e,i as t,p as n,u as r}from"./vendor-Cdo4YKSn.js";var i=n({apiKey:`AIzaSyAM4mbEIHcTUMNr7l4huOCOalFRKjGUIU4`,authDomain:`becbbsr-90a44.firebaseapp.com`,projectId:`becbbsr-90a44`,storageBucket:`becbbsr-90a44.firebasestorage.app`,messagingSenderId:`379108510831`,appId:`1:379108510831:web:d439fda6481e2c9359519a`}),a=e(i),o=r(i),s=t(i);export{o as n,s as r,a as t};

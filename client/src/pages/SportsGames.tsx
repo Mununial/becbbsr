@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { PageLayout } from '../components/PageLayout';
 import { Trophy, Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
+import { useData } from '../context/DataContext';
 
 
 const staticSportsImages = [
@@ -23,13 +23,7 @@ const staticSportsImages = [
 
 export const SportsGames = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [dynamicImages, setDynamicImages] = useState<any[]>([]);
-
-  useEffect(() => {
-    axios.get('/api/sports')
-      .then(res => setDynamicImages(Array.isArray(res.data) ? res.data : []))
-      .catch(() => setDynamicImages([]));
-  }, []);
+  const { sports: dynamicImages } = useData();
 
   const allImages = [...dynamicImages, ...staticSportsImages];
 

@@ -3,8 +3,7 @@ import { PageLayout } from '../components/PageLayout';
 import { Image as ImageIcon, X, ChevronLeft, ChevronRight, Camera, Sparkles, Layout, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
-
-import axios from 'axios';
+import { useData } from '../context/DataContext';
 
 const categories = ['All Archive', 'Convocation', 'Campus Life', 'Placements', 'Laboratory'];
 
@@ -34,13 +33,14 @@ const staticGalleryImages = [
 export const PhotoGallery = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState('All Archive');
-  const [dynamicImages, setDynamicImages] = useState<any[]>([]);
+  const { gallery } = useData();
 
-  useEffect(() => {
-    axios.get('/api/gallery')
-      .then(res => setDynamicImages(Array.isArray(res.data) ? res.data.map((img: any) => ({ ...img, category: 'Uploads' })) : []))
-      .catch(() => setDynamicImages([]));
-  }, []);
+  // Map incoming URL key to photo key to match static image rendering key
+  const dynamicImages = gallery.map((img: any) => ({
+    ...img,
+    photo: img.photo || img.url,
+    category: img.category || 'Uploads'
+  }));
 
   const allImages = [...dynamicImages, ...staticGalleryImages];
   const filteredImages = activeCategory === 'All Archive' 

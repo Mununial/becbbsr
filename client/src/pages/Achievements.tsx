@@ -3,8 +3,7 @@ import { PageLayout } from '../components/PageLayout';
 import { Award, Trophy, Star, Target, GraduationCap, Zap, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
-
-import axios from 'axios';
+import { useData } from '../context/DataContext';
 
 const StudentPhoto = ({ src, name }: { src: string; name: string }) => {
   const [hasError, setHasError] = useState(false);
@@ -78,16 +77,8 @@ const collegeAchievements = [
 ];
 
 export const Achievements = () => {
-  const [studentAchievements, setStudentAchievements] = useState<any[]>([]);
+  const { achievements: studentAchievements } = useData();
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-     axios.get('/api/achievements')
-       .then(res => {
-          if (Array.isArray(res.data)) setStudentAchievements(res.data);
-       })
-       .catch(err => console.error("Error fetching achievements:", err));
-  }, []);
 
   const filteredStudents = studentAchievements.filter(s => 
      s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 

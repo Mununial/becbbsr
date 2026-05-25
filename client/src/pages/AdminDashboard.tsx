@@ -1,826 +1,1531 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { LayoutDashboard, Users, Newspaper, Image as ImageIcon, Briefcase, Settings, LogOut, Plus, Search, Trash2, Edit, Award, Plane, Monitor, Trophy } from 'lucide-react';
-
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  LayoutDashboard, Users, Newspaper, Image as ImageIcon, Briefcase, 
+  Settings, LogOut, Plus, Search, Trash2, Edit, Award, Plane, 
+  Monitor, Trophy, Zap, BellRing, Sparkles, Navigation as MapNavigation, 
+  ArrowUp, ArrowDown, Upload, FileVideo, FileImage, Loader2, X, PlusCircle, 
+  GraduationCap, ArrowUpRight, HelpCircle, Menu
+} from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
 import { LoginGate } from '../components/LoginGate';
 import { db, storage } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import axios from 'axios';
+import { useData } from '../context/DataContext';
+import { type SelectedStudent, type Slide, type Scene, type GalleryImage, type Notice, type Faculty, type Leader, type Highlight } from '../types';
 
 const sidebarItems = [
   { name: 'Dashboard', icon: LayoutDashboard },
-  { name: 'Notices', icon: Newspaper },
-  { name: 'Applications', icon: Users },
-  { name: 'Gallery', icon: ImageIcon },
-  { name: 'Achievements', icon: Award },
+  { name: 'Home Slider', icon: Monitor },
+  { name: 'Latest Notices', icon: Newspaper },
   { name: 'Placements', icon: Briefcase },
+  { name: 'Campus Panorama', icon: MapNavigation },
+  { name: 'Photo Gallery', icon: ImageIcon },
+  { name: 'Event Highlights', icon: Zap },
+  { name: 'Leadership', icon: Users },
+  { name: 'Faculty', icon: GraduationCap },
+  { name: 'Achievements', icon: Award },
   { name: 'Aero Club', icon: Plane },
   { name: 'Workshops', icon: Monitor },
   { name: 'Sports', icon: Trophy },
-  { name: 'Settings', icon: Settings },
 ];
 
 export const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('Dashboard');
-  const [achievements, setAchievements] = useState<any[]>([]);
-  const [aeroClubItems, setAeroClubItems] = useState<any[]>([]);
-  const [workshopItems, setWorkshopItems] = useState<any[]>([]);
-  const [sportsItems, setSportsItems] = useState<any[]>([]);
-  const [galleryItems, setGalleryItems] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // Real-time Firestore sync context integration
+  const {
+    slides, updateSlides,
+    notices, updateNotices,
+    gallery, updateGallery,
+    faculties, updateFaculties,
+    students, updateStudents,
+    scenes, updateScenes,
+    highlights, updateHighlights,
+    leaders, updateLeaders,
+    achievements, updateAchievements,
+    aeroclub: aeroClubItems, updateAeroClub,
+    workshop: workshopItems, updateWorkshops,
+    sports: sportsItems, updateSports
+  } = useData();
 
-  const [editingItem, setEditingItem] = useState<any>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  // Editing Item States
+  const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
+  const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
+  const [editingStudent, setEditingStudent] = useState<SelectedStudent | null>(null);
+  const [editingScene, setEditingScene] = useState<Scene | null>(null);
+  const [editingGallery, setEditingGallery] = useState<GalleryImage | null>(null);
+  const [editingHighlight, setEditingHighlight] = useState<Highlight | null>(null);
+  const [editingLeader, setEditingLeader] = useState<Leader | null>(null);
+  const [editingFaculty, setEditingFaculty] = useState<Faculty | null>(null);
+  const [editingAchievement, setEditingAchievement] = useState<any | null>(null);
+  const [editingAeroClub, setEditingAeroClub] = useState<any | null>(null);
+  const [editingWorkshop, setEditingWorkshop] = useState<any | null>(null);
+  const [editingSports, setEditingSports] = useState<any | null>(null);
 
-  const loadKey = async (key: string, setFn: (data: any[]) => void) => {
+  // Status indicators
+  const [uploading, setUploading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Universal Media Upload via Firebase Storage (Bulletproof serverless client upload)
+  const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
     try {
-      const docRef = doc(db, "configs", key);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
-        setFn(docSnap.data().items);
-      }
-    } catch (e) {
-      console.error(`Error loading key ${key} from Firestore:`, e);
+      const storageRef = ref(storage, `uploads/${Date.now()}-${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      callback(url);
+    } catch (err) {
+      console.error("Firebase Storage Upload Error:", err);
+      alert("Failed to upload media. Please try again.");
+    } finally {
+      setUploading(false);
     }
   };
 
-  useEffect(() => {
-    loadKey('achievements', setAchievements);
-    loadKey('aeroclub', setAeroClubItems);
-    loadKey('workshop', setWorkshopItems);
-    loadKey('sports', setSportsItems);
-    loadKey('gallery', setGalleryItems);
-  }, []);
-
-  const handleSave = async () => {
-      let endpoint = 'achievements';
-      let currentItems: any[] = [];
-      let setFn: (data: any[]) => void = () => {};
-
-      if (activeTab === 'Achievements') {
-        endpoint = 'achievements';
-        currentItems = achievements;
-        setFn = setAchievements;
-      } else if (activeTab === 'Aero Club') {
-        endpoint = 'aeroclub';
-        currentItems = aeroClubItems;
-        setFn = setAeroClubItems;
-      } else if (activeTab === 'Workshops') {
-        endpoint = 'workshop';
-        currentItems = workshopItems;
-        setFn = setWorkshopItems;
-      } else if (activeTab === 'Sports') {
-        endpoint = 'sports';
-        currentItems = sportsItems;
-        setFn = setSportsItems;
-      } else if (activeTab === 'Gallery') {
-        endpoint = 'gallery';
-        currentItems = galleryItems;
-        setFn = setGalleryItems;
-      }
-
-      let updatedItems: any[] = [];
-      if (editingItem.id) {
-         // Update existing item
-         updatedItems = currentItems.map(item => item.id === editingItem.id ? editingItem : item);
-      } else {
-         // Create new item
-         const newItem = { ...editingItem, id: Date.now().toString() };
-         updatedItems = [...currentItems, newItem];
-      }
-
-      try {
-         const docRef = doc(db, "configs", endpoint);
-         await setDoc(docRef, { items: updatedItems });
-         setFn(updatedItems);
-         setIsModalOpen(false);
-      } catch (e) {
-         console.error("Error saving config to Firestore:", e);
-      }
+  const handleSaveItem = async (type: string, payload: any) => {
+    if (type === 'hero-slides') {
+      const updated = payload.id 
+        ? slides.map(s => s.id === payload.id ? payload : s)
+        : [...slides, { ...payload, id: Date.now().toString() }];
+      await updateSlides(updated);
+      setEditingSlide(null);
+    } 
+    else if (type === 'university-notices') {
+      const updated = payload.id 
+        ? notices.map(n => n.id === payload.id ? payload : n)
+        : [{ ...payload, id: Date.now().toString(), date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) }, ...notices];
+      await updateNotices(updated);
+      setEditingNotice(null);
+    }
+    else if (type === 'selected-students-v2') {
+      const updated = payload.id 
+        ? students.map(s => s.id === payload.id ? payload : s)
+        : [{ ...payload, id: Date.now().toString() }, ...students];
+      await updateStudents(updated);
+      setEditingStudent(null);
+    }
+    else if (type === 'tour-scenes-v2') {
+      const updated = payload.id 
+        ? scenes.map(s => s.id === payload.id ? payload : s)
+        : [...scenes, { ...payload, id: Date.now().toString() }];
+      await updateScenes(updated);
+      setEditingScene(null);
+    }
+    else if (type === 'campus-gallery') {
+      const updated = payload.id 
+        ? gallery.map(g => g.id === payload.id ? payload : g)
+        : [{ ...payload, id: Date.now().toString() }, ...gallery];
+      await updateGallery(updated);
+      setEditingGallery(null);
+    }
+    else if (type === 'events-highlights') {
+      const updated = payload.id 
+        ? highlights.map(h => h.id === payload.id ? payload : h)
+        : [...highlights, { ...payload, id: Date.now().toString() }];
+      await updateHighlights(updated);
+      setEditingHighlight(null);
+    }
+    else if (type === 'leadership-data') {
+      const updated = leaders.map(l => l.id === payload.id ? payload : l);
+      await updateLeaders(updated);
+      setEditingLeader(null);
+    }
+    else if (type === 'university-faculties') {
+      const updated = payload.id 
+        ? faculties.map(f => f.id === payload.id ? payload : f)
+        : [{ ...payload, id: Date.now().toString() }, ...faculties];
+      await updateFaculties(updated);
+      setEditingFaculty(null);
+    }
+    else if (type === 'achievements') {
+      const updated = payload.id 
+        ? achievements.map(a => a.id === payload.id ? payload : a)
+        : [{ ...payload, id: Date.now().toString() }, ...achievements];
+      await updateAchievements(updated);
+      setEditingAchievement(null);
+    }
+    else if (type === 'aeroclub') {
+      const updated = payload.id 
+        ? aeroClubItems.map(a => a.id === payload.id ? payload : a)
+        : [{ ...payload, id: Date.now().toString() }, ...aeroClubItems];
+      await updateAeroClub(updated);
+      setEditingAeroClub(null);
+    }
+    else if (type === 'workshop') {
+      const updated = payload.id 
+        ? workshopItems.map(w => w.id === payload.id ? payload : w)
+        : [{ ...payload, id: Date.now().toString() }, ...workshopItems];
+      await updateWorkshops(updated);
+      setEditingWorkshop(null);
+    }
+    else if (type === 'sports') {
+      const updated = payload.id 
+        ? sportsItems.map(s => s.id === payload.id ? payload : s)
+        : [{ ...payload, id: Date.now().toString() }, ...sportsItems];
+      await updateSports(updated);
+      setEditingSports(null);
+    }
   };
 
-  const handleDelete = async (id: string) => {
-      if (!confirm('Are you sure?')) return;
-      let endpoint = 'achievements';
-      let currentItems: any[] = [];
-      let setFn: (data: any[]) => void = () => {};
+  const handleDeleteItem = async (type: string, id: string) => {
+    if (!confirm('Are you sure you want to delete this item?')) return;
 
-      if (activeTab === 'Achievements') {
-        endpoint = 'achievements';
-        currentItems = achievements;
-        setFn = setAchievements;
-      } else if (activeTab === 'Aero Club') {
-        endpoint = 'aeroclub';
-        currentItems = aeroClubItems;
-        setFn = setAeroClubItems;
-      } else if (activeTab === 'Workshops') {
-        endpoint = 'workshop';
-        currentItems = workshopItems;
-        setFn = setWorkshopItems;
-      } else if (activeTab === 'Sports') {
-        endpoint = 'sports';
-        currentItems = sportsItems;
-        setFn = setSportsItems;
-      } else if (activeTab === 'Gallery') {
-        endpoint = 'gallery';
-        currentItems = galleryItems;
-        setFn = setGalleryItems;
-      }
-
-      const updatedItems = currentItems.filter(item => item.id !== id);
-
-      try {
-         const docRef = doc(db, "configs", endpoint);
-         await setDoc(docRef, { items: updatedItems });
-         setFn(updatedItems);
-      } catch (e) {
-         console.error("Error deleting config from Firestore:", e);
-      }
-  };
-
-  const handleUpload = async (file: File | undefined) => {
-     if (!file) return;
-     setIsUploading(true);
-     try {
-        const storageRef = ref(storage, `uploads/${Date.now()}-${file.name}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        setEditingItem({ ...editingItem, photo: url });
-     } catch (e) {
-        console.error("Firebase Storage upload error:", e);
-     } finally {
-        setIsUploading(false);
-     }
+    if (type === 'hero-slides') {
+      const updated = slides.filter(s => s.id !== id);
+      await updateSlides(updated);
+    }
+    else if (type === 'university-notices') {
+      const updated = notices.filter(n => n.id !== id);
+      await updateNotices(updated);
+    }
+    else if (type === 'selected-students-v2') {
+      const updated = students.filter(s => s.id !== id);
+      await updateStudents(updated);
+    }
+    else if (type === 'tour-scenes-v2') {
+      const updated = scenes.filter(s => s.id !== id);
+      await updateScenes(updated);
+    }
+    else if (type === 'campus-gallery') {
+      const updated = gallery.filter(g => g.id !== id);
+      await updateGallery(updated);
+    }
+    else if (type === 'events-highlights') {
+      const updated = highlights.filter(h => h.id !== id);
+      await updateHighlights(updated);
+    }
+    else if (type === 'university-faculties') {
+      const updated = faculties.filter(f => f.id !== id);
+      await updateFaculties(updated);
+    }
+    else if (type === 'achievements') {
+      const updated = achievements.filter(a => a.id !== id);
+      await updateAchievements(updated);
+    }
+    else if (type === 'aeroclub') {
+      const updated = aeroClubItems.filter(a => a.id !== id);
+      await updateAeroClub(updated);
+    }
+    else if (type === 'workshop') {
+      const updated = workshopItems.filter(w => w.id !== id);
+      await updateWorkshops(updated);
+    }
+    else if (type === 'sports') {
+      const updated = sportsItems.filter(s => s.id !== id);
+      await updateSports(updated);
+    }
   };
 
   return (
     <LoginGate>
-      <div className="flex min-h-screen bg-slate-100 font-sans selection:bg-primary-light selection:text-white">
-      {/* Sidebar */}
-      <aside className="w-64 bg-navy-900 text-white flex flex-col fixed h-full z-50">
-        <div className="p-8 border-b border-white/5 flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center text-primary-light">
-             <LayoutDashboard className="w-5 h-5" />
+      <div className="flex flex-col lg:flex-row min-h-screen bg-slate-900 text-white font-inter selection:bg-cyan-500 selection:text-white">
+        
+        {/* Mobile Navigation Header Bar */}
+        <div className="lg:hidden flex items-center justify-between p-4 bg-slate-950 border-b border-white/5 sticky top-0 z-30">
+          <div className="flex items-center gap-3">
+            <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" className="w-8 h-8 object-contain" alt="BEC Logo" />
+            <span className="text-white font-black text-sm uppercase tracking-wider italic">BEC Admin Panel</span>
           </div>
-          <span className="font-black text-xl tracking-tighter uppercase italic">Institutional Admin</span>
+          <button 
+            onClick={() => setIsSidebarOpen(true)} 
+            className="p-2 bg-white/5 rounded-xl border border-white/10 text-white hover:bg-white/10 transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
 
-        <nav className="flex-1 px-4 py-8 space-y-2">
-           {sidebarItems.map((item) => (
-             <button
-               key={item.name}
-               onClick={() => setActiveTab(item.name)}
-               className={cn(
-                 "w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm transition-all group",
-                 activeTab === item.name 
-                 ? "bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02]" 
-                 : "text-gray-400 hover:text-white hover:bg-white/5"
-               )}
-             >
-               <item.icon className={cn("w-5 h-5", activeTab === item.name ? "text-white" : "text-gray-500 group-hover:text-white")} />
-               {item.name}
-             </button>
-           ))}
-        </nav>
-
-        <div className="p-4 border-t border-white/5">
-           <Link to="/" className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-sm text-rose-400 hover:bg-rose-500/10 transition-colors">
-              <LogOut className="w-5 h-5" />
-              EXIT ADMIN
-           </Link>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 ml-64 p-8 lg:p-12 transition-all duration-300">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 w-full">
-           <div>
-              <h1 className="text-3xl font-black text-navy-900 mb-2 drop-shadow-sm">{activeTab} Overview</h1>
-              <p className="text-gray-500 font-medium">Manage and update your campus content seamlessly.</p>
-           </div>
-           <div className="flex items-center gap-4 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
-              <div className="bg-gray-100 p-2 rounded-xl text-gray-400">
-                 <Search className="w-5 h-5" />
-              </div>
-              <input type="text" placeholder="Global search..." className="bg-transparent border-none outline-none font-bold text-sm w-48 text-navy-900 placeholder:text-gray-300" />
-           </div>
-        </header>
-
-        {/* Dashboard Grid */}
-        {activeTab === 'Dashboard' && (
-          <div className="space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-               {[
-                 { label: 'Total Students', value: '4,821', trend: '+12%', color: 'text-indigo-500', bg: 'bg-indigo-50' },
-                 { label: 'Courses Active', value: '124', trend: '+2', color: 'text-emerald-500', bg: 'bg-emerald-50' },
-                 { label: 'Faculty Count', value: '382', trend: '+5%', color: 'text-amber-500', bg: 'bg-amber-50' },
-                 { label: 'Placements 24', value: '92%', trend: '+3%', color: 'text-rose-500', bg: 'bg-rose-50' },
-               ].map((stat, i) => (
-                 <motion.div
-                   key={i}
-                   initial={{ opacity: 0, scale: 0.95 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ delay: i * 0.1 }}
-                   className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-navy-900/5 transition-all group"
-                 >
-                    <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-6", stat.bg)}>
-                       <span className={cn("font-black", stat.color)}>{stat.trend}</span>
-                    </div>
-                    <h4 className="text-4xl font-black text-navy-900 mb-2">{stat.value}</h4>
-                    <p className="text-xs uppercase tracking-widest font-black text-gray-400">{stat.label}</p>
-                 </motion.div>
-               ))}
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-               <div className="xl:col-span-2 bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100 overflow-hidden relative">
-                  <div className="flex justify-between items-center mb-10">
-                     <h3 className="text-xl font-black text-navy-900">Recent Notices</h3>
-                     <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white text-xs font-black rounded-xl shadow-lg shadow-primary/20">
-                        <Plus className="w-4 h-4" /> ADD NEW
-                     </button>
-                  </div>
-                  <div className="space-y-6">
-                     {[1, 2, 3].map((n) => (
-                       <div key={n} className="flex flex-col md:flex-row justify-between items-start md:items-center p-6 border border-gray-50 rounded-2xl hover:bg-gray-50 transition-colors group">
-                          <div className="flex items-center gap-4">
-                             <div className="w-12 h-12 bg-white border-2 border-gray-100 rounded-xl flex flex-col items-center justify-center overflow-hidden shrink-0 group-hover:border-primary-light transition-colors">
-                                <span className="text-[10px] font-black text-gray-400">MAR</span>
-                                <span className="text-lg font-black text-navy-900 leading-none">22</span>
-                             </div>
-                             <div>
-                                <h5 className="font-bold text-navy-900">National Innovation Summit 2026</h5>
-                                <p className="text-xs text-gray-400 font-medium">Published by Registrar Office</p>
-                             </div>
-                          </div>
-                          <div className="flex gap-2 mt-4 md:mt-0">
-                             <button className="p-2.5 text-navy-900 hover:bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-all"><Edit className="w-4 h-4" /></button>
-                             <button className="p-2.5 text-rose-500 hover:bg-rose-50 hover:border-rose-100 rounded-xl border border-transparent transition-all"><Trash2 className="w-4 h-4" /></button>
-                          </div>
-                       </div>
-                     ))}
-                  </div>
-               </div>
-
-               <div className="bg-navy-900 rounded-[3rem] p-10 text-white overflow-hidden relative group">
-                  <div className="absolute top-[-20px] right-[-20px] text-primary/10 opacity-20 group-hover:scale-150 transition-transform duration-1000">
-                     <Settings className="w-64 h-64" />
-                  </div>
-                  <h3 className="text-xl font-black mb-8 relative z-10">System Status</h3>
-                  <div className="space-y-8 relative z-10">
-                     <div className="flex flex-col gap-2">
-                        <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-gray-400">
-                           <span>Storage (Cloudinary)</span>
-                           <span>64%</span>
-                        </div>
-                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                           <motion.div initial={{ width: 0 }} animate={{ width: '64%' }} className="h-full bg-secondary" />
-                        </div>
-                     </div>
-                     <div className="flex flex-col gap-2">
-                        <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-gray-400">
-                           <span>DB Latency (Firebase)</span>
-                           <span>12ms</span>
-                        </div>
-                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                           <motion.div initial={{ width: 0 }} animate={{ width: '12%' }} className="h-full bg-emerald-500" />
-                        </div>
-                     </div>
-                     <div className="bg-white/5 p-6 rounded-2xl border border-white/5 mt-12">
-                        <h5 className="font-bold mb-2">Pro Plan Active</h5>
-                        <p className="text-xs text-gray-400 mb-4">You have used 1.2GB of 5.0GB total assets.</p>
-                        <button className="w-full py-3 bg-primary text-white text-xs font-black rounded-xl">UPGRADE CLOUD</button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-          </div>
+        {/* Mobile Menu Backdrop */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
         )}
 
-         {activeTab === 'Gallery' && (
-           <div className="space-y-12">
-             <div className="flex justify-between items-center mb-8">
+        {/* Sidebar Navigation */}
+        <aside className={cn(
+          "w-72 bg-slate-950 border-r border-white/5 flex flex-col fixed h-full z-50 transition-transform duration-300",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}>
+          <div className="p-8 border-b border-white/5 flex items-center gap-4 justify-between">
+            <div className="flex items-center gap-4">
+              <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" className="w-12 h-12 object-contain" alt="BEC Logo" />
+              <div>
+                <span className="font-black text-xs uppercase tracking-[0.25em] text-cyan-500 block">Website</span>
+                <span className="text-white font-black text-lg -mt-1 block uppercase italic tracking-wider">Editor Panel</span>
+              </div>
+            </div>
+            <button 
+              className="lg:hidden p-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-400 hover:text-white"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <nav className="flex-1 px-4 py-8 space-y-1.5 overflow-y-auto custom-scrollbar">
+            {sidebarItems.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => {
+                  setActiveTab(item.name);
+                  setIsSidebarOpen(false);
+                }}
+                className={cn(
+                  "w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl font-black text-xs transition-all uppercase tracking-wider group text-left",
+                  activeTab === item.name 
+                    ? "bg-gradient-to-r from-cyan-600 to-blue-700 text-white shadow-xl shadow-cyan-600/25 scale-[1.02]" 
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                )}
+              >
+                <item.icon className={cn("w-4.5 h-4.5", activeTab === item.name ? "text-white animate-pulse" : "text-slate-500 group-hover:text-white")} />
+                {item.name}
+              </button>
+            ))}
+          </nav>
+
+          <div className="p-6 border-t border-white/5">
+            <Link to="/" className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-rose-400 border border-rose-500/10 hover:bg-rose-500/10 hover:border-rose-500/30 transition-all">
+              <LogOut className="w-4 h-4" />
+              Exit Editor
+            </Link>
+          </div>
+        </aside>
+
+        {/* Master Content View */}
+        <main className="flex-1 lg:ml-72 p-6 md:p-8 lg:p-12 bg-slate-900 overflow-x-hidden min-h-screen pb-24">
+          <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-16 gap-8 border-b border-white/5 pb-10">
+            <div>
+              <div className="flex items-center gap-3 text-cyan-400 font-bold text-xs uppercase tracking-widest mb-1.5">
+                <Sparkles className="w-4 h-4" /> Institutional Live Control
+              </div>
+              <h1 className="text-3xl lg:text-4xl font-black text-white uppercase tracking-tighter italic">{activeTab} Manager</h1>
+              <p className="text-slate-400 text-sm font-semibold mt-1">Configure and edit student elements, text notices, dynamic media, and sliders.</p>
+            </div>
+            <div className="flex items-center gap-4 bg-slate-950 p-2.5 rounded-2xl border border-white/5 w-full lg:w-fit shadow-xl">
+              <div className="bg-white/5 p-2.5 rounded-xl text-slate-500">
+                <Search className="w-4.5 h-4.5" />
+              </div>
+              <input 
+                type="text" 
+                placeholder="Search resources..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent border-none outline-none font-bold text-sm w-full lg:w-48 text-white placeholder:text-slate-600" 
+              />
+            </div>
+          </header>
+
+          {/* TAB 1: OVERVIEW DASHBOARD */}
+          {activeTab === 'Dashboard' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  { label: 'Home Slider Images', value: slides.length, icon: Monitor, color: 'from-blue-600 to-cyan-500' },
+                  { label: 'Active Notices', value: notices.length, icon: BellRing, color: 'from-amber-600 to-orange-500' },
+                  { label: 'Placed Alumni', value: students.length, icon: Briefcase, color: 'from-emerald-600 to-teal-500' },
+                  { label: 'Tour Panoramas', value: scenes.length, icon: MapNavigation, color: 'from-purple-600 to-indigo-500' },
+                ].map((stat, i) => (
+                  <div key={i} className="bg-slate-950 p-8 rounded-[32px] border border-white/5 relative overflow-hidden group shadow-2xl">
+                    <div className={cn("absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r", stat.color)} />
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5">
+                        <stat.icon className="w-5 h-5 text-cyan-400" />
+                      </div>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 italic">BEC Sync Active</span>
+                    </div>
+                    <h3 className="text-4xl font-black text-white tracking-tighter mb-1.5">{stat.value}</h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <div className="xl:col-span-2 bg-slate-950 rounded-[40px] p-10 border border-white/5 shadow-2xl">
+                  <div className="flex justify-between items-center mb-8 border-b border-white/5 pb-6">
+                    <h3 className="text-xl font-black uppercase tracking-tighter italic">Recent Live Notices</h3>
+                    <button onClick={() => setActiveTab('Latest Notices')} className="flex items-center gap-2 px-5 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-cyan-600/10">
+                      View All
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {notices.slice(0, 3).map((notice) => (
+                      <div key={notice.id} className="flex justify-between items-center p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-cyan-500/20 transition-all">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-xs shrink-0">
+                            {notice.category?.[0] || 'N'}
+                          </div>
+                          <div>
+                            <h5 className="font-bold text-white text-sm line-clamp-1">{notice.title}</h5>
+                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5 block">{notice.category} • {notice.date}</span>
+                          </div>
+                        </div>
+                        <span className="text-[9px] font-bold px-3 py-1 bg-white/5 rounded-lg border border-white/5 uppercase tracking-wider text-slate-400">Live</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-slate-950 rounded-[40px] p-10 border border-white/5 shadow-2xl relative overflow-hidden group">
+                  <div className="absolute -top-12 -right-12 text-white/5 pointer-events-none group-hover:scale-110 transition-all duration-1000">
+                    <Settings className="w-48 h-48" />
+                  </div>
+                  <h3 className="text-xl font-black uppercase tracking-tighter italic mb-8 border-b border-white/5 pb-6">Cloud Status</h3>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        <span>Database Node (Firestore)</span>
+                        <span className="text-emerald-400">Online</span>
+                      </div>
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-500 w-[100%]" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        <span>Media Uploads (Cloudinary)</span>
+                        <span className="text-cyan-400">Active</span>
+                      </div>
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-cyan-500 w-[100%]" />
+                      </div>
+                    </div>
+                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5 mt-10 text-center">
+                      <HelpCircle className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
+                      <h5 className="font-bold text-xs uppercase tracking-widest text-white mb-1">Need help with editing?</h5>
+                      <p className="text-[10px] text-slate-500 font-semibold mb-4 leading-relaxed">Check out our system walkthrough guide at the bottom footer of the website.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: HOME SLIDER */}
+          {activeTab === 'Home Slider' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
                 <div>
-                   <h3 className="text-2xl font-black text-navy-900 uppercase tracking-tighter">Campus Photo Gallery</h3>
-                   <p className="text-gray-500 font-medium">Upload and manage institutional photos and graduation moments.</p>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Cinematic Slide Editor</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage slides appearing in the main hero element of the home page.</p>
                 </div>
                 <button 
-                  onClick={() => {
-                    setEditingItem({ title: '', photo: '' });
-                    setIsModalOpen(true);
-                  }}
-                  className="flex items-center gap-3 px-8 py-4 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all"
+                  onClick={() => setEditingSlide({ id: '', type: 'image', url: '', title: '', subtitle: '', description: '', ctaText: 'Explore Campus' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
                 >
-                   <Plus className="w-5 h-5" /> ADD PHOTO
+                  <PlusCircle className="w-5 h-5" /> Add Slide
                 </button>
-             </div>
-
-             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {galleryItems.map((item) => (
-                  <motion.div 
-                    key={item.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="bg-white p-4 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all group relative overflow-hidden"
-                  >
-                     <div className="aspect-[4/3] rounded-[2rem] overflow-hidden mb-6 border border-gray-50 shadow-inner">
-                        <img src={item.photo} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                     </div>
-                     <div className="px-2 pb-2">
-                        <h4 className="text-sm font-black text-navy-900 tracking-tight leading-tight uppercase line-clamp-1 mb-4">{item.title}</h4>
-                        <div className="flex gap-2">
-                           <button 
-                             onClick={() => {
-                               setEditingItem(item);
-                               setIsModalOpen(true);
-                             }}
-                             className="flex-1 p-2.5 text-navy-900 bg-gray-50 hover:bg-white rounded-xl border border-gray-100 transition-all flex items-center justify-center"
-                           >
-                              <Edit className="w-4 h-4" />
-                           </button>
-                           <button 
-                             onClick={() => handleDelete(item.id)}
-                             className="flex-1 p-2.5 text-rose-500 bg-rose-50/30 hover:bg-rose-50 rounded-xl border border-rose-100 transition-all flex items-center justify-center"
-                           >
-                              <Trash2 className="w-4 h-4" />
-                           </button>
-                        </div>
-                     </div>
-                  </motion.div>
-                ))}
-                {galleryItems.length === 0 && (
-                  <div className="col-span-full py-32 text-center bg-gray-50/50 rounded-[3rem] border-2 border-dashed border-gray-200">
-                     <ImageIcon className="w-16 h-16 text-gray-200 mx-auto mb-6" />
-                     <h3 className="text-2xl font-black text-gray-300 uppercase tracking-tighter">Photo Gallery is Empty</h3>
-                  </div>
-                )}
-             </div>
-           </div>
-         )}
-
-         {activeTab === 'Achievements' && (
-
-          <div className="space-y-12">
-            <div className="flex justify-between items-center mb-8">
-               <div>
-                  <h3 className="text-2xl font-black text-navy-900 uppercase tracking-tighter">Manage Student Achievements</h3>
-                  <p className="text-gray-500 font-medium">Add, Edit or Remove student honors and awards.</p>
-               </div>
-               <button 
-                 onClick={() => {
-                   setEditingItem({ name: '', dept: '', title: '', desc: '', award: '', photo: '' });
-                   setIsModalOpen(true);
-                 }}
-                 className="flex items-center gap-3 px-8 py-4 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all"
-               >
-                  <Plus className="w-5 h-5" /> ADD ACHIEVEMENT
-               </button>
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-               {achievements.map((item) => (
-                 <motion.div 
-                   key={item.id}
-                   initial={{ opacity: 0, y: 20 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all group relative overflow-hidden"
-                 >
-                    <div className="flex gap-8 items-start relative z-10">
-                       <div className="w-24 h-24 bg-gray-50 rounded-3xl overflow-hidden shrink-0 border border-gray-100">
-                          {item.photo ? (
-                            <img src={item.photo} alt={item.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-300">
-                               <ImageIcon className="w-8 h-8" />
-                            </div>
-                          )}
-                       </div>
-                       <div className="flex-1">
-                          <div className="flex justify-between items-start mb-4">
-                             <div>
-                                <span className="px-3 py-1 bg-cyan-50 text-cyan-700 text-[9px] font-black uppercase tracking-widest rounded-full mb-2 block w-fit italic">{item.award}</span>
-                                <h4 className="text-xl font-black text-navy-900 tracking-tighter leading-tight uppercase group-hover:text-primary transition-colors">{item.title}</h4>
-                             </div>
-                             <div className="flex gap-2">
-                                <button 
-                                  onClick={() => {
-                                    setEditingItem(item);
-                                    setIsModalOpen(true);
-                                  }}
-                                  className="p-3 text-navy-900 bg-gray-50 hover:bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-all shadow-sm"
-                                >
-                                   <Edit className="w-4 h-4" />
-                                </button>
-                                <button 
-                                  onClick={() => handleDelete(item.id)}
-                                  className="p-3 text-rose-500 bg-rose-50/30 hover:bg-rose-50 rounded-xl border border-rose-100 transition-all shadow-sm"
-                                >
-                                   <Trash2 className="w-4 h-4" />
-                                </button>
-                             </div>
-                          </div>
-                          <p className="text-gray-500 text-sm font-medium leading-relaxed mb-6 line-clamp-3">{item.desc}</p>
-                          <div className="flex items-center gap-3">
-                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                                <Users className="w-4 h-4" />
-                             </div>
-                             <div>
-                                <div className="text-xs font-black text-navy-900">{item.name}</div>
-                                <div className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{item.dept}</div>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </motion.div>
-               ))}
-               {achievements.length === 0 && (
-                 <div className="col-span-full py-32 text-center bg-gray-50/50 rounded-[3rem] border-2 border-dashed border-gray-200">
-                    <Award className="w-16 h-16 text-gray-200 mx-auto mb-6" />
-                    <h3 className="text-2xl font-black text-gray-300 uppercase tracking-tighter">No Achievements Added</h3>
-                 </div>
-               )}
-            </div>
-            
-            {/* Modal */}
-            {isModalOpen && (
-              <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
-                 <motion.div 
-                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} 
-                   className="absolute inset-0 bg-navy-900/40 backdrop-blur-md" 
-                   onClick={() => setIsModalOpen(false)}
-                 />
-                 <motion.div 
-                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                   className="relative bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl p-10 lg:p-16"
-                 >
-                    <h3 className="text-3xl font-black text-navy-900 uppercase tracking-tighter mb-10 italic">
-                      {editingItem?.id ? `Edit ${activeTab === 'Achievements' ? 'Achievement' : 'Activity'}` : `Add ${activeTab === 'Achievements' ? 'Achievement' : 'Activity'}`}
-                    </h3>
-                    <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
-                       {activeTab === 'Achievements' && (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                             <label className="block space-y-3">
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">Student Name</span>
-                                <input 
-                                  value={editingItem?.name || ''}
-                                  onChange={(e) => setEditingItem({...editingItem, name: e.target.value})}
-                                  placeholder="e.g. Rahul Kumar"
-                                  className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-navy-900 placeholder:text-gray-300 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all" 
-                                />
-                             </label>
-                             <label className="block space-y-3">
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">Department</span>
-                                <select 
-                                  value={editingItem?.dept || ''}
-                                  onChange={(e) => setEditingItem({...editingItem, dept: e.target.value})}
-                                  className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-navy-900 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all appearance-none"
-                                >
-                                   <option value="">Select Branch</option>
-                                   <option value="AERONAUTICAL ENGINEERING">Aeronautical</option>
-                                   <option value="CSE">CSE</option>
-                                   <option value="ECE">ECE</option>
-                                   <option value="EE">EE</option>
-                                   <option value="CIVIL">Civil</option>
-                                   <option value="MECHANICAL">Mechanical</option>
-                                </select>
-                             </label>
-                          </div>
-                       )}
-
-                       {activeTab === 'Aero Club' && (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                             <label className="block space-y-3">
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">Event Date</span>
-                                <input 
-                                  type="date"
-                                  value={editingItem?.date || ''}
-                                  onChange={(e) => setEditingItem({...editingItem, date: e.target.value})}
-                                  className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-navy-900 focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all" 
-                                />
-                             </label>
-                             <label className="block space-y-3">
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">Category</span>
-                                <select 
-                                  value={editingItem?.category || 'Event'}
-                                  onChange={(e) => setEditingItem({...editingItem, category: e.target.value})}
-                                  className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-navy-900 focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all appearance-none"
-                                >
-                                   <option value="Event">Event</option>
-                                   <option value="Workshop">Workshop</option>
-                                   <option value="Training">Training</option>
-                                   <option value="Competition">Competition</option>
-                                </select>
-                             </label>
-                          </div>
-                       )}
-
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                          <label className="block space-y-3">
-                             <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">
-                               {activeTab === 'Achievements' ? 'Award Title' : activeTab === 'Aero Club' ? 'Activity Title' : 'Photo Caption'}
-                             </span>
-                             <input 
-                               value={editingItem?.title || ''}
-                               onChange={(e) => setEditingItem({...editingItem, title: e.target.value})}
-                               placeholder={activeTab === 'Achievements' ? "e.g. Best Innovator" : activeTab === 'Workshops' || activeTab === 'Sports' || activeTab === 'Gallery' ? "e.g. Annual Convocation 2024" : "e.g. Drone Workshop 2024"}
-                               className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-navy-900 focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all" 
-                             />
-
-                          </label>
-                          {activeTab === 'Achievements' && (
-                             <label className="block space-y-3">
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">Honor/Award Label</span>
-                                <input 
-                                  value={editingItem?.award || ''}
-                                  onChange={(e) => setEditingItem({...editingItem, award: e.target.value})}
-                                  placeholder="e.g. AIR 134 / State Award"
-                                  className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-navy-900 focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all" 
-                                />
-                             </label>
-                          )}
-                       </div>
-
-                       {(activeTab === 'Achievements' || activeTab === 'Aero Club') && (
-                        <label className="block space-y-3">
-                           <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">Description</span>
-                           <textarea 
-                             value={editingItem?.desc || ''}
-                             onChange={(e) => setEditingItem({...editingItem, desc: e.target.value})}
-                             rows={4} 
-                             placeholder="Details and highlights..."
-                             className="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-navy-900 focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all resize-none"
-                           />
-                        </label>
-                       )}
-
-
-                       <label className="block space-y-3">
-                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em] ml-2">Media Upload</span>
-                          <div className="flex gap-4">
-                             <div className="flex-1 relative group">
-                                <input 
-                                  type="file" 
-                                  onChange={(e) => handleUpload(e.target.files?.[0])}
-                                  className="absolute inset-0 opacity-0 cursor-pointer z-10" 
-                                />
-                                <div className="w-full px-8 py-5 bg-white border-2 border-dashed border-gray-100 rounded-2xl text-sm font-bold text-gray-400 flex items-center justify-center gap-3 group-hover:border-primary group-hover:text-primary transition-all">
-                                   <Plus className="w-5 h-5" /> {isUploading ? 'Uploading...' : `Upload ${activeTab === 'Achievements' ? 'Student' : 'Activity'} Image`}
-                                </div>
-                             </div>
-                             {editingItem?.photo && (
-                               <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border border-white">
-                                  <img src={editingItem.photo} className="w-full h-full object-cover" alt="" />
-                               </div>
-                             )}
-                          </div>
-                       </label>
-                       <div className="flex gap-4 pt-10">
-                          <button 
-                            type="button" 
-                            onClick={() => setIsModalOpen(false)}
-                            className="flex-1 py-5 bg-gray-100 text-navy-950 text-xs font-black rounded-2xl tracking-widest hover:bg-gray-200 transition-all"
-                          >
-                             CANCEL
-                          </button>
-                          <button 
-                            type="submit" 
-                            className="flex-[2] py-5 bg-primary text-white text-xs font-black rounded-2xl tracking-widest hover:bg-navy-950 shadow-2xl shadow-primary/30 transition-all"
-                          >
-                             {editingItem?.id ? 'UPDATE ITEM' : 'PUBLISH NOW'}
-                          </button>
-                       </div>
-                    </form>
-                 </motion.div>
               </div>
-            )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {slides.map(slide => (
+                  <div key={slide.id} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="h-44 bg-black/40 rounded-2xl overflow-hidden relative mb-6">
+                        {slide.type === 'video' ? (
+                          <video src={slide.url} muted className="w-full h-full object-cover opacity-60" />
+                        ) : (
+                          <img src={slide.url} className="w-full h-full object-cover opacity-60" alt="" />
+                        )}
+                        <div className="absolute top-4 right-4 bg-black/60 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest text-cyan-400">
+                          {slide.type}
+                        </div>
+                      </div>
+                      <h4 className="font-bold text-lg text-white mb-2 line-clamp-1">{slide.title}</h4>
+                      <p className="text-slate-500 text-xs leading-relaxed line-clamp-3 mb-6 font-medium">{slide.description}</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <button onClick={() => setEditingSlide(slide)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('hero-slides', slide.id)} className="p-3 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4.5 h-4.5" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: LATEST NOTICES */}
+          {activeTab === 'Latest Notices' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Latest Notices & Updates</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage important notices, campus alerts, exam guides, and placement reports.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingNotice({ id: '', title: '', date: '', category: 'Admission', url: '/admission_query', type: 'image', isNew: true })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Notice
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {notices.map(notice => (
+                  <div key={notice.id} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-[8px] font-black uppercase tracking-widest rounded-full">{notice.category}</span>
+                        <span className="text-[9px] text-slate-500 font-bold">{notice.date}</span>
+                      </div>
+                      <h4 className="font-bold text-lg text-white mb-6 line-clamp-3 min-h-[4.5rem] leading-snug">{notice.title}</h4>
+                    </div>
+                    <div className="flex gap-3">
+                      <button onClick={() => setEditingNotice(notice)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('university-notices', notice.id)} className="p-3 bg-rose-500/10 text-rose-400 hover:bg-rose-50 hover:text-white rounded-xl transition-all"><Trash2 className="w-4.5 h-4.5" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: PLACEMENTS */}
+          {activeTab === 'Placements' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Placement Records</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage elite placed students, active corporate salary packages, and company filters.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingStudent({ id: '', companyRole: '', name: '', branch: 'CSE', degree: 'BTech', batch: '2026', packageInfo: 'Placed', companyLogo: '', photo: '', bgColor: 'from-blue-600 to-cyan-500' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Student
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {students.map(student => (
+                  <div key={student.id} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className={`h-40 rounded-2xl relative overflow-hidden mb-6 bg-gradient-to-br ${student.bgColor} flex items-center justify-center`}>
+                        {student.photo ? (
+                          <img src={student.photo} className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-2xl" alt="" />
+                        ) : (
+                          <Users className="w-12 h-12 text-white/40" />
+                        )}
+                      </div>
+                      <span className="px-3 py-1 bg-white/10 text-cyan-400 text-[8px] font-black uppercase tracking-widest rounded-full mb-3 inline-block">{student.companyRole}</span>
+                      <h4 className="font-bold text-xl text-white mb-1 truncate">{student.name}</h4>
+                      <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-6">{student.branch} • {student.degree} ({student.batch})</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <button onClick={() => setEditingStudent(student)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('selected-students-v2', student.id)} className="p-3 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4.5 h-4.5" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: CAMPUS PANORAMA */}
+          {activeTab === 'Campus Panorama' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Campus Panorama VR Tour</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Configure interactive panorama hotspots and 360-degree virtual tour positions.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingScene({ id: '', name: '', image: '', initialX: 50, hotspots: [] })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Scene
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {scenes.map(scene => (
+                  <div key={scene.id} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="h-44 bg-black/40 rounded-2xl overflow-hidden relative mb-6">
+                        <img src={scene.image} className="w-full h-full object-cover opacity-60" alt="" />
+                        <div className="absolute bottom-4 left-4">
+                          <span className="bg-cyan-600/80 backdrop-blur text-white text-[8px] font-black px-2.5 py-1 rounded uppercase tracking-widest">
+                            {scene.hotspots?.length || 0} Hotspots
+                          </span>
+                        </div>
+                      </div>
+                      <h4 className="font-bold text-lg text-white mb-6 truncate">{scene.name}</h4>
+                    </div>
+                    <div className="flex gap-3">
+                      <button onClick={() => setEditingScene(scene)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Configure</button>
+                      <button onClick={() => handleDeleteItem('tour-scenes-v2', scene.id)} className="p-3 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4.5 h-4.5" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: PHOTO GALLERY */}
+          {activeTab === 'Photo Gallery' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Photo Gallery</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Upload and manage campus life archive pictures and graduation moments.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingGallery({ id: '', url: '', title: '', category: 'Events' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Photo
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {gallery.map(img => (
+                  <div key={img.id} className="bg-slate-950 p-5 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="aspect-[4/3] rounded-2xl overflow-hidden relative mb-5 bg-black/40">
+                        <img src={img.url} className="w-full h-full object-cover opacity-85" alt="" />
+                      </div>
+                      <span className="px-2.5 py-0.5 bg-cyan-500/10 text-cyan-400 text-[8px] font-black uppercase tracking-widest rounded-full mb-2 inline-block">{img.category}</span>
+                      <h4 className="font-bold text-sm text-white mb-4 truncate leading-snug">{img.title}</h4>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => setEditingGallery(img)} className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('campus-gallery', img.id)} className="p-2.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 7: EVENT HIGHLIGHTS */}
+          {activeTab === 'Event Highlights' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Event Highlights</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Configure the 4 large interactive quick-access banners on the homepage.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingHighlight({ id: '', title: '', date: 'Learn More', image: '' })}
+                  disabled={highlights.length >= 4}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105 disabled:opacity-40"
+                >
+                  <PlusCircle className="w-5 h-5" /> {highlights.length >= 4 ? 'Max 4 Reached' : 'Add Highlight'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {highlights.map(h => (
+                  <div key={h.id} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="h-44 bg-black/40 rounded-2xl overflow-hidden relative mb-5">
+                        <img src={h.image} className="w-full h-full object-cover opacity-60" alt="" />
+                        <div className="absolute bottom-4 left-4">
+                          <span className="bg-cyan-600 text-white text-[8px] font-black px-2 py-1 rounded uppercase tracking-widest">{h.date}</span>
+                        </div>
+                      </div>
+                      <h4 className="font-bold text-base text-white mb-6 line-clamp-2 min-h-[3rem] leading-snug">{h.title}</h4>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => setEditingHighlight(h)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('events-highlights', h.id)} className="p-3 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 8: LEADERSHIP */}
+          {activeTab === 'Leadership' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Chairman & Director Profiles</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Edit custom vision statements, quote blocks, and bios for executive leadership.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                {leaders.map(l => (
+                  <div key={l.id} className="bg-slate-950 p-8 rounded-[40px] border border-white/5 shadow-2xl flex gap-8 items-start relative overflow-hidden group">
+                    <div className="w-32 h-40 rounded-2xl overflow-hidden bg-black/40 border border-white/10 shrink-0">
+                      <img src={l.image} className="w-full h-full object-cover" alt="" />
+                    </div>
+                    <div className="flex-1">
+                      <span className={cn("px-2.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest text-white inline-block mb-3 bg-gradient-to-r", l.color || "from-cyan-600 to-blue-500")}>
+                        {l.role}
+                      </span>
+                      <h4 className="font-bold text-2xl text-white mb-1 uppercase tracking-tight leading-none">{l.name}</h4>
+                      <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest mb-4">{l.subtitle}</p>
+                      <p className="text-slate-500 text-xs leading-relaxed italic line-clamp-3 mb-6 font-medium">"{l.quote}"</p>
+                      <button onClick={() => setEditingLeader(l)} className="py-2.5 px-6 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit Profile</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 9: FACULTY */}
+          {activeTab === 'Faculty' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Faculty Members</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage department head directories, staff listings, and email cards.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingFaculty({ id: '', name: '', role: 'Assistant Professor', email: '', department: 'CSE Engg', image: '' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Faculty
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {faculties.map(f => (
+                  <div key={f.id} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="flex items-center gap-4 mb-5">
+                        <div className="w-16 h-16 rounded-full overflow-hidden bg-black/40 border border-white/5 flex items-center justify-center shrink-0">
+                          {f.image ? <img src={f.image} className="w-full h-full object-cover" alt="" /> : <Users className="w-8 h-8 text-white/20" />}
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg text-white mb-0.5">{f.name}</h4>
+                          <span className="text-cyan-400 text-[10px] font-black uppercase tracking-wider">{f.role}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2 mb-6 border-t border-white/5 pt-4">
+                        <p className="text-slate-500 text-xs font-semibold"><span className="text-slate-600 uppercase tracking-wider mr-2">Dept:</span> {f.department}</p>
+                        <p className="text-slate-500 text-xs font-semibold"><span className="text-slate-600 uppercase tracking-wider mr-2">Email:</span> {f.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => setEditingFaculty(f)} className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('university-faculties', f.id)} className="p-2.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 10: ACHIEVEMENTS */}
+          {activeTab === 'Achievements' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Student Achievements</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage the college honor roll and national contest winner placements.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingAchievement({ id: '', name: '', dept: 'CSE', title: '', desc: '', award: '1st Place', photo: '' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Achievement
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                {achievements.map(item => (
+                  <div key={item.id} className="bg-slate-950 p-8 rounded-[40px] border border-white/5 shadow-2xl flex gap-8 items-start relative overflow-hidden group">
+                    <div className="w-24 h-24 rounded-2xl overflow-hidden bg-black/40 border border-white/5 shrink-0">
+                      {item.photo ? <img src={item.photo} className="w-full h-full object-cover" alt="" /> : <Award className="w-8 h-8 text-white/20 m-auto mt-8" />}
+                    </div>
+                    <div className="flex-1">
+                      <span className="px-2.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-500/10 inline-block mb-2">
+                        {item.award}
+                      </span>
+                      <h4 className="font-bold text-xl text-white mb-2 uppercase tracking-tight">{item.title}</h4>
+                      <p className="text-slate-500 text-xs leading-relaxed font-medium mb-4 line-clamp-2">"{item.desc}"</p>
+                      <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4">{item.name} • {item.dept}</p>
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditingAchievement(item)} className="py-2 px-5 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Edit</button>
+                        <button onClick={() => handleDeleteItem('achievements', item.id)} className="p-2 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 11: AERO CLUB */}
+          {activeTab === 'Aero Club' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Aero Club Activities</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage aviation hangers events, drone training sessions, and design competitions.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingAeroClub({ id: '', title: '', desc: '', date: '', category: 'Event', photo: '' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Activity
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                {aeroClubItems.map(item => (
+                  <div key={item.id} className="bg-slate-950 p-8 rounded-[40px] border border-white/5 shadow-2xl flex gap-8 items-start relative overflow-hidden group">
+                    <div className="w-24 h-24 rounded-2xl overflow-hidden bg-black/40 border border-white/5 shrink-0">
+                      {item.photo ? <img src={item.photo} className="w-full h-full object-cover" alt="" /> : <Plane className="w-8 h-8 text-white/20 m-auto mt-8" />}
+                    </div>
+                    <div className="flex-1">
+                      <span className="px-2.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/10 inline-block mb-2">
+                        {item.category}
+                      </span>
+                      <h4 className="font-bold text-xl text-white mb-2 uppercase tracking-tight">{item.title}</h4>
+                      <p className="text-slate-500 text-xs leading-relaxed font-medium mb-4 line-clamp-2">"{item.desc}"</p>
+                      <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4">{item.date}</p>
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditingAeroClub(item)} className="py-2 px-5 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Edit</button>
+                        <button onClick={() => handleDeleteItem('aeroclub', item.id)} className="p-2 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 12: WORKSHOPS */}
+          {activeTab === 'Workshops' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Workshop & Seminar Gallery</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Upload and manage photographs of institutional academic seminars and research workshops.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingWorkshop({ id: '', title: '', photo: '' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Photo
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {workshopItems.map(item => (
+                  <div key={item.id} className="bg-slate-950 p-5 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="aspect-[4/3] rounded-2xl overflow-hidden relative mb-5 bg-black/40">
+                        <img src={item.photo} className="w-full h-full object-cover opacity-85" alt="" />
+                      </div>
+                      <h4 className="font-bold text-sm text-white mb-4 truncate leading-snug">{item.title}</h4>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => setEditingWorkshop(item)} className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('workshop', item.id)} className="p-2.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 13: SPORTS */}
+          {activeTab === 'Sports' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Sports & Games Gallery</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Upload and manage photographs of athletic events, sports meets, and student matches.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingSports({ id: '', title: '', photo: '' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Photo
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {sportsItems.map(item => (
+                  <div key={item.id} className="bg-slate-950 p-5 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="aspect-[4/3] rounded-2xl overflow-hidden relative mb-5 bg-black/40">
+                        <img src={item.photo} className="w-full h-full object-cover opacity-85" alt="" />
+                      </div>
+                      <h4 className="font-bold text-sm text-white mb-4 truncate leading-snug">{item.title}</h4>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => setEditingSports(item)} className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('sports', item.id)} className="p-2.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </main>
+
+        {/* MODAL 1: EDIT SLIDE */}
+        {editingSlide && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Slide</h3>
+                <button onClick={() => setEditingSlide(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Media Source</label>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                    {editingSlide.url ? (
+                      <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex items-center justify-center group">
+                        {editingSlide.type === 'video' ? <video src={editingSlide.url} muted className="max-h-36" /> : <img src={editingSlide.url} className="max-h-36" alt="" />}
+                        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                          <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer shadow-2xl">
+                            {uploading ? 'UPLOADING...' : 'CHANGE MEDIA'}
+                            <input type="file" className="hidden" accept="image/*,video/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingSlide({ ...editingSlide, url, type: e.target.files?.[0]?.type.startsWith('video') ? 'video' : 'image' }))} />
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                        <Upload className="w-8 h-8 text-white/20 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Upload Media From Device</span>
+                        <input type="file" className="hidden" accept="image/*,video/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingSlide({ ...editingSlide, url, type: e.target.files?.[0]?.type.startsWith('video') ? 'video' : 'image' }))} />
+                      </label>
+                    )}
+                    <input className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60" value={editingSlide.url} onChange={(e) => setEditingSlide({ ...editingSlide, url: e.target.value })} placeholder="Media Direct Link URL" />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Headline</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingSlide.title} onChange={(e) => setEditingSlide({ ...editingSlide, title: e.target.value })} />
+                  </label>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Subtitle</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingSlide.subtitle} onChange={(e) => setEditingSlide({ ...editingSlide, subtitle: e.target.value })} />
+                  </label>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Detailed Info</span>
+                    <textarea className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none h-24 resize-none" value={editingSlide.description} onChange={(e) => setEditingSlide({ ...editingSlide, description: e.target.value })} />
+                  </label>
+                </div>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingSlide(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('hero-slides', editingSlide)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
           </div>
         )}
 
-        {activeTab === 'Aero Club' && (
-          <div className="space-y-12">
-            <div className="flex justify-between items-center mb-8">
-               <div>
-                  <h3 className="text-2xl font-black text-navy-900 uppercase tracking-tighter">Manage Aero Club Activities</h3>
-                  <p className="text-gray-500 font-medium">Add, Edit or Remove Aero Club events, workshops, and photos.</p>
-               </div>
-               <button 
-                 onClick={() => {
-                   setEditingItem({ title: '', desc: '', date: '', category: 'Event', photo: '' });
-                   setIsModalOpen(true);
-                 }}
-                 className="flex items-center gap-3 px-8 py-4 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all"
-               >
-                  <Plus className="w-5 h-5" /> ADD ACTIVITY
-               </button>
+        {/* MODAL 2: EDIT NOTICE */}
+        {editingNotice && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Notice</h3>
+                <button onClick={() => setEditingNotice(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Notice Title</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingNotice.title} onChange={(e) => setEditingNotice({ ...editingNotice, title: e.target.value })} placeholder="Enter update banner title" />
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Category</span>
+                    <select className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingNotice.category} onChange={(e) => setEditingNotice({ ...editingNotice, category: e.target.value })}>
+                      <option value="Admission">Admission</option>
+                      <option value="Academic">Academic</option>
+                      <option value="Placement">Placement</option>
+                      <option value="Exam">Examination</option>
+                      <option value="Events">General Events</option>
+                    </select>
+                  </label>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Redirection Path</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingNotice.url} onChange={(e) => setEditingNotice({ ...editingNotice, url: e.target.value })} placeholder="e.g. /fees or external url" />
+                  </label>
+                </div>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingNotice(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('university-notices', editingNotice)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
             </div>
+          </div>
+        )}
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-               {aeroClubItems.map((item) => (
-                 <motion.div 
-                   key={item.id}
-                   initial={{ opacity: 0, y: 20 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all group relative overflow-hidden"
-                 >
-                    <div className="flex gap-8 items-start relative z-10">
-                       <div className="w-24 h-24 bg-gray-50 rounded-3xl overflow-hidden shrink-0 border border-gray-100">
-                          {item.photo ? (
-                            <img src={item.photo} alt={item.title} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-300">
-                               <ImageIcon className="w-8 h-8" />
-                            </div>
-                          )}
-                       </div>
-                       <div className="flex-1">
-                          <div className="flex justify-between items-start mb-4">
-                             <div>
-                                <span className="px-3 py-1 bg-amber-50 text-amber-700 text-[9px] font-black uppercase tracking-widest rounded-full mb-2 block w-fit italic">{item.category}</span>
-                                <h4 className="text-xl font-black text-navy-900 tracking-tighter leading-tight uppercase group-hover:text-primary transition-colors">{item.title}</h4>
-                             </div>
-                             <div className="flex gap-2">
-                                <button 
-                                  onClick={() => {
-                                    setEditingItem(item);
-                                    setIsModalOpen(true);
-                                  }}
-                                  className="p-3 text-navy-900 bg-gray-50 hover:bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-all shadow-sm"
-                                >
-                                   <Edit className="w-4 h-4" />
-                                </button>
-                                <button 
-                                  onClick={() => handleDelete(item.id)}
-                                  className="p-3 text-rose-500 bg-rose-50/30 hover:bg-rose-50 rounded-xl border border-rose-100 transition-all shadow-sm"
-                                >
-                                   <Trash2 className="w-4 h-4" />
-                                </button>
-                             </div>
+        {/* MODAL 3: EDIT STUDENT */}
+        {editingStudent && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-2xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Student Record</h3>
+                <button onClick={() => setEditingStudent(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Student Full Name</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingStudent.name} onChange={(e) => setEditingStudent({ ...editingStudent, name: e.target.value })} />
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <label className="block space-y-2">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Branch</span>
+                      <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingStudent.branch} onChange={(e) => setEditingStudent({ ...editingStudent, branch: e.target.value })} />
+                    </label>
+                    <label className="block space-y-2">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Degree</span>
+                      <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingStudent.degree} onChange={(e) => setEditingStudent({ ...editingStudent, degree: e.target.value })} />
+                    </label>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <label className="block space-y-2">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Batch</span>
+                      <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingStudent.batch} onChange={(e) => setEditingStudent({ ...editingStudent, batch: e.target.value })} />
+                    </label>
+                    <label className="block space-y-2">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Placed Company</span>
+                      <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingStudent.companyRole} onChange={(e) => setEditingStudent({ ...editingStudent, companyRole: e.target.value })} />
+                    </label>
+                  </div>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Package Details</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingStudent.packageInfo} onChange={(e) => setEditingStudent({ ...editingStudent, packageInfo: e.target.value })} placeholder="e.g. 12.4 LPA Placed" />
+                  </label>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Student Image</span>
+                    <div className="flex gap-4 items-center">
+                      <div className="w-16 h-16 rounded-full overflow-hidden bg-black flex items-center justify-center shrink-0">
+                        {editingStudent.photo ? <img src={editingStudent.photo} className="w-full h-full object-cover" alt="" /> : <Users className="w-6 h-6 text-white/20" />}
+                      </div>
+                      <label className="bg-cyan-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase cursor-pointer">
+                        Upload
+                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingStudent({ ...editingStudent, photo: url }))} />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Company Logo</span>
+                    <div className="flex gap-4 items-center bg-white p-4 rounded-xl">
+                      {editingStudent.companyLogo ? <img src={editingStudent.companyLogo} className="max-h-8 object-contain" alt="" /> : <span className="text-black/30 text-xs">No Logo</span>}
+                      <label className="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase cursor-pointer ml-auto">
+                        Upload
+                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingStudent({ ...editingStudent, companyLogo: url }))} />
+                      </label>
+                    </div>
+                  </div>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Card Background Theme</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-mono" value={editingStudent.bgColor} onChange={(e) => setEditingStudent({ ...editingStudent, bgColor: e.target.value })} placeholder="from-blue-600 to-cyan-500" />
+                  </label>
+                </div>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingStudent(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('selected-students-v2', editingStudent)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 4: CONFIGURE PANORAMA */}
+        {editingScene && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-4xl border border-white/10 shadow-2xl flex flex-col max-h-[95vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Virtual Tour Scene</h3>
+                <button onClick={() => setEditingScene(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto custom-scrollbar text-slate-300 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Location Name</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingScene.name} onChange={(e) => setEditingScene({ ...editingScene, name: e.target.value })} placeholder="e.g. Aeronautical Hangars" />
+                  </label>
+                  <div className="space-y-2">
+                    <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">360-degree Panorama Photo Source</span>
+                    <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                      {editingScene.image ? (
+                        <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex items-center justify-center group">
+                          <img src={editingScene.image} className="max-h-36" alt="" />
+                          <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                            <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer">
+                              Change Image
+                              <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingScene({ ...editingScene, image: url }))} />
+                            </label>
                           </div>
-                          <p className="text-gray-500 text-sm font-medium leading-relaxed mb-6 line-clamp-3">{item.desc}</p>
-                          <div className="text-[10px] font-black text-gray-400 uppercase tracking-[.2em]">{item.date}</div>
-                       </div>
+                        </div>
+                      ) : (
+                        <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                          <Upload className="w-8 h-8 text-white/20 mb-2" />
+                          <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Click to Upload panorama file</span>
+                          <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingScene({ ...editingScene, image: url }))} />
+                        </label>
+                      )}
+                      <input className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60" value={editingScene.image} onChange={(e) => setEditingScene({ ...editingScene, image: e.target.value })} />
                     </div>
-                 </motion.div>
-               ))}
-               {aeroClubItems.length === 0 && (
-                 <div className="col-span-full py-32 text-center bg-gray-50/50 rounded-[3rem] border-2 border-dashed border-gray-200">
-                    <Plane className="w-16 h-16 text-gray-200 mx-auto mb-6" />
-                    <h3 className="text-2xl font-black text-gray-300 uppercase tracking-tighter">No Activities Added</h3>
-                 </div>
-               )}
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-3">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Hotspot Overlays</span>
+                    <button onClick={() => setEditingScene({ ...editingScene, hotspots: [...(editingScene.hotspots || []), { x: 50, y: 50, text: 'Click Here', type: 'scene', targetId: scenes[0]?.id || '' }] })} className="text-cyan-400 font-bold text-xs uppercase hover:underline">Add Hotspot +</button>
+                  </div>
+                  <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    {editingScene.hotspots?.map((hs, i) => (
+                      <div key={i} className="bg-slate-950 p-4 rounded-xl border border-white/5 space-y-3">
+                        <div className="flex justify-between items-center pb-2 border-b border-white/5">
+                          <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Marker {i+1}</span>
+                          <button onClick={() => setEditingScene({ ...editingScene, hotspots: editingScene.hotspots?.filter((_, idx) => idx !== i) })} className="text-rose-400 hover:text-rose-500"><Trash2 className="w-4 h-4" /></button>
+                        </div>
+                        <input className="w-full bg-slate-900 border border-white/5 rounded-lg px-3 py-2 text-xs" value={hs.text} onChange={(e) => {
+                          const list = [...(editingScene.hotspots || [])];
+                          list[i].text = e.target.value;
+                          setEditingScene({ ...editingScene, hotspots: list });
+                        }} placeholder="Pointer Label Text" />
+                        <div className="grid grid-cols-3 gap-2">
+                          <input type="number" className="bg-slate-900 border border-white/5 rounded-lg px-3 py-2 text-xs" value={hs.x} onChange={(e) => {
+                            const list = [...(editingScene.hotspots || [])];
+                            list[i].x = Number(e.target.value);
+                            setEditingScene({ ...editingScene, hotspots: list });
+                          }} placeholder="X%" />
+                          <input type="number" className="bg-slate-900 border border-white/5 rounded-lg px-3 py-2 text-xs" value={hs.y} onChange={(e) => {
+                            const list = [...(editingScene.hotspots || [])];
+                            list[i].y = Number(e.target.value);
+                            setEditingScene({ ...editingScene, hotspots: list });
+                          }} placeholder="Y%" />
+                          <select className="bg-slate-900 border border-white/5 rounded-lg px-3 py-2 text-[10px]" value={hs.targetId} onChange={(e) => {
+                            const list = [...(editingScene.hotspots || [])];
+                            list[i].targetId = e.target.value;
+                            setEditingScene({ ...editingScene, hotspots: list });
+                          }}>
+                            {scenes.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingScene(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('tour-scenes-v2', editingScene)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
             </div>
           </div>
         )}
 
-        {activeTab === 'Workshops' && (
-          <div className="space-y-12">
-            <div className="flex justify-between items-center mb-8">
-               <div>
-                  <h3 className="text-2xl font-black text-navy-900 uppercase tracking-tighter">Workshop Gallery Manager</h3>
-                  <p className="text-gray-500 font-medium">Upload and manage photos for the Workshop & Seminar section.</p>
-               </div>
-               <button 
-                 onClick={() => {
-                   setEditingItem({ title: '', photo: '' });
-                   setIsModalOpen(true);
-                 }}
-                 className="flex items-center gap-3 px-8 py-4 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all"
-               >
-                  <Plus className="w-5 h-5" /> ADD TO GALLERY
-               </button>
-            </div>
+        {/* MODAL 5: PHOTO GALLERY */}
+        {editingGallery && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Gallery Photo</h3>
+                <button onClick={() => setEditingGallery(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Image Source</span>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                    {editingGallery.url ? (
+                      <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex items-center justify-center group">
+                        <img src={editingGallery.url} className="max-h-36" alt="" />
+                        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                          <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer">
+                            Change Image
+                            <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingGallery({ ...editingGallery, url }))} />
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                        <Upload className="w-8 h-8 text-white/20 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Upload photo from device</span>
+                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingGallery({ ...editingGallery, url }))} />
+                      </label>
+                    )}
+                    <input className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60 text-center" value={editingGallery.url} onChange={(e) => setEditingGallery({ ...editingGallery, url: e.target.value })} />
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-               {workshopItems.map((item) => (
-                 <motion.div 
-                   key={item.id}
-                   initial={{ opacity: 0, scale: 0.95 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   className="bg-white p-4 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all group relative overflow-hidden"
-                 >
-                    <div className="aspect-[4/3] rounded-[2rem] overflow-hidden mb-6 border border-gray-50 shadow-inner">
-                       <img src={item.photo} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    </div>
-                    <div className="px-2 pb-2">
-                       <h4 className="text-sm font-black text-navy-900 tracking-tight leading-tight uppercase line-clamp-1 mb-4">{item.title}</h4>
-                       <div className="flex gap-2">
-                          <button 
-                            onClick={() => {
-                              setEditingItem(item);
-                              setIsModalOpen(true);
-                            }}
-                            className="flex-1 p-2.5 text-navy-900 bg-gray-50 hover:bg-white rounded-xl border border-gray-100 transition-all flex items-center justify-center"
-                          >
-                             <Edit className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(item.id)}
-                            className="flex-1 p-2.5 text-rose-500 bg-rose-50/30 hover:bg-rose-50 rounded-xl border border-rose-100 transition-all flex items-center justify-center"
-                          >
-                             <Trash2 className="w-4 h-4" />
-                          </button>
-                       </div>
-                    </div>
-                 </motion.div>
-               ))}
-               {workshopItems.length === 0 && (
-                 <div className="col-span-full py-32 text-center bg-gray-50/50 rounded-[3rem] border-2 border-dashed border-gray-200">
-                    <ImageIcon className="w-16 h-16 text-gray-200 mx-auto mb-6" />
-                    <h3 className="text-2xl font-black text-gray-300 uppercase tracking-tighter">Gallery is Empty</h3>
-                 </div>
-               )}
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Photo Caption</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingGallery.title} onChange={(e) => setEditingGallery({ ...editingGallery, title: e.target.value })} placeholder="Enter photograph title or event context" />
+                </label>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Category Folder</span>
+                  <select className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingGallery.category} onChange={(e) => setEditingGallery({ ...editingGallery, category: e.target.value })}>
+                    <option value="Events">Events & Festivals</option>
+                    <option value="Infrastructure">Campus & Infrastructure</option>
+                    <option value="Placements">Placements Achievements</option>
+                    <option value="Laboratory">Hangers & Laboratory</option>
+                  </select>
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingGallery(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('campus-gallery', editingGallery)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
             </div>
           </div>
         )}
 
-        {activeTab === 'Sports' && (
-          <div className="space-y-12">
-            <div className="flex justify-between items-center mb-8">
-               <div>
-                  <h3 className="text-2xl font-black text-navy-900 uppercase tracking-tighter">Sports Gallery Manager</h3>
-                  <p className="text-gray-500 font-medium">Upload and manage photos for the Sports & Games section.</p>
-               </div>
-               <button 
-                 onClick={() => {
-                   setEditingItem({ title: '', photo: '' });
-                   setIsModalOpen(true);
-                 }}
-                 className="flex items-center gap-3 px-8 py-4 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all"
-               >
-                  <Plus className="w-5 h-5" /> ADD TO GALLERY
-               </button>
-            </div>
+        {/* MODAL 6: EVENT HIGHLIGHT */}
+        {editingHighlight && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Highlights Card</h3>
+                <button onClick={() => setEditingHighlight(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Card Banner Image</span>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                    {editingHighlight.image ? (
+                      <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex items-center justify-center group">
+                        <img src={editingHighlight.image} className="max-h-36" alt="" />
+                        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                          <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer">
+                            Change Image
+                            <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingHighlight({ ...editingHighlight, image: url }))} />
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                        <Upload className="w-8 h-8 text-white/20 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Upload Highlight image</span>
+                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingHighlight({ ...editingHighlight, image: url }))} />
+                      </label>
+                    )}
+                    <input className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60 text-center" value={editingHighlight.image} onChange={(e) => setEditingHighlight({ ...editingHighlight, image: e.target.value })} />
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-               {sportsItems.map((item) => (
-                 <motion.div 
-                   key={item.id}
-                   initial={{ opacity: 0, scale: 0.95 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   className="bg-white p-4 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all group relative overflow-hidden"
-                 >
-                    <div className="aspect-[4/3] rounded-[2rem] overflow-hidden mb-6 border border-gray-50 shadow-inner">
-                       <img src={item.photo} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    </div>
-                    <div className="px-2 pb-2">
-                       <h4 className="text-sm font-black text-navy-900 tracking-tight leading-tight uppercase line-clamp-1 mb-4">{item.title}</h4>
-                       <div className="flex gap-2">
-                          <button 
-                            onClick={() => {
-                              setEditingItem(item);
-                              setIsModalOpen(true);
-                            }}
-                            className="flex-1 p-2.5 text-navy-900 bg-gray-50 hover:bg-white rounded-xl border border-gray-100 transition-all flex items-center justify-center"
-                          >
-                             <Edit className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(item.id)}
-                            className="flex-1 p-2.5 text-rose-500 bg-rose-50/30 hover:bg-rose-50 rounded-xl border border-rose-100 transition-all flex items-center justify-center"
-                          >
-                             <Trash2 className="w-4 h-4" />
-                          </button>
-                       </div>
-                    </div>
-                 </motion.div>
-               ))}
-               {sportsItems.length === 0 && (
-                 <div className="col-span-full py-32 text-center bg-gray-50/50 rounded-[3rem] border-2 border-dashed border-gray-200">
-                    <Trophy className="w-16 h-16 text-gray-200 mx-auto mb-6" />
-                    <h3 className="text-2xl font-black text-gray-300 uppercase tracking-tighter">Gallery is Empty</h3>
-                 </div>
-               )}
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Card Heading Title</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingHighlight.title} onChange={(e) => setEditingHighlight({ ...editingHighlight, title: e.target.value })} placeholder="e.g. Admission Open 2026" />
+                </label>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Action Pill Label</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingHighlight.date} onChange={(e) => setEditingHighlight({ ...editingHighlight, date: e.target.value })} placeholder="e.g. Apply Now / Join Live" />
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingHighlight(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('events-highlights', editingHighlight)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
             </div>
           </div>
         )}
 
-        {activeTab !== 'Dashboard' && activeTab !== 'Achievements' && activeTab !== 'Aero Club' && activeTab !== 'Workshops' && activeTab !== 'Sports' && activeTab !== 'Gallery' && (
+        {/* MODAL 7: EDIT LEADER */}
+        {editingLeader && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Edit Executive Profile</h3>
+                <button onClick={() => setEditingLeader(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Profile Photograph</span>
+                  <div className="flex gap-4 items-center">
+                    <div className="w-20 h-24 rounded-xl overflow-hidden bg-black shrink-0">
+                      <img src={editingLeader.image} className="w-full h-full object-cover" alt="" />
+                    </div>
+                    <label className="bg-cyan-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase cursor-pointer">
+                      Upload New
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingLeader({ ...editingLeader, image: url }))} />
+                    </label>
+                  </div>
+                </div>
 
-
-
-          <div className="bg-white rounded-[3rem] p-20 min-h-[60vh] flex flex-col items-center justify-center text-center shadow-sm border border-gray-100">
-             <div className="w-24 h-24 bg-primary/5 rounded-full flex items-center justify-center text-primary mb-8 border border-primary/10">
-                <Settings className="w-10 h-10 animate-spin-slow" />
-             </div>
-             <h2 className="text-3xl font-black text-navy-900 mb-4 uppercase tracking-tighter italic">Initializing {activeTab} Module</h2>
-             <p className="text-gray-500 font-medium max-w-sm mb-12">Connecting to College Firebase Realtime Sync and Cloudinary API infrastructure...</p>
-             <button onClick={() => setActiveTab('Dashboard')} className="px-10 py-4 bg-navy-900 text-white font-black text-xs rounded-full tracking-widest hover:bg-primary transition-all">BACK TO OVERVIEW</button>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Leader Full Name</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingLeader.name} onChange={(e) => setEditingLeader({ ...editingLeader, name: e.target.value })} />
+                </label>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Subtitle / Office Designation</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingLeader.subtitle} onChange={(e) => setEditingLeader({ ...editingLeader, subtitle: e.target.value })} />
+                </label>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Quote / Visionary Message</span>
+                  <textarea className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm h-32 resize-none leading-relaxed focus:outline-none" value={editingLeader.quote} onChange={(e) => setEditingLeader({ ...editingLeader, quote: e.target.value })} />
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingLeader(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('leadership-data', editingLeader)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Save Changes</button>
+              </div>
+            </div>
           </div>
         )}
-      </main>
 
-      <style>{`
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-           animation: spin-slow 8s linear infinite;
-        }
-      `}</style>
+        {/* MODAL 8: EDIT FACULTY */}
+        {editingFaculty && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Faculty Card</h3>
+                <button onClick={() => setEditingFaculty(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Faculty Photo</span>
+                  <div className="flex gap-4 items-center">
+                    <div className="w-16 h-16 rounded-full overflow-hidden bg-black flex items-center justify-center shrink-0 border border-white/10">
+                      {editingFaculty.image ? <img src={editingFaculty.image} className="w-full h-full object-cover" alt="" /> : <Users className="w-6 h-6 text-white/20" />}
+                    </div>
+                    <label className="bg-cyan-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase cursor-pointer">
+                      Upload
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingFaculty({ ...editingFaculty, image: url }))} />
+                    </label>
+                  </div>
+                </div>
+
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Faculty Name</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm text-white" value={editingFaculty.name} onChange={(e) => setEditingFaculty({ ...editingFaculty, name: e.target.value })} />
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Designation Role</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingFaculty.role} onChange={(e) => setEditingFaculty({ ...editingFaculty, role: e.target.value })} placeholder="e.g. Professor & Head" />
+                  </label>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Department</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingFaculty.department} onChange={(e) => setEditingFaculty({ ...editingFaculty, department: e.target.value })} placeholder="e.g. CSE Engg" />
+                  </label>
+                </div>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Email Contact</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingFaculty.email} onChange={(e) => setEditingFaculty({ ...editingFaculty, email: e.target.value })} />
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingFaculty(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('university-faculties', editingFaculty)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 9: EDIT ACHIEVEMENT */}
+        {editingAchievement && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Achievement</h3>
+                <button onClick={() => setEditingAchievement(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Media File</span>
+                  <div className="flex gap-4 items-center">
+                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0 border border-white/10 flex items-center justify-center">
+                      {editingAchievement.photo ? <img src={editingAchievement.photo} className="w-full h-full object-cover" alt="" /> : <Award className="w-6 h-6 text-white/20" />}
+                    </div>
+                    <label className="bg-cyan-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase cursor-pointer">
+                      Upload
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingAchievement({ ...editingAchievement, photo: url }))} />
+                    </label>
+                  </div>
+                </div>
+
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Achievement Header Title</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingAchievement.title} onChange={(e) => setEditingAchievement({ ...editingAchievement, title: e.target.value })} />
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Award Label</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingAchievement.award} onChange={(e) => setEditingAchievement({ ...editingAchievement, award: e.target.value })} placeholder="e.g. Gold Medalist" />
+                  </label>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Student Full Name</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingAchievement.name} onChange={(e) => setEditingAchievement({ ...editingAchievement, name: e.target.value })} />
+                  </label>
+                </div>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Branch Department</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingAchievement.dept} onChange={(e) => setEditingAchievement({ ...editingAchievement, dept: e.target.value })} placeholder="e.g. Aero / MECH / CSE" />
+                </label>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Short Description Details</span>
+                  <textarea className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm h-24 resize-none leading-relaxed" value={editingAchievement.desc} onChange={(e) => setEditingAchievement({ ...editingAchievement, desc: e.target.value })} />
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingAchievement(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('achievements', editingAchievement)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 10: EDIT AERO CLUB */}
+        {editingAeroClub && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Aero Activity</h3>
+                <button onClick={() => setEditingAeroClub(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto custom-scrollbar text-slate-300 space-y-6">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Activity Photo</span>
+                  <div className="flex gap-4 items-center">
+                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0 border border-white/10 flex items-center justify-center">
+                      {editingAeroClub.photo ? <img src={editingAeroClub.photo} className="w-full h-full object-cover" alt="" /> : <Plane className="w-6 h-6 text-white/20" />}
+                    </div>
+                    <label className="bg-cyan-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase cursor-pointer">
+                      Upload
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingAeroClub({ ...editingAeroClub, photo: url }))} />
+                    </label>
+                  </div>
+                </div>
+
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Activity Title</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingAeroClub.title} onChange={(e) => setEditingAeroClub({ ...editingAeroClub, title: e.target.value })} />
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Date Label</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingAeroClub.date} onChange={(e) => setEditingAeroClub({ ...editingAeroClub, date: e.target.value })} placeholder="e.g. Feb 22, 2026" />
+                  </label>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Category</span>
+                    <select className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm text-white" value={editingAeroClub.category} onChange={(e) => setEditingAeroClub({ ...editingAeroClub, category: e.target.value })}>
+                      <option value="Event">Event</option>
+                      <option value="Workshop">Workshop</option>
+                      <option value="Training">Drone Training</option>
+                      <option value="Hanger Meet">Hanger Meet</option>
+                    </select>
+                  </label>
+                </div>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Activity Description Details</span>
+                  <textarea className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm h-24 resize-none leading-relaxed" value={editingAeroClub.desc} onChange={(e) => setEditingAeroClub({ ...editingAeroClub, desc: e.target.value })} />
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingAeroClub(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('aeroclub', editingAeroClub)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 11: EDIT WORKSHOP */}
+        {editingWorkshop && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Workshop Photo</h3>
+                <button onClick={() => setEditingWorkshop(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Photograph Source</span>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                    {editingWorkshop.photo ? (
+                      <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex items-center justify-center group">
+                        <img src={editingWorkshop.photo} className="max-h-36" alt="" />
+                        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                          <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer">
+                            Change Image
+                            <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingWorkshop({ ...editingWorkshop, photo: url }))} />
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                        <Upload className="w-8 h-8 text-white/20 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Upload image from device</span>
+                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingWorkshop({ ...editingWorkshop, photo: url }))} />
+                      </label>
+                    )}
+                    <input className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60 text-center" value={editingWorkshop.photo} onChange={(e) => setEditingWorkshop({ ...editingWorkshop, photo: e.target.value })} />
+                  </div>
+                </div>
+
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Photo Description / Title</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingWorkshop.title} onChange={(e) => setEditingWorkshop({ ...editingWorkshop, title: e.target.value })} placeholder="e.g. Blockchain Summit 2026" />
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingWorkshop(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('workshop', editingWorkshop)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 12: EDIT SPORTS */}
+        {editingSports && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Sports Photo</h3>
+                <button onClick={() => setEditingSports(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Photograph Source</span>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                    {editingSports.photo ? (
+                      <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex items-center justify-center group">
+                        <img src={editingSports.photo} className="max-h-36" alt="" />
+                        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                          <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer">
+                            Change Image
+                            <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingSports({ ...editingSports, photo: url }))} />
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                        <Upload className="w-8 h-8 text-white/20 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Upload image from device</span>
+                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleMediaUpload(e, (url) => setEditingSports({ ...editingSports, photo: url }))} />
+                      </label>
+                    )}
+                    <input className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60 text-center" value={editingSports.photo} onChange={(e) => setEditingSports({ ...editingSports, photo: e.target.value })} />
+                  </div>
+                </div>
+
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Photo Description / Title</span>
+                  <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingSports.title} onChange={(e) => setEditingSports({ ...editingSports, title: e.target.value })} placeholder="e.g. Inter-College Cricket Match" />
+                </label>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingSports(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('sports', editingSports)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </LoginGate>
   );

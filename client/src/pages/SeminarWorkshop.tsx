@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 import { PageLayout } from '../components/PageLayout';
 import { BellRing, Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-
+import { useData } from '../context/DataContext';
 
 
 const staticWorkshopImages = [
@@ -31,13 +29,7 @@ const staticWorkshopImages = [
 
 export const SeminarWorkshop = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [dynamicImages, setDynamicImages] = useState<any[]>([]);
-
-  useEffect(() => {
-    axios.get('/api/workshop')
-      .then(res => setDynamicImages(Array.isArray(res.data) ? res.data : []))
-      .catch(() => setDynamicImages([]));
-  }, []);
+  const { workshop: dynamicImages } = useData();
 
   const allImages = [...dynamicImages, ...staticWorkshopImages];
 
