@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "name": "Er. Anita Behera",
+    "role": "Professor & Head",
+    "email": "cse@becbbsr.ac.in",
+    "department": "CSE Engg"
+  },
+  {
+    "id": "2",
+    "name": "Dr. Shipra Kumari",
+    "role": "Professor",
+    "email": "cse@becbbsr.ac.in",
+    "department": "CSE Engg"
+  },
+  {
+    "id": "3",
+    "name": "Er. S Hota",
+    "role": "Asst. Professor",
+    "email": "cse@becbbsr.ac.in",
+    "department": "CSE Engg"
+  },
+  {
+    "id": "4",
+    "name": "Dr. Sangram Samal",
+    "role": "Professor & Head",
+    "email": "aero@becbbsr.ac.in",
+    "department": "Aeronautical Engg"
+  },
+  {
+    "id": "5",
+    "name": "Er. A. Panigrahy",
+    "role": "Asst. Professor",
+    "email": "aero@becbbsr.ac.in",
+    "department": "Aeronautical Engg"
+  }
+]

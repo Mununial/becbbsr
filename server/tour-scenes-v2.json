@@ -1,0 +1,65 @@
+[
+  {
+    "id": "exterior",
+    "name": "College Main Building",
+    "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+    "hotspots": [
+      {
+        "x": 45,
+        "y": 60,
+        "type": "scene",
+        "text": "Enter Building",
+        "targetId": "interior"
+      },
+      {
+        "x": 80,
+        "y": 65,
+        "type": "scene",
+        "text": "To Campus Stairs",
+        "targetId": "stairs"
+      }
+    ]
+  },
+  {
+    "id": "interior",
+    "name": "Reception Area",
+    "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629486/becweb/campus_interior.jpg",
+    "hotspots": [
+      {
+        "x": 10,
+        "y": 70,
+        "type": "scene",
+        "text": "Back Outside",
+        "targetId": "exterior"
+      }
+    ]
+  },
+  {
+    "id": "stairs",
+    "name": "Main Campus Stairs",
+    "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629487/becweb/stairs.jpg",
+    "hotspots": [
+      {
+        "x": 50,
+        "y": 80,
+        "type": "scene",
+        "text": "Return to Front",
+        "targetId": "exterior"
+      }
+    ]
+  },
+  {
+    "id": "front",
+    "name": "College Entrance",
+    "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+    "hotspots": [
+      {
+        "x": 60,
+        "y": 70,
+        "type": "scene",
+        "text": "Walk Forward",
+        "targetId": "exterior"
+      }
+    ]
+  }
+]
