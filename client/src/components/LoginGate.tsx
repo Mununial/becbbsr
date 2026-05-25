@@ -27,7 +27,7 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
     setCheckingSession(false);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) {
       setError('Please enter both ID and Password');
@@ -181,6 +181,7 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
             <div className="flex flex-col gap-3.5 mt-4">
               <button
                 type="submit"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="w-full py-4.5 bg-accent text-navy-950 text-xs font-black rounded-2xl uppercase tracking-widest hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-accent/15 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
               >
