@@ -282,7 +282,7 @@ export const App = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-bg-soft selection:bg-primary selection:text-white font-inter">
+    <div className="min-h-screen bg-bg-soft selection:bg-primary selection:text-white font-inter overflow-x-hidden w-full max-w-full relative">
       <AnimatePresence>
         {loading && (
           <motion.div
