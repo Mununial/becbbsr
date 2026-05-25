@@ -185,8 +185,8 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
   return (
     <>
       {/* 1. TOP BAR - Clean Info */}
-      <div className="hidden lg:block bg-[#0F172A] text-white py-2 border-b border-white/5">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 flex justify-between items-center text-xs font-bold tracking-[0.2em] uppercase font-poppins">
+      <div className="hidden xl:block bg-[#0F172A] text-white py-2 border-b border-white/5">
+        <div className="max-w-[1400px] mx-auto px-6 xl:px-8 flex justify-between items-center text-xs font-bold tracking-[0.2em] uppercase font-poppins">
           <div className="flex items-center gap-10">
             <a href="mailto:info@becbbsr.ac.in" className="flex items-center gap-2.5 hover:text-accent transition-all duration-300">
               <Mail className="w-3.5 h-3.5 text-accent" /> info@becbbsr.ac.in
@@ -234,7 +234,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
           </Link>
 
           {/* Institutional Partners */}
-          <div className="hidden lg:flex items-center gap-10 border-l border-slate-100 pl-10">
+          <div className="hidden xl:flex items-center gap-10 border-l border-slate-100 pl-10">
             {[
               { id: 'aicte', name: 'AICTE', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629482/becweb/org_logo3.png' },
               { id: 'bput', name: 'BPUT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629347/becweb/bput.png' },
@@ -258,7 +258,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
         scrolled ? "fixed top-0 bg-primary/95 backdrop-blur-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] py-1" : "relative bg-primary py-0"
       )}>
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          <div className="hidden lg:flex items-center h-14 pl-6">
+          <div className="hidden xl:flex items-center h-14 pl-6">
             <div className="flex items-center h-full gap-0.5 ml-2">
               {navItems.map((item) => (
                 <div key={item.name} className="h-full group/nav relative">
@@ -269,7 +269,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
             </div>
           </div>
 
-          <div className="lg:hidden w-full flex items-center justify-between px-6 py-2 bg-primary/70 backdrop-blur-[20px] border-b border-white/5 relative overflow-hidden shadow-2xl">
+          <div className="xl:hidden w-full flex items-center justify-between px-6 py-2 bg-primary/70 backdrop-blur-[20px] border-b border-white/5 relative overflow-hidden shadow-2xl">
              {/* Dynamic Ambient Light */}
              <div className="absolute -top-10 -left-10 w-40 h-40 bg-accent/20 blur-[80px] rounded-full pointer-events-none animate-pulse" />
              
@@ -301,7 +301,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
              </motion.button>
           </div>
 
-          <div className="hidden lg:block pr-6">
+          <div className="hidden xl:block pr-6">
             <Link 
               to="/admission_query"
               className="px-8 py-2.5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] hover:bg-white hover:text-primary transition-all duration-500 shadow-xl shadow-accent/20"
@@ -348,14 +348,14 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-[140] bg-black/40 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-[140] bg-black/40 backdrop-blur-sm xl:hidden"
             />
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed right-0 top-0 bottom-0 w-[85%] z-[150] bg-white shadow-2xl flex flex-col lg:hidden overflow-hidden"
+              className="fixed right-0 top-0 bottom-0 w-[85%] z-[150] bg-white shadow-2xl flex flex-col xl:hidden overflow-hidden"
             >
               <div className="p-8 flex justify-between items-center border-b border-slate-50">
                  <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC" className="h-12 w-auto object-contain" />
