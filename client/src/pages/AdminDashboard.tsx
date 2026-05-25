@@ -71,20 +71,30 @@ export const AdminDashboard = () => {
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Universal Media Upload via Firebase Storage (Bulletproof serverless client upload)
+  // Universal Media Upload via Express Server's Cloudinary endpoint (extremely robust and bypasses Firebase Auth constraints)
   const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
     try {
-      const storageRef = ref(storage, `uploads/${Date.now()}-${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      callback(url);
-    } catch (err) {
-      console.error("Firebase Storage Upload Error:", err);
-      alert("Failed to upload media. Please try again.");
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await axios.post('/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      if (response.data && response.data.success && response.data.url) {
+        callback(response.data.url);
+      } else {
+        throw new Error('Upload failed on server');
+      }
+    } catch (err: any) {
+      console.error("Media Upload to Cloudinary failed:", err);
+      alert("Failed to upload media. Please try again. " + (err.response?.data?.error || err.message || ''));
     } finally {
       setUploading(false);
     }

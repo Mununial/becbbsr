@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader } from '../types';
-import { db } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
+import { signInAnonymously } from 'firebase/auth';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import axios from 'axios';
 
 interface DataContextType {
   notices: Notice[];
@@ -48,6 +50,11 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [sports, setSports] = useState<any[]>([]);
 
   useEffect(() => {
+    // Authenticate anonymously so unauthenticated visitors can write to config paths matching Firestore rules
+    signInAnonymously(auth).catch((err) => {
+      console.warn("Firebase Storage/Firestore anonymous auth skipped:", err);
+    });
+
     // Helper to spin up a realtime listener on a Firestore configuration doc key
     const setupListener = (key: string, setFn: (data: any[]) => void, defaultData: any) => {
       const docRef = doc(db, "configs", key);
@@ -155,53 +162,77 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  // Sync / set Doc writers
+  // Sync / set Doc writers (Firestore cloud database + Express local JSON filesystem fallback)
   const updateNotices = (newNotices: Notice[]) => {
     setDoc(doc(db, "configs", "university-notices"), { items: newNotices }).catch(() => {});
+    axios.post('/api/config/university-notices', { items: newNotices }).catch(() => {});
+    localStorage.setItem("university-notices", JSON.stringify(newNotices));
   };
 
   const updateSlides = (newSlides: Slide[]) => {
     setDoc(doc(db, "configs", "hero-slides"), { items: newSlides }).catch(() => {});
+    axios.post('/api/config/hero-slides', { items: newSlides }).catch(() => {});
+    localStorage.setItem("hero-slides", JSON.stringify(newSlides));
   };
 
   const updateGallery = (newGallery: GalleryImage[]) => {
     setDoc(doc(db, "configs", "campus-gallery"), { items: newGallery }).catch(() => {});
+    axios.post('/api/config/campus-gallery', { items: newGallery }).catch(() => {});
+    localStorage.setItem("campus-gallery", JSON.stringify(newGallery));
   };
 
   const updateFaculties = (newFaculties: Faculty[]) => {
     setDoc(doc(db, "configs", "university-faculties"), { items: newFaculties }).catch(() => {});
+    axios.post('/api/config/university-faculties', { items: newFaculties }).catch(() => {});
+    localStorage.setItem("university-faculties", JSON.stringify(newFaculties));
   };
 
   const updateStudents = (newStudents: SelectedStudent[]) => {
     setDoc(doc(db, "configs", "selected-students-v2"), { items: newStudents }).catch(() => {});
+    axios.post('/api/config/selected-students-v2', { items: newStudents }).catch(() => {});
+    localStorage.setItem("selected-students-v2", JSON.stringify(newStudents));
   };
 
   const updateScenes = (newScenes: Scene[]) => {
     setDoc(doc(db, "configs", "tour-scenes-v2"), { items: newScenes }).catch(() => {});
+    axios.post('/api/config/tour-scenes-v2', { items: newScenes }).catch(() => {});
+    localStorage.setItem("tour-scenes-v2", JSON.stringify(newScenes));
   };
 
   const updateHighlights = (newHighlights: Highlight[]) => {
     setDoc(doc(db, "configs", "events-highlights"), { items: newHighlights }).catch(() => {});
+    axios.post('/api/config/events-highlights', { items: newHighlights }).catch(() => {});
+    localStorage.setItem("events-highlights", JSON.stringify(newHighlights));
   };
 
   const updateLeaders = (newLeaders: Leader[]) => {
     setDoc(doc(db, "configs", "leadership-data"), { items: newLeaders }).catch(() => {});
+    axios.post('/api/config/leadership-data', { items: newLeaders }).catch(() => {});
+    localStorage.setItem("leadership-data", JSON.stringify(newLeaders));
   };
 
   const updateAchievements = (newAchievements: any[]) => {
     setDoc(doc(db, "configs", "achievements"), { items: newAchievements }).catch(() => {});
+    axios.post('/api/config/achievements', { items: newAchievements }).catch(() => {});
+    localStorage.setItem("achievements", JSON.stringify(newAchievements));
   };
 
   const updateAeroClub = (newAero: any[]) => {
     setDoc(doc(db, "configs", "aeroclub"), { items: newAero }).catch(() => {});
+    axios.post('/api/config/aeroclub', { items: newAero }).catch(() => {});
+    localStorage.setItem("aeroclub", JSON.stringify(newAero));
   };
 
   const updateWorkshops = (newWorkshop: any[]) => {
     setDoc(doc(db, "configs", "workshop"), { items: newWorkshop }).catch(() => {});
+    axios.post('/api/config/workshop', { items: newWorkshop }).catch(() => {});
+    localStorage.setItem("workshop", JSON.stringify(newWorkshop));
   };
 
   const updateSports = (newSports: any[]) => {
     setDoc(doc(db, "configs", "sports"), { items: newSports }).catch(() => {});
+    axios.post('/api/config/sports', { items: newSports }).catch(() => {});
+    localStorage.setItem("sports", JSON.stringify(newSports));
   };
 
   return (
