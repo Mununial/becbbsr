@@ -25,15 +25,20 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     const loadKey = async (key: string, setFn: (data: any) => void, defaultData: any) => {
       try {
         const res = await axios.get(`/api/config/${key}`);
-        if (res.data) {
+        if (res.data && Array.isArray(res.data)) {
           setFn(res.data);
           localStorage.setItem(key, JSON.stringify(res.data));
         } else {
           const local = localStorage.getItem(key);
           if (local) {
             const parsed = JSON.parse(local);
-            setFn(parsed);
-            axios.post(`/api/config/${key}`, parsed).catch(() => {});
+            if (Array.isArray(parsed)) {
+              setFn(parsed);
+              axios.post(`/api/config/${key}`, parsed).catch(() => {});
+            } else {
+              setFn(defaultData);
+              axios.post(`/api/config/${key}`, defaultData).catch(() => {});
+            }
           } else {
             setFn(defaultData);
             axios.post(`/api/config/${key}`, defaultData).catch(() => {});
@@ -41,7 +46,12 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         }
       } catch (err) {
         const local = localStorage.getItem(key);
-        setFn(local ? JSON.parse(local) : defaultData);
+        if (local) {
+          const parsed = JSON.parse(local);
+          setFn(Array.isArray(parsed) ? parsed : defaultData);
+        } else {
+          setFn(defaultData);
+        }
       }
     };
 

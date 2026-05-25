@@ -151,27 +151,48 @@ export const App = () => {
   const [showTour, setShowTour] = useState(false);
 
   const [scenes, setScenes] = useState<Scene[]>(() => {
-    const saved = localStorage.getItem('tour-scenes-v2');
-    return saved ? JSON.parse(saved) : DEFAULT_SCENES;
+    try {
+      const saved = localStorage.getItem('tour-scenes-v2');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return DEFAULT_SCENES;
   });
 
   const [students, setStudents] = useState<SelectedStudent[]>(() => {
-    const saved = localStorage.getItem('selected-students-v2');
-    return saved ? JSON.parse(saved) : DEFAULT_SELECTED_STUDENTS;
+    try {
+      const saved = localStorage.getItem('selected-students-v2');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return DEFAULT_SELECTED_STUDENTS;
   });
 
   const [highlights, setHighlights] = useState<Highlight[]>(() => {
-    const saved = localStorage.getItem('events-highlights');
-    return saved ? JSON.parse(saved) : DEFAULT_HIGHLIGHTS;
+    try {
+      const saved = localStorage.getItem('events-highlights');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return DEFAULT_HIGHLIGHTS;
   });
 
   const [leaders, setLeaders] = useState<Leader[]>(() => {
-    const saved = localStorage.getItem('leadership-data');
-    if (saved) {
-      const parsed = JSON.parse(saved) as Leader[];
-      const filtered = parsed.filter(l => l.role !== "VICE CHAIRMAN");
-      return filtered;
-    }
+    try {
+      const saved = localStorage.getItem('leadership-data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(l => l.role !== "VICE CHAIRMAN");
+        }
+      }
+    } catch (e) {}
     return DEFAULT_LEADERS;
   });
 
@@ -180,15 +201,20 @@ export const App = () => {
     const loadKey = async (key: string, setFn: (data: any) => void, defaultData: any) => {
       try {
         const res = await axios.get(`/api/config/${key}`);
-        if (res.data) {
+        if (res.data && Array.isArray(res.data)) {
           setFn(res.data);
           localStorage.setItem(key, JSON.stringify(res.data));
         } else {
           const local = localStorage.getItem(key);
           if (local) {
             const parsed = JSON.parse(local);
-            setFn(parsed);
-            axios.post(`/api/config/${key}`, parsed).catch(() => {});
+            if (Array.isArray(parsed)) {
+              setFn(parsed);
+              axios.post(`/api/config/${key}`, parsed).catch(() => {});
+            } else {
+              setFn(defaultData);
+              axios.post(`/api/config/${key}`, defaultData).catch(() => {});
+            }
           } else {
             setFn(defaultData);
             axios.post(`/api/config/${key}`, defaultData).catch(() => {});
@@ -196,7 +222,12 @@ export const App = () => {
         }
       } catch (err) {
         const local = localStorage.getItem(key);
-        setFn(local ? JSON.parse(local) : defaultData);
+        if (local) {
+          const parsed = JSON.parse(local);
+          setFn(Array.isArray(parsed) ? parsed : defaultData);
+        } else {
+          setFn(defaultData);
+        }
       }
     };
 
