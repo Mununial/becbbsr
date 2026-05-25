@@ -202,9 +202,9 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                 Fees Payment
               </Link>
               <Link to="/admission_query" className="px-5 py-1.5 bg-accent text-white rounded-lg hover:bg-white hover:text-primary transition-all shadow-lg shadow-accent/20">Admission 2026</Link>
-              <button onClick={onAdminClick} className="flex items-center gap-2.5 text-white/60 hover:text-white transition-all pl-4">
+              <a href="http://31.97.63.174:3006/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-white/60 hover:text-white transition-all pl-4">
                 <LayoutDashboard className="w-4 h-4 text-accent" /> ERP Portal
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -315,23 +315,23 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
       {/* 4. PREMIUM ANNOUNCEMENT */}
       <div className="bg-white border-b border-slate-100 h-10 flex items-center overflow-hidden relative z-[50]">
         <div className="flex-1 overflow-hidden relative h-full flex items-center">
-          <div className="px-8 h-full bg-[#0F172A] flex items-center gap-3 z-20 shrink-0 font-black text-xs uppercase tracking-[0.3em] text-white shadow-[15px_0_40px_rgba(15,23,42,0.4)]">
-            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" /> Latest Board
+          <div className="px-4 md:px-8 h-full bg-[#0F172A] flex items-center gap-2 md:gap-3 z-20 shrink-0 font-black text-[10px] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-white shadow-[15px_0_40px_rgba(15,23,42,0.4)]">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent animate-pulse shrink-0" /> Latest Board
           </div>
-          <div className="flex animate-marquee whitespace-nowrap gap-20 text-xs font-bold text-primary/70 uppercase tracking-widest px-10">
+          <div className="flex animate-marquee whitespace-nowrap gap-10 md:gap-20 text-[10px] md:text-xs font-bold text-primary/70 uppercase tracking-wider md:tracking-widest px-4 md:px-10">
             {[1, 2, 3, 4, 5].map((i) => (
-              <span key={i} className="flex items-center gap-10">
-                <span className="flex items-center gap-3">
-                  <Zap className="w-3.5 h-3.5 text-accent animate-pulse" /> Admissions for Academic Session 2026-27 are now open 
+              <span key={i} className="flex items-center gap-10 shrink-0">
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <Zap className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> Admissions for Academic Session 2026-27 are now open 
                 </span>
-                <span className="flex items-center gap-3">
-                  <Trophy className="w-3.5 h-3.5 text-accent animate-pulse" /> BEC Students secure placements at Amazon, TCS and Infosys
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <Trophy className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> BEC Students secure placements at Amazon, TCS and Infosys
                 </span>
-                <span className="flex items-center gap-3">
-                  <GraduationCap className="w-3.5 h-3.5 text-accent animate-pulse" /> AICTE Approved & BPUT Affiliated College
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <GraduationCap className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> AICTE Approved & BPUT Affiliated College
                 </span>
-                <span className="flex items-center gap-3">
-                  <ArrowUpRight className="w-3.5 h-3.5 text-accent animate-pulse" /> Register for Alumni Homecoming 2026
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <ArrowUpRight className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> Register for Alumni Homecoming 2026
                 </span>
               </span>
             ))}
@@ -444,9 +444,9 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                 ))}
               </div>
               <div className="p-8 bg-slate-50 mt-auto flex flex-col gap-4">
-                 <button onClick={() => { onAdminClick(); setIsOpen(false); }} className="w-full py-4 bg-white border border-slate-200 rounded-xl text-primary font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-sm shadow-slate-100">
+                 <a href="http://31.97.63.174:3006/" target="_blank" rel="noopener noreferrer" className="w-full py-4 bg-white border border-slate-200 rounded-xl text-primary font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-sm shadow-slate-100">
                    <LayoutDashboard className="w-5 h-5 text-accent" /> Student Portal
-                 </button>
+                 </a>
                  <Link to="/admission_query" className="w-full py-5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-lg shadow-accent/20">
                    Join BEC 2026 <GraduationCap className="w-5 h-5" />
                  </Link>

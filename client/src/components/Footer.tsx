@@ -133,6 +133,7 @@ export const Footer = () => {
             © 2026 Bhubaneswar Engineering College (BEC). Digital Nexus by BEC IT.
           </div>
           <div className="flex gap-8 text-xs font-bold uppercase tracking-[0.2em] font-inter">
+            <a href="/admin" className="text-slate-600 hover:text-accent transition-colors">Website Editor</a>
             <a href="#" className="text-slate-600 hover:text-accent transition-colors">Privacy</a>
             <a href="#" className="text-slate-600 hover:text-accent transition-colors">Terms</a>
             <a href="#" className="text-slate-600 hover:text-accent transition-colors">Anti-Ragging</a>
