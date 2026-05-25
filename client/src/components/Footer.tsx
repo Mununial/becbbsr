@@ -82,21 +82,25 @@ export const Footer = () => {
             <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] mb-8 font-poppins text-accent/80">Campus Contact</h4>
             <div className="space-y-6">
               <div className="flex gap-4 group">
-                <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shrink-0 group-hover:border-accent/20 transition-colors">
-                  <MapPin className="w-4 h-4 text-accent transition-transform group-hover:scale-110" />
-                </div>
-                <p className="text-xs font-bold leading-relaxed font-inter text-slate-400">Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha</p>
+                <a href="https://maps.google.com/?q=Bhubaneswar+Engineering+College" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shrink-0 hover:border-accent/20 transition-colors">
+                  <MapPin className="w-4 h-4 text-accent transition-transform hover:scale-110" />
+                </a>
+                <a href="https://maps.google.com/?q=Bhubaneswar+Engineering+College" target="_blank" rel="noopener noreferrer" className="text-xs font-bold leading-relaxed font-inter text-slate-400 hover:text-accent transition-colors">
+                  Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha
+                </a>
               </div>
               <div className="flex gap-4 group">
-                <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shrink-0 group-hover:border-accent/20 transition-colors">
-                  <Phone className="w-4 h-4 text-accent transition-transform group-hover:scale-110" />
-                </div>
-                <p className="text-xs font-bold font-inter leading-relaxed text-slate-400">094370 90875 / 094370 88215</p>
+                <a href="tel:+919437090875" className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shrink-0 hover:border-accent/20 transition-colors">
+                  <Phone className="w-4 h-4 text-accent transition-transform hover:scale-110" />
+                </a>
+                <p className="text-xs font-bold font-inter leading-relaxed text-slate-400">
+                  <a href="tel:+919437090875" className="hover:text-accent transition-colors">094370 90875</a> / <a href="tel:+919437088215" className="hover:text-accent transition-colors">094370 88215</a>
+                </p>
               </div>
               <div className="flex gap-4 group">
-                <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shrink-0 group-hover:border-accent/20 transition-colors">
-                  <Mail className="w-4 h-4 text-accent transition-transform group-hover:scale-110" />
-                </div>
+                <a href="mailto:info@becbbsr.ac.in" className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shrink-0 hover:border-accent/20 transition-colors">
+                  <Mail className="w-4 h-4 text-accent transition-transform hover:scale-110" />
+                </a>
                 <a href="mailto:info@becbbsr.ac.in" className="text-xs font-bold hover:text-white transition-colors font-inter lowercase text-slate-400">info@becbbsr.ac.in</a>
               </div>
             </div>

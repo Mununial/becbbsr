@@ -30,7 +30,7 @@ const socials = [
   { 
     name: 'Whatsapp', 
     icon: MessageCircle, 
-    href: 'https://wa.me/919437090875', 
+    href: 'https://wa.me/919437088215', 
     color: 'bg-[#25D366]',
     isWhatsapp: true
   },
