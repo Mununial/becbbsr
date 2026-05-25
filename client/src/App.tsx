@@ -23,6 +23,7 @@ import { AdmissionPopup } from './components/AdmissionPopup';
 import { FloatingSocials } from './components/FloatingSocials';
 import { useData } from './context/DataContext';
 import { LoginGate } from './components/LoginGate';
+import { SEO } from './components/SEO';
 
 import { type SelectedStudent, type Scene, type Leader, type Highlight } from './types';
 
@@ -214,6 +215,51 @@ export const App = () => {
       </AnimatePresence>
 
       <AdmissionPopup />
+      <SEO 
+        title="Bhubaneswar Engineering College (BEC) | Best Private Engineering College in Odisha"
+        description="Bhubaneswar Engineering College (BEC) is a top private B.Tech, MBA &amp; Diploma college in Bhubaneswar, Odisha. Offering AICTE approved courses, 100% placement assistance, world-class labs, and budget-friendly fees. Enroll today!"
+        keywords={[
+          "best private engineering college in Odisha",
+          "top 10 engineering colleges in Bhubaneswar",
+          "engineering college with best placement in Odisha",
+          "aeronautical engineering college Bhubaneswar",
+          "aeronautical engineering in Odisha",
+          "BTech admission 2026 Odisha",
+          "engineering college fees Odisha",
+          "MBA college Bhubaneswar",
+          "Bhubaneswar Engineering College",
+          "BEC Bhubaneswar",
+          "AICTE approved engineering colleges in Odisha"
+        ]}
+        schema={{
+          "@type": "CollegeOrUniversity",
+          "name": "Bhubaneswar Engineering College (BEC)",
+          "alternateName": "BEC Bhubaneswar",
+          "url": "https://becbbsr.ac.in",
+          "logo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png",
+          "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+          "description": "Bhubaneswar Engineering College (BEC) is a premier AICTE-approved engineering and management institute in Bhubaneswar, Odisha, offering B.Tech, MBA, and Diploma courses with high placement packages.",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "At: Kaimatia, Post: Khudupur, Via: Madanpur",
+            "addressLocality": "Bhubaneswar",
+            "addressRegion": "Odisha",
+            "postalCode": "752054",
+            "addressCountry": "India"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "20.1983",
+            "longitude": "85.7032"
+          },
+          "telephone": "+91-9437044218",
+          "sameAs": [
+            "https://www.facebook.com/becbbsr/",
+            "https://www.instagram.com/becbbsr_official/",
+            "https://twitter.com/becbbsr"
+          ]
+        }}
+      />
       <Navbar onAdminClick={() => setShowAdmin(true)} />
 
       {showAdmin && (

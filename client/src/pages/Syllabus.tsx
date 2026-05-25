@@ -2,6 +2,7 @@ import { PageLayout } from '../components/PageLayout';
 import { FileText, Download, ShieldCheck, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
+import { SEO } from '../components/SEO';
 
 const syllabusData = [
   {
@@ -33,6 +34,17 @@ const syllabusData = [
 export const Syllabus = () => {
   return (
     <PageLayout title="Academic Syllabus">
+      <SEO 
+        title="Download Academic Syllabus &amp; BPUT Curriculum | BEC"
+        description="Download the official B.Tech &amp; Diploma course syllabus of Bhubaneswar Engineering College (BEC). AICTE and BPUT aligned academic handbooks."
+        keywords={[
+          "BTech syllabus download Odisha",
+          "BEC Bhubaneswar syllabus",
+          "BPUT curriculum engineering",
+          "diploma polytechnic syllabus Odisha",
+          "academic calendar BEC college"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Info Box */}

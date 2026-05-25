@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Zap, Target, GraduationCap, Mail, Cpu, Power } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const faculty = [
   { name: "Bijay Kumar Sahoo", role: "Asst. Professor", email: "electrical@becbbsr.ac.in" },
@@ -12,6 +13,17 @@ const faculty = [
 export const EEEngg = () => {
   return (
     <PageLayout title="Electrical Engineering">
+      <SEO 
+        title="B.Tech Electrical Engineering | Department of EE | BEC"
+        description="Enroll in B.Tech Electrical Engineering at Bhubaneswar Engineering College (BEC). High-voltage labs, power electronics training, and excellent job opportunities in state electricity grids."
+        keywords={[
+          "electrical engineering college Bhubaneswar",
+          "BTech electrical engineering in Odisha",
+          "power grid jobs Odisha",
+          "high voltage electrical labs BEC",
+          "government PSU job preparation"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Header Section */}

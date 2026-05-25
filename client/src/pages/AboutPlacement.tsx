@@ -1,4 +1,5 @@
 import { PageLayout } from '../components/PageLayout';
+import { SEO } from '../components/SEO';
 import { Briefcase, Target, CheckCircle2, TrendingUp, Award } from 'lucide-react';
 
 const objectives = [
@@ -21,6 +22,18 @@ const trainingPillars = [
 export const AboutPlacement = () => {
   return (
     <PageLayout title="Training & Placement">
+      <SEO 
+        title="Training & Placement Cell | Career Opportunities at BEC"
+        description="Learn about the Training &amp; Placement Cell of Bhubaneswar Engineering College (BEC). Explore our career training roadmap, industrial training, and 75%+ placement records."
+        keywords={[
+          "Bhubaneswar Engineering College placement cell",
+          "BEC training and placement roadmap",
+          "engineering summer training Odisha",
+          "student employability development Bhubaneswar",
+          "BEC highest salary package",
+          "career opportunities engineering Odisha"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Intro Section */}

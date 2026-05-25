@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Library, Microscope, Presentation, Wifi, CupSoda, Home, Bus, HeartPulse, Building2 } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const facilityList = [
   {
@@ -71,6 +72,17 @@ const facilityList = [
 export const Facilities = () => {
   return (
     <PageLayout title="Campus Facilities">
+      <SEO 
+        title="Campus Infrastructure &amp; Facilities | Hostels &amp; Labs | BEC"
+        description="Explore the world-class campus facilities at Bhubaneswar Engineering College (BEC). Central library, state-of-the-art laboratories, modern boys/girls hostels, and Wi-Fi campus."
+        keywords={[
+          "Bhubaneswar Engineering College hostel",
+          "BEC library facilities",
+          "engineering laboratories Bhubaneswar",
+          "canteen Wi-Fi campus BEC",
+          "bus transport facility college Khordha"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Intro Banner */}

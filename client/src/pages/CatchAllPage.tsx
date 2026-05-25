@@ -1,10 +1,15 @@
 import { PageLayout } from '../components/PageLayout';
 import { Construction } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { SEO } from '../components/SEO';
 
 export const CatchAllPage = () => {
   return (
     <PageLayout title="Page Under Construction">
+      <SEO 
+        title="Page Under Construction | BEC Bhubaneswar"
+        description="This page is currently under development on the new Bhubaneswar Engineering College (BEC) portal. Please return to the homepage or explore academic programs."
+      />
       <div className="flex flex-col items-center justify-center text-center py-24 px-6 bg-gray-50 rounded-3xl border border-gray-100 shadow-inner">
          <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-10 border border-primary/20 shadow-xl shadow-primary/5">
             <Construction className="w-12 h-12 text-primary animate-pulse" />

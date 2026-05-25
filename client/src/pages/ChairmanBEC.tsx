@@ -1,10 +1,22 @@
 import { PageLayout } from '../components/PageLayout';
 import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 export const ChairmanBEC = () => {
   return (
     <PageLayout title="Chairman's Message" subtitle="Bhubaneswar Engineering College (BEC)">
+      <SEO 
+        title="Chairman's Message | Er. Alok Ranjan Mallick | BEC"
+        description="Read the welcoming message from Er. Alok Ranjan Mallick, Chairman of Bhubaneswar Engineering College (BEC), on technical innovation, academic rigor, and professional mentoring."
+        keywords={[
+          "BEC Bhubaneswar Chairman message",
+          "Er Alok Ranjan Mallick",
+          "Bhubaneswar Engineering College management",
+          "engineering leadership Odisha",
+          "founder message BEC college"
+        ]}
+      />
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}

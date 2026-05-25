@@ -2,6 +2,7 @@ import { PageLayout } from '../components/PageLayout';
 import { Award, Layers, CheckSquare } from 'lucide-react';
 import { useAdmission } from '../hooks/useAdmission';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 const courses = [
   { name: "Aeronautical Engineering", intake: 30 },
@@ -15,6 +16,17 @@ export const Diploma = () => {
   const { open } = useAdmission();
   return (
     <PageLayout title="Diploma in Engineering" subtitle="SCTE & VT Affiliated | Industry-Ready Skills | 3-Year Programs">
+      <SEO 
+        title="Diploma in Engineering Programs | SCTE &amp; VT Affiliated | BEC"
+        description="study 3-year Diploma in Engineering at Bhubaneswar Engineering College (BEC). SCTE &amp; VT affiliated diploma courses in Aeronautical, AME, Civil, Electrical, &amp; Mechanical."
+        keywords={[
+          "diploma engineering colleges in Bhubaneswar",
+          "polytechnic admission Odisha 2026",
+          "diploma aeronautical engineering",
+          "SCTE &amp; VT affiliated colleges Odisha",
+          "BEC diploma intake"
+        ]}
+      />
       <div className="flex flex-col gap-10 mt-4">
         
         <section className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] p-8 md:p-10 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden">

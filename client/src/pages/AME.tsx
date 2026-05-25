@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Plane, Target, Rocket, GraduationCap, Mail } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const faculty = [
   { name: "Er. S Jena", role: "Asst. Professor", email: "ame@becbbsr.ac.in" },
@@ -10,6 +11,17 @@ const faculty = [
 export const AME = () => {
   return (
     <PageLayout title="Aircraft Maintenance Engineering">
+      <SEO 
+        title="Aircraft Maintenance Engineering (AME) | Aviation Academy | BEC"
+        description="Become a licensed Aircraft Maintenance Engineer at Bhubaneswar Engineering College (BEC). Explore our DGCA aligned AME courses, modern hangars, and top placements."
+        keywords={[
+          "aircraft maintenance engineering college Bhubaneswar",
+          "AME course in Odisha",
+          "DGCA approved engineering colleges",
+          "aviation maintenance training Bhubaneswar",
+          "BEC AME intake"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Header Section */}

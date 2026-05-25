@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { Calendar, ChevronRight, Share2, Tag } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 export const NewsAndEvents = () => {
   const { notices } = useData();
@@ -11,6 +12,17 @@ export const NewsAndEvents = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <SEO 
+        title="News, Events &amp; Notice Board | Campus Announcements | BEC"
+        description="Stay updated with the latest news, announcements, notices, and events at Bhubaneswar Engineering College (BEC). Live academic alerts and workshop schedules."
+        keywords={[
+          "BEC Bhubaneswar news",
+          "Bhubaneswar Engineering College events",
+          "college notice board Odisha",
+          "engineering admissions notices",
+          "seminar dates BEC campus"
+        ]}
+      />
       {/* 1. PREMIUM HEADER BANNER */}
       <section className="relative h-[45vh] flex items-center overflow-hidden">
         {/* Background Image with Overlay */}

@@ -1,11 +1,23 @@
 import { PageLayout } from '../components/PageLayout';
 import { Monitor, Target, GraduationCap, Mail, Database, BrainCircuit, Globe } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { SEO } from '../components/SEO';
 
 export const CSEEngg = () => {
   const { faculties } = useData();
   return (
     <PageLayout title="Computer Science & Engineering">
+      <SEO 
+        title="B.Tech Computer Science &amp; Engineering | CSE Department | BEC"
+        description="Study B.Tech Computer Science &amp; Engineering (CSE) at Bhubaneswar Engineering College. Specializations in Data Science, Artificial Intelligence, Cybersecurity, and Web Development."
+        keywords={[
+          "computer science engineering college Bhubaneswar",
+          "BTech CSE in Odisha",
+          "best CSE colleges in Bhubaneswar",
+          "data science engineering course Odisha",
+          "cybersecurity artificial intelligence BEC"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Header Section */}

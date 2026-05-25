@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { SEO } from '../components/SEO';
 import { Search, Building2, Trophy, Award, ChevronRight, Download, GraduationCap, Sparkles, Zap, Target } from 'lucide-react';
 
 interface Company {
@@ -229,6 +230,26 @@ export const Placement = () => {
 
   return (
     <div className="min-h-screen bg-[#F0F4F8] font-poppins selection:bg-cyan-500/30">
+      <SEO 
+        title="Placement Records & Recruiter Partners | BEC Bhubaneswar"
+        description="Explore the exceptional placement records of Bhubaneswar Engineering College (BEC). Our B.Tech, MBA &amp; Diploma graduates placed in top MNCs like Amazon, Tata Steel, Tech Mahindra, Infosys, and InterGlobe."
+        keywords={[
+          "engineering college with best placement in Odisha",
+          "Bhubaneswar Engineering College placement",
+          "BEC placements record",
+          "top recruiters BEC Bhubaneswar",
+          "best placement engineering colleges in Bhubaneswar",
+          "BTech jobs Odisha",
+          "management placements Bhubaneswar",
+          "BEC corporate relations cell"
+        ]}
+        schema={{
+          "@type": "WebPage",
+          "name": "Placement Records - Bhubaneswar Engineering College",
+          "description": "Information on recruitment events, statistics, average packages, and top recruiter partners at Bhubaneswar Engineering College (BEC).",
+          "url": "https://becbbsr.ac.in/placement"
+        }}
+      />
       <Navbar onAdminClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
       
       {/* Hero Section - Elevated SaaS Style */}

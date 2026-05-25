@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Building2, Users, Target, GraduationCap, Mail, Drill } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const faculty = [
   { name: "Soubhagyalaxmi Mohanty", role: "Asst. Professor", email: "civil@becbbsr.ac.in" },
@@ -13,6 +14,17 @@ const faculty = [
 export const CivilEngg = () => {
   return (
     <PageLayout title="Civil Engineering">
+      <SEO 
+        title="B.Tech Civil Engineering | Civil &amp; Environmental Department | BEC"
+        description="Study B.Tech Civil Engineering at Bhubaneswar Engineering College (BEC). Explore our infrastructure labs, survey camps, expert faculty, and placement partners."
+        keywords={[
+          "civil engineering college Bhubaneswar",
+          "BTech civil engineering in Odisha",
+          "environmental engineering courses",
+          "structural design training BEC",
+          "government job preparation engineering"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Header Section */}

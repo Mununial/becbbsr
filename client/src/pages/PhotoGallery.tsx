@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { PageLayout } from '../components/PageLayout';
 import { Image as ImageIcon, X, ChevronLeft, ChevronRight, Camera, Sparkles, Layout, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SEO } from '../components/SEO';
 import { cn } from '../lib/utils';
 import { useData } from '../context/DataContext';
 
@@ -52,6 +53,17 @@ export const PhotoGallery = () => {
 
   return (
     <PageLayout title="Gallery Center">
+      <SEO 
+        title="Photo Gallery &amp; Campus Life Archives | BEC Bhubaneswar"
+        description="Browse through the official photo gallery of Bhubaneswar Engineering College (BEC). High-resolution memories of convocations, campus events, recruiters visits, and labs."
+        keywords={[
+          "Bhubaneswar Engineering College photos",
+          "BEC convocation gallery",
+          "campus life pictures Bhubaneswar",
+          "engineering laboratory photos Odisha",
+          "college event images BEC"
+        ]}
+      />
       <div className="flex flex-col gap-0 -mt-10 overflow-hidden">
         
         {/* Dynamic Glass Hero */}

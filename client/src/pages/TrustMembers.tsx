@@ -1,6 +1,7 @@
 import { PageLayout } from '../components/PageLayout';
 import { ShieldCheck, Award, Linkedin, Facebook, Star, Building2, Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 const trustees = [
   {
@@ -55,6 +56,17 @@ export const TrustMembers = () => {
       subtitle="The visionary leaders driving innovation and excellence at Bhubaneswar Engineering College (BEC)."
       badge="Ayush Group of Institutions"
     >
+      <SEO 
+        title="Members of Trust | Visionary Founders &amp; Trustees | BEC"
+        description="Meet the distinguished trust members and visionary founders of Bhubaneswar Engineering College (BEC) managed under the Ayush Group of Institutions."
+        keywords={[
+          "Bhubaneswar Engineering College trust members",
+          "BEC trustees",
+          "Ayush Group of Institutions founders",
+          "Er Alok Ranjan Mallick BEC",
+          "Ayush Mallick Executive Director"
+        ]}
+      />
       <div className="flex flex-col gap-14">
 
         {/* ── Intro Banner ── */}

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { SEO } from '../components/SEO';
 import { 
   ShieldCheck, 
   Plane, 
@@ -17,6 +18,17 @@ import {
 export const AboutCollege = () => {
   return (
     <div className="min-h-screen bg-[#F9FAFB] font-inter text-[#111827]">
+      <SEO 
+        title="About BEC Bhubaneswar | Legacy, Campus &amp; Infrastructure"
+        description="Learn about Bhubaneswar Engineering College (BEC). Established in 2008, BEC is a premier AICTE-approved B.Tech, MBA &amp; Diploma college on a lush 40-acre campus in Odisha."
+        keywords={[
+          "Bhubaneswar Engineering College history",
+          "BEC Bhubaneswar campus area",
+          "about Ayush Group of Institutions",
+          "best private engineering college campus Odisha",
+          "engineering infrastructure Bhubaneswar"
+        ]}
+      />
       <Navbar onAdminClick={() => {}} />
 
       {/* ── HERO BANNER (REDUCED SCALE) ── */}

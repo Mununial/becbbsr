@@ -4,6 +4,7 @@ import { Award, Trophy, Star, Target, GraduationCap, Zap, Search } from 'lucide-
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useData } from '../context/DataContext';
+import { SEO } from '../components/SEO';
 
 const StudentPhoto = ({ src, name }: { src: string; name: string }) => {
   const [hasError, setHasError] = useState(false);
@@ -88,6 +89,17 @@ export const Achievements = () => {
 
   return (
     <PageLayout title="BEC Achievements">
+      <SEO 
+        title="College &amp; Student Achievements | Awards &amp; Honors | BEC"
+        description="Discover the award-winning legacy of Bhubaneswar Engineering College (BEC). Explore our institutional honors, gold medals, research patents, and academic milestones."
+        keywords={[
+          "Bhubaneswar Engineering College achievements",
+          "BEC awards and honors",
+          "best engineering college awards Odisha",
+          "student research paper publications BEC",
+          "gold medals BTech BPUT"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Hero Section - Refined Glassmorphism */}

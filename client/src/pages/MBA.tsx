@@ -2,6 +2,7 @@ import { PageLayout } from '../components/PageLayout';
 import { Briefcase, Layers, CheckSquare, GraduationCap, Users, Mail, Microscope } from 'lucide-react';
 import { useAdmission } from '../hooks/useAdmission';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 const specializations = [
   "Marketing", "Finance", "Human Resource", "Systems", "Operations Management", "Agri-Business"
@@ -21,7 +22,19 @@ const faculty = [
 export const MBA = () => {
   const { open } = useAdmission();
   return (
-    <PageLayout title="MBA & Basic Sciences" subtitle="AICTE Approved | 120 Seats | BPUT Affiliated">
+    <PageLayout title="MBA &amp; Basic Sciences" subtitle="AICTE Approved | 120 Seats | BPUT Affiliated">
+      <SEO 
+        title="MBA &amp; Basic Sciences Programmes | PG Admissions | BEC"
+        description="Enroll in the top MBA program at Bhubaneswar Engineering College (BEC). AICTE approved, 120 seats, BPUT affiliated. Specializations in Marketing, Finance, HR, and Operations."
+        keywords={[
+          "best MBA college in Bhubaneswar",
+          "MBA admissions 2026 Odisha",
+          "MBA colleges in Odisha with low fees",
+          "MBA marketing finance HR Bhubaneswar",
+          "BEC MBA intake",
+          "basic sciences department BEC"
+        ]}
+      />
       <div className="flex flex-col gap-12 mt-4">
         
         <section className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-8 md:p-12 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden">

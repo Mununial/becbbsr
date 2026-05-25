@@ -1,10 +1,22 @@
 import { PageLayout } from '../components/PageLayout';
 import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 export const ChairmanAyushGroup = () => {
   return (
     <PageLayout title="Chairman's Message" subtitle="Ayush Group of Institutions">
+      <SEO 
+        title="Chairman's Message | Ayush Group of Institutions | BEC"
+        description="Read the vision statement of Er. Alok Ranjan Mallick, Chairman of Ayush Group of Institutions, on providing qualitative standards in technical education."
+        keywords={[
+          "Ayush Group of Institutions Chairman",
+          "Er Alok Ranjan Mallick",
+          "BEC technical education vision",
+          "Bhubaneswar Engineering College management",
+          "engineering standard Odisha"
+        ]}
+      />
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}

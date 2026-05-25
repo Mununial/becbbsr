@@ -2,6 +2,7 @@ import { PageLayout } from '../components/PageLayout';
 import { GraduationCap, BookOpen, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { useAdmission } from '../hooks/useAdmission';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 const courses = [
   { name: "Aeronautical Engineering", intake: 30 },
@@ -21,6 +22,18 @@ export const BTech = () => {
   const { open } = useAdmission();
   return (
     <PageLayout title="B.Tech Programs" subtitle="AICTE Approved • BPUT Affiliated • Govt. of Odisha Recognised">
+      <SEO 
+        title="B.Tech Programs &amp; Branch Intake | BEC Bhubaneswar"
+        description="Explore the best private B.Tech programs in Odisha at Bhubaneswar Engineering College (BEC). AICTE approved B.Tech in CSE, Aeronautical, Agriculture, Mechanical, &amp; Civil."
+        keywords={[
+          "best private BTech college in Odisha",
+          "BTech admission 2026 Odisha",
+          "BTech courses list Bhubaneswar",
+          "AICTE approved engineering colleges in Odisha",
+          "BTech intake and seats BEC",
+          "computer science engineering Bhubaneswar"
+        ]}
+      />
       <div className="flex flex-col gap-10 mt-4">
 
         <section className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] p-8 md:p-10 border border-gray-100 flex flex-col items-center text-center relative overflow-hidden">

@@ -4,6 +4,7 @@ import { Plane, Rocket, Wind, Zap, Microscope, LayoutGrid, Calendar, ArrowRight,
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useData } from '../context/DataContext';
+import { SEO } from '../components/SEO';
 
 export const AeroClub = () => {
   const { aeroclub: activities } = useData();
@@ -18,6 +19,17 @@ export const AeroClub = () => {
 
   return (
     <PageLayout title="BEC Aero Club">
+      <SEO 
+        title="BEC Aero Club | Aeronautical Hangar &amp; Drones | BEC"
+        description="Explore the BEC Aero Club, pioneering student innovation in UAVs, drone technologies, RC aircraft design, and aeronautical research at Bhubaneswar Engineering College."
+        keywords={[
+          "BEC aero club",
+          "drone design engineering college",
+          "aeronautical hangar Bhubaneswar",
+          "RC aircraft modeling Odisha",
+          "UAV research labs college"
+        ]}
+      />
       <div className="flex flex-col gap-24">
         
         {/* Cinematic Hero Section */}

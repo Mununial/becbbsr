@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Leaf, Users, Target, GraduationCap, Mail, ShieldCheck } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const faculty = [
   { name: "P Ch. Nayak", role: "Asst. Professor", email: "agr@becbbsr.ac.in" },
@@ -14,6 +15,17 @@ const faculty = [
 export const AgricultureEngg = () => {
   return (
     <PageLayout title="Agriculture Engineering">
+      <SEO 
+        title="B.Tech Agriculture Engineering | Department of Agri-Tech | BEC"
+        description="Study B.Tech Agriculture Engineering at Bhubaneswar Engineering College (BEC). Hands-on training in farm machinery, smart irrigation systems, and sustainable farming technology."
+        keywords={[
+          "agriculture engineering college Bhubaneswar",
+          "BTech agriculture engineering in Odisha",
+          "agri-tech courses Bhubaneswar",
+          "farm machinery design labs",
+          "sustainable farming engineering BEC"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Header Section */}

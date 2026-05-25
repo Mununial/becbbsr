@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Plane, Users, Target, Rocket, GraduationCap, Mail } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const faculty = [
   { name: "Dr. Sangram Samal", role: "Professor & Head", email: "aero@becbbsr.ac.in" },
@@ -15,6 +16,17 @@ const faculty = [
 export const AeronauticalEngg = () => {
   return (
     <PageLayout title="Aeronautical Engineering">
+      <SEO 
+        title="B.Tech Aeronautical Engineering | Best Aviation College in Odisha"
+        description="Study B.Tech Aeronautical Engineering at Bhubaneswar Engineering College (BEC). Explore our aviation courses, expert faculty, modern labs, and excellent placement in aviation companies."
+        keywords={[
+          "aeronautical engineering college Bhubaneswar",
+          "aeronautical engineering in Odisha",
+          "aviation engineering courses Bhubaneswar",
+          "BTech aeronautical engineering BEC",
+          "aircraft maintenance engineering scope India"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Header Section */}

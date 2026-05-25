@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-
 import { PageLayout } from '../components/PageLayout';
 import { BellRing, Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '../context/DataContext';
-
+import { SEO } from '../components/SEO';
 
 const staticWorkshopImages = [
   { photo: "/photogallery/bec-seminar1.jpg", title: "Technical Seminar" },
@@ -25,8 +24,6 @@ const staticWorkshopImages = [
   { photo: "/photogallery/MAHENDRA SKILL TRAINING-7.jpg", title: "Training Completion" },
 ];
 
-
-
 export const SeminarWorkshop = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const { workshop: dynamicImages } = useData();
@@ -36,9 +33,19 @@ export const SeminarWorkshop = () => {
   const nextImage = () => setSelectedImage(prev => prev !== null ? (prev + 1) % allImages.length : null);
   const prevImage = () => setSelectedImage(prev => prev !== null ? (prev - 1 + allImages.length) % allImages.length : null);
 
-
   return (
-    <PageLayout title="Seminars & Workshops">
+    <PageLayout title="Seminars &amp; Workshops">
+      <SEO 
+        title="Seminars, Workshops &amp; Industry Training | BEC"
+        description="Learn about the skill development programs, national workshops, and academic seminars held at Bhubaneswar Engineering College (BEC). Registration info and event archives."
+        keywords={[
+          "Bhubaneswar Engineering College seminars",
+          "BEC technical workshops",
+          "guest lectures engineering college",
+          "skill development programs Bhubaneswar",
+          "blockchain workshop BEC"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* News Bar */}

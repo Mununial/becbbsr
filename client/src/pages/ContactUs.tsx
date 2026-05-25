@@ -1,10 +1,22 @@
 import { PageLayout } from '../components/PageLayout';
 import { Mail, Phone, MapPin, Globe, Clock, Building, Send, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 export const ContactUs = () => {
   return (
     <PageLayout title="Contact Us">
+      <SEO 
+        title="Contact Us &amp; Campus Address | Help Desk | BEC"
+        description="Get in touch with Bhubaneswar Engineering College (BEC). Direct phone hotlines, official email support, campus address in Gangapada, and corporate office details."
+        keywords={[
+          "contact Bhubaneswar Engineering College",
+          "BEC campus address",
+          "BEC admission phone number",
+          "engineering college office hours",
+          "email contact BEC college"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Top Info Cards */}

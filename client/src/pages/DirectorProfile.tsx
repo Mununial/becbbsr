@@ -1,10 +1,22 @@
 import { PageLayout } from '../components/PageLayout';
 import { GraduationCap, Award, Briefcase, Microscope, Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 
 export const DirectorProfile = () => {
   return (
     <PageLayout title="Director Profile" subtitle="Prof. Dr. B.N. Biswal — Director, Academics & Administration">
+      <SEO 
+        title="Director Profile | Prof. Dr. B.N. Biswal | BEC"
+        description="Meet Prof. Dr. B.N. Biswal, Director of Academics &amp; Administration at Bhubaneswar Engineering College (BEC). PhD in Signal Processing, with 27+ years experience."
+        keywords={[
+          "Prof Dr B N Biswal",
+          "BEC Director profile",
+          "Bhubaneswar Engineering College Director",
+          "academics and administration BEC",
+          "engineering PhD mentors Odisha"
+        ]}
+      />
       <div className="flex flex-col lg:flex-row gap-6 mt-4">
 
         {/* ── Left Sidebar ── */}

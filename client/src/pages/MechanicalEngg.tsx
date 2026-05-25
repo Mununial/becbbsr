@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Settings, Target, GraduationCap, Mail, Box, Drill } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const faculty = [
   { name: "Smruti Ranjan Ratha", role: "Asst. Professor", email: "mech@becbbsr.ac.in" },
@@ -15,6 +16,17 @@ const faculty = [
 export const MechanicalEngg = () => {
   return (
     <PageLayout title="Mechanical Engineering">
+      <SEO 
+        title="B.Tech Mechanical Engineering | Mechatronics &amp; Robotics | BEC"
+        description="Study B.Tech Mechanical Engineering at Bhubaneswar Engineering College (BEC). Elite focus on Mechatronics, additive manufacturing, autonomous systems, and advanced robotics."
+        keywords={[
+          "mechanical engineering college Bhubaneswar",
+          "BTech mechanical engineering in Odisha",
+          "mechatronics and robotics courses",
+          "3D printing additive manufacturing BEC",
+          "automobile CAD labs Bhubaneswar"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Header Section */}

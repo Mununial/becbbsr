@@ -2,6 +2,7 @@ import { PageLayout } from '../components/PageLayout';
 import { CreditCard, CheckCircle2, Building, Home, Bus, FileText, Send } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '../lib/utils';
+import { SEO } from '../components/SEO';
 
 const feesCategories = [
    {
@@ -80,6 +81,19 @@ export const Fees = () => {
 
    return (
       <PageLayout title="Fees Payment">
+         <SEO 
+            title="Fees Structure & Online Fees Payment Portal | BEC"
+            description="Securely pay your college fees online at Bhubaneswar Engineering College (BEC). Direct access to B.Tech, MBA, Diploma, hostel, and transport fee structures & payment verification."
+            keywords={[
+               "engineering college fees Odisha",
+               "Bhubaneswar Engineering College fees payment",
+               "BTech college fees Bhubaneswar",
+               "MBA college fees Odisha",
+               "online fees payment BEC",
+               "hostel transport fees BEC",
+               "BTech admission charges Odisha"
+            ]}
+         />
          <div className="max-w-7xl mx-auto space-y-16 mt-8 p-6 md:p-0">
             
             {/* Header section */}

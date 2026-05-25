@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { PageLayout } from '../components/PageLayout';
 import { Trophy, Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SEO } from '../components/SEO';
 import { cn } from '../lib/utils';
 import { useData } from '../context/DataContext';
 
@@ -32,7 +33,18 @@ export const SportsGames = () => {
 
   return (
     <PageLayout title="Sports & Games">
-      <div className="flex flex-col gap-10 mt-2">
+      <SEO 
+        title="Sports & Games | Annual Athletic Meet | BEC"
+        description="Experience the vibrant sports culture at Bhubaneswar Engineering College (BEC). Explore our indoor & outdoor gaming arenas, cricket tournaments, and annual athletic meets."
+        keywords={[
+          "sports facilities in engineering college",
+          "BEC sports meet",
+          "cricket tournament Bhubaneswar college",
+          "athletics track field Odisha",
+          "indoor games BEC campus"
+        ]}
+      />
+      <div className="flex flex-col gap-16 mt-4">
 
         
         {/* Compact Modern Header */}

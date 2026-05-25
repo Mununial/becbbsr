@@ -1,5 +1,6 @@
 import { useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/SEO';
 import { 
   GraduationCap, 
   ClipboardCheck, 
@@ -173,13 +174,57 @@ const ADMISSION_CONTENT: Record<string, any> = {
   }
 };
 
+const ADMISSION_SEO: Record<string, { title: string; description: string; keywords: string[] }> = {
+  '/admission/programme': {
+    title: 'BTech & MBA Academic Programmes | Admissions 2026',
+    description: 'Explore B.Tech (Aeronautical, CSE, Civil, ME, EE, Agri), MBA, and Diploma course details, eligibility criteria, and branches offered at Bhubaneswar Engineering College (BEC).',
+    keywords: ['BTech courses Odisha', 'MBA specialization Bhubaneswar', 'diploma engineering programs', 'aeronautical engineering Odisha', 'BEC academic programs']
+  },
+  '/admission/procedure': {
+    title: 'Engineering Admission Procedure & Eligibility | Session 2026',
+    description: 'Learn how to apply for B.Tech, MBA, or Diploma at Bhubaneswar Engineering College (BEC). Step-by-step admission process via JEE Main, OJEE, and direct counseling.',
+    keywords: ['BTech admission procedure Odisha', 'engineering admission eligibility', 'OJEE counseling BEC', 'how to apply engineering college Bhubaneswar']
+  },
+  '/admission/documents': {
+    title: 'Admissions Document Checklist | BEC Bhubaneswar',
+    description: 'Complete checklist of mandatory certificates, CLC, migration, JEE/OJEE rank cards, and identity proofs required for admission at Bhubaneswar Engineering College.',
+    keywords: ['documents for BTech admission', 'engineering admission certificates checklist', 'admissions documents required Odisha', 'BEC enrollment proof']
+  },
+  '/admission/bank-loan': {
+    title: 'Education Bank Loan & Financial Assistance | BEC',
+    description: 'Secure your future at Bhubaneswar Engineering College (BEC) with easy education bank loans. Support for SBI, PNB, Union Bank, and Vidya Lakshmi portal loans.',
+    keywords: ['education loan for BTech Odisha', 'engineering bank loan documentation', 'Vidya Lakshmi portal BEC', 'student loan support Bhubaneswar']
+  },
+  '/admission/scholarship': {
+    title: 'Scholarship Schemes & Merit Rewards | BEC Bhubaneswar',
+    description: 'Apply for Prerana, Medhabruti, NSP, and post-matric government scholarships at Bhubaneswar Engineering College. Merit-based fee waivers available.',
+    keywords: ['BTech scholarship Odisha', 'Prerana scholarship BEC', 'engineering merit scholarships', 'Medhabruti scholarship eligibility']
+  },
+  '/admission/contacts': {
+    title: 'Admission Cell Contacts & Counselors Helpline | BEC',
+    description: 'Contact Bhubaneswar Engineering College (BEC) admission cell. Reach our expert career counselors on campus or at our city office for quick registration.',
+    keywords: ['BEC admission helpline', 'engineering college contact Bhubaneswar', 'admission counselor numbers Odisha', 'BEC office location']
+  },
+  '/admission/prospectus': {
+    title: 'Download Academic Prospectus & Brochure | BEC',
+    description: 'Download the official Bhubaneswar Engineering College (BEC) prospectus 2026-27 to explore the 40-acre campus, infrastructure, faculty profiles, and placement records.',
+    keywords: ['BEC prospectus download', 'engineering college brochure Odisha', 'BTech courses prospectus', 'BEC campus guide pdf']
+  }
+};
+
 export const AdmissionsMaster = () => {
   const { pathname } = useLocation();
   const data = ADMISSION_CONTENT[pathname] || ADMISSION_CONTENT['/admission/programme'];
+  const seoData = ADMISSION_SEO[pathname] || ADMISSION_SEO['/admission/programme'];
   const Icon = data.icon;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-inter">
+      <SEO 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+      />
       <Navbar onAdminClick={() => {}} />
 
       {/* Hero Section */}

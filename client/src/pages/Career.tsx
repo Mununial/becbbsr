@@ -1,5 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { Mail, Phone, CheckCircle, GraduationCap, Building2 } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const positions = [
   "Electronics & Communication Engg.",
@@ -17,6 +18,17 @@ const positions = [
 export const Career = () => {
   return (
     <PageLayout title="Careers at BEC">
+      <SEO 
+        title="Faculty Careers &amp; Job Openings | Work at BEC"
+        description="Explore teaching and research career opportunities at Bhubaneswar Engineering College (BEC). Apply for Professor, Associate Professor, and Assistant Professor roles."
+        keywords={[
+          "teaching jobs engineering college Odisha",
+          "BEC Bhubaneswar careers",
+          "faculty recruitment engineering Bhubaneswar",
+          "work at Bhubaneswar Engineering College",
+          "assistant professor job openings Odisha"
+        ]}
+      />
       <div className="flex flex-col gap-16 mt-4">
         
         {/* Urgent Requirement Banner */}
