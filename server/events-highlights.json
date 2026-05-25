@@ -1,15 +1,23 @@
-[
-  {
-    "id": "1",
-    "title": "Admission Open 2026-27",
-    "date": "Enroll Now",
-    "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
-    "link": "/admission_query"
-  },
-  {
-    "id": "1779656724890",
-    "title": "Congratulations ",
-    "date": "Deepak kumar Tripathy (B.Tech-CSE -DS)",
-    "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1779656864/bec_web_assets/fxbkag6jzicjrmqfuhtd.jpg"
-  }
-]
+{
+  "items": [
+    {
+      "id": "1",
+      "title": "Admission Open 2026-27",
+      "date": "Enroll Now",
+      "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+      "link": "/admission_query"
+    },
+    {
+      "id": "1779656724890",
+      "title": "Congratulations ",
+      "date": "Deepak kumar Tripathy (B.Tech-CSE -DS)",
+      "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1779656864/bec_web_assets/fxbkag6jzicjrmqfuhtd.jpg"
+    },
+    {
+      "id": "1779737940108",
+      "title": "",
+      "date": "",
+      "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1779737760/bec_web_assets/wrazqjn3iljnpeemf4uc.jpg"
+    }
+  ]
+}

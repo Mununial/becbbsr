@@ -39,25 +39,29 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
     setLoading(true);
     setError(null);
 
-    // Client-side fallback check (instant login bypass)
-    const normalizedUser = username.trim().toLowerCase();
-    if ((normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && password === 'becadmin@2026') {
-      sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
-      setIsAuthorized(true);
-      setLoading(false);
-      return;
-    }
-
+    // 1. Attempt standard email/password login to Firebase Auth first to activate Firestore database write permissions
     try {
       const email = username.includes('@') ? username.trim() : `${username.trim()}@becbbsr.ac.in`;
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       if (userCredential.user) {
         sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
         setIsAuthorized(true);
+        setLoading(false);
+        return;
       }
     } catch (err: any) {
-      console.error('Firebase Auth error:', err);
-      // Fallback to standard Express API check if Firebase Auth has issues or backend check is needed
+      console.warn('Firebase Auth standard login skipped or error occurred, using bypass fallback:', err);
+      
+      // 2. Client-side fallback check (instant bypass local credentials fallback)
+      const normalizedUser = username.trim().toLowerCase();
+      if ((normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && password === 'becadmin@2026') {
+        sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
+        setIsAuthorized(true);
+        setLoading(false);
+        return;
+      }
+
+      // 3. Fallback to standard Express API check if Firebase Auth has issues or backend check is needed
       try {
         const res = await axios.post('/api/admin/login', { username, password });
         if (res.data.success && res.data.token) {

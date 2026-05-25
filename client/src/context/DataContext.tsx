@@ -55,29 +55,65 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       console.warn("Firebase Storage/Firestore anonymous auth skipped:", err);
     });
 
-    // Helper to spin up a realtime listener on a Firestore configuration doc key
+    // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
     const setupListener = (key: string, setFn: (data: any[]) => void, defaultData: any) => {
+      // 1. Fetch live config from the local Express server immediately on mount to prevent any permission gaps
+      axios.get(`/api/config/${key}`)
+        .then(res => {
+          const serverItems = (res.data && Array.isArray(res.data.items))
+            ? res.data.items 
+            : (Array.isArray(res.data) ? res.data : null);
+
+          if (serverItems) {
+            setFn(serverItems);
+            localStorage.setItem(key, JSON.stringify(serverItems));
+          } else {
+            setFn(defaultData);
+          }
+        })
+        .catch(() => {
+          // Offline storage fallback
+          const local = localStorage.getItem(key);
+          if (local) {
+            try { setFn(JSON.parse(local)); } catch (_) {}
+          } else {
+            setFn(defaultData);
+          }
+        });
+
+      // 2. Start backup background polling loop on local server JSON file (ensures reload-free cross-device updates even if Firestore is blocked)
+      const pollInterval = setInterval(() => {
+        axios.get(`/api/config/${key}`)
+          .then(res => {
+            const serverItems = (res.data && Array.isArray(res.data.items))
+              ? res.data.items 
+              : (Array.isArray(res.data) ? res.data : null);
+
+            if (serverItems) {
+              setFn(serverItems);
+              localStorage.setItem(key, JSON.stringify(serverItems));
+            }
+          })
+          .catch(() => {});
+      }, 3000);
+
+      // 3. Parallel live Firestore websocket listener
       const docRef = doc(db, "configs", key);
-      return onSnapshot(docRef, (docSnap) => {
+      const unsubFirestore = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
           const items = docSnap.data().items;
           setFn(items);
           localStorage.setItem(key, JSON.stringify(items));
-        } else {
-          // If no doc exists, initialize with defaults
-          setDoc(docRef, { items: defaultData }).catch(() => {});
-          setFn(defaultData);
         }
       }, (err) => {
-        console.error(`onSnapshot error for key ${key}:`, err);
-        // Offline fallback
-        const local = localStorage.getItem(key);
-        if (local) {
-          try { setFn(JSON.parse(local)); } catch (_) {}
-        } else {
-          setFn(defaultData);
-        }
+        console.warn(`Firestore live sync suspended for key ${key}: ${err.message}`);
       });
+
+      // Cleanup hook to clear intervals and listeners on unmount
+      return () => {
+        clearInterval(pollInterval);
+        unsubFirestore();
+      };
     };
 
     // 1. Home Slides
