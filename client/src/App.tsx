@@ -268,11 +268,12 @@ export const App = () => {
 
   useEffect(() => {
     AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
+      duration: 400,
+      easing: 'ease-out',
       once: true,
-      offset: 100,
-      delay: 50
+      offset: 40,
+      delay: 0,
+      disable: 'mobile'
     });
 
     const timer = setTimeout(() => {
