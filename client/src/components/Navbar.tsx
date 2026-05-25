@@ -301,10 +301,10 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
              </motion.button>
           </div>
 
-          <div className="hidden xl:block pr-6">
+          <div className="hidden xl:block pr-6 shrink-0">
             <Link 
               to="/admission_query"
-              className="px-8 py-2.5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] hover:bg-white hover:text-primary transition-all duration-500 shadow-xl shadow-accent/20"
+              className="px-8 py-2.5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] hover:bg-white hover:text-primary transition-all duration-500 shadow-xl shadow-accent/20 whitespace-nowrap"
             >
               Apply Online
             </Link>
