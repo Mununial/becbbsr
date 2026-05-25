@@ -1,0 +1,1 @@
+import{n as e,t}from"./vendor-C5Sh_ceb.js";function n(...n){return t(e(n))}export{n as t};

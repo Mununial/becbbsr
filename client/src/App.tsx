@@ -146,124 +146,20 @@ const DEFAULT_SELECTED_STUDENTS: SelectedStudent[] = [
 ];
 
 export const App = () => {
-  const { notices, updateNotices, slides, updateSlides, gallery, updateGallery, faculties, updateFaculties } = useData();
+  const { 
+    notices, updateNotices, 
+    slides, updateSlides, 
+    gallery, updateGallery, 
+    faculties, updateFaculties,
+    students, updateStudents,
+    scenes, updateScenes,
+    highlights, updateHighlights,
+    leaders, updateLeaders
+  } = useData();
+
   const [loading, setLoading] = useState(true);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showTour, setShowTour] = useState(false);
-
-  const [scenes, setScenes] = useState<Scene[]>(() => {
-    try {
-      const saved = localStorage.getItem('tour-scenes-v2');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return DEFAULT_SCENES;
-  });
-
-  const [students, setStudents] = useState<SelectedStudent[]>(() => {
-    try {
-      const saved = localStorage.getItem('selected-students-v2');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return DEFAULT_SELECTED_STUDENTS;
-  });
-
-  const [highlights, setHighlights] = useState<Highlight[]>(() => {
-    try {
-      const saved = localStorage.getItem('events-highlights');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (e) {}
-    return DEFAULT_HIGHLIGHTS;
-  });
-
-  const [leaders, setLeaders] = useState<Leader[]>(() => {
-    try {
-      const saved = localStorage.getItem('leadership-data');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed.filter(l => l.role !== "VICE CHAIRMAN");
-        }
-      }
-    } catch (e) {}
-    return DEFAULT_LEADERS;
-  });
-
-  // Fetch configs from backend on mount
-  useEffect(() => {
-    const loadKey = async (key: string, setFn: (data: any) => void, defaultData: any) => {
-      try {
-        const docRef = doc(db, "configs", key);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
-          const items = docSnap.data().items;
-          setFn(items);
-          localStorage.setItem(key, JSON.stringify(items));
-        } else {
-          const local = localStorage.getItem(key);
-          if (local) {
-            const parsed = JSON.parse(local);
-            if (Array.isArray(parsed)) {
-              setFn(parsed);
-              setDoc(docRef, { items: parsed }).catch(() => {});
-            } else {
-              setFn(defaultData);
-              setDoc(docRef, { items: defaultData }).catch(() => {});
-            }
-          } else {
-            setFn(defaultData);
-            setDoc(docRef, { items: defaultData }).catch(() => {});
-          }
-        }
-      } catch (err) {
-        console.error(`Error loading key ${key} from Firestore:`, err);
-        const local = localStorage.getItem(key);
-        if (local) {
-          const parsed = JSON.parse(local);
-          setFn(Array.isArray(parsed) ? parsed : defaultData);
-        } else {
-          setFn(defaultData);
-        }
-      }
-    };
-
-    loadKey('tour-scenes-v2', setScenes, DEFAULT_SCENES);
-    loadKey('selected-students-v2', setStudents, DEFAULT_SELECTED_STUDENTS);
-    loadKey('events-highlights', setHighlights, DEFAULT_HIGHLIGHTS);
-    loadKey('leadership-data', setLeaders, DEFAULT_LEADERS);
-  }, []);
-
-  const updateScenes = (newScenes: Scene[]) => {
-    setScenes(newScenes);
-    localStorage.setItem('tour-scenes-v2', JSON.stringify(newScenes));
-    setDoc(doc(db, "configs", "tour-scenes-v2"), { items: newScenes }).catch(() => {});
-  };
-
-  const updateStudents = (newStudents: SelectedStudent[]) => {
-    setStudents(newStudents);
-    localStorage.setItem('selected-students-v2', JSON.stringify(newStudents));
-    setDoc(doc(db, "configs", "selected-students-v2"), { items: newStudents }).catch(() => {});
-  };
-
-  const updateHighlights = (newHighlights: Highlight[]) => {
-    setHighlights(newHighlights);
-    localStorage.setItem('events-highlights', JSON.stringify(newHighlights));
-    setDoc(doc(db, "configs", "events-highlights"), { items: newHighlights }).catch(() => {});
-  };
-
-  const updateLeaders = (newLeaders: Leader[]) => {
-    setLeaders(newLeaders);
-    localStorage.setItem('leadership-data', JSON.stringify(newLeaders));
-    setDoc(doc(db, "configs", "leadership-data"), { items: newLeaders }).catch(() => {});
-  };
 
 
   useEffect(() => {
