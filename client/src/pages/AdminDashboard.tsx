@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, Users, Newspaper, Image as ImageIcon, Briefcase, Settings, LogOut, Plus, Search, Trash2, Edit, Award, Plane, Monitor, Trophy } from 'lucide-react';
-
 
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
 import { LoginGate } from '../components/LoginGate';
+import { db, storage } from '../lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const sidebarItems = [
   { name: 'Dashboard', icon: LayoutDashboard },
@@ -20,8 +22,6 @@ const sidebarItems = [
   { name: 'Settings', icon: Settings },
 ];
 
-
-
 export const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [achievements, setAchievements] = useState<any[]>([]);
@@ -34,102 +34,126 @@ export const AdminDashboard = () => {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [isUploading, setIsUploading] = useState(false);
 
+  const loadKey = async (key: string, setFn: (data: any[]) => void) => {
+    try {
+      const docRef = doc(db, "configs", key);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
+        setFn(docSnap.data().items);
+      }
+    } catch (e) {
+      console.error(`Error loading key ${key} from Firestore:`, e);
+    }
+  };
 
-
-  const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000/api'
-    : '/api';
-
-  useState(() => {
-     fetch(`${API_URL}/achievements`)
-       .then(res => res.json())
-       .then(data => setAchievements(data));
-     
-     fetch(`${API_URL}/aeroclub`)
-       .then(res => res.json())
-       .then(data => setAeroClubItems(data));
-
-     fetch(`${API_URL}/workshop`)
-       .then(res => res.json())
-       .then(data => setWorkshopItems(data));
-
-     fetch(`${API_URL}/sports`)
-       .then(res => res.json())
-       .then(data => setSportsItems(data));
-
-     fetch(`${API_URL}/gallery`)
-       .then(res => res.json())
-       .then(data => setGalleryItems(data));
-  });
-
-
-
+  useEffect(() => {
+    loadKey('achievements', setAchievements);
+    loadKey('aeroclub', setAeroClubItems);
+    loadKey('workshop', setWorkshopItems);
+    loadKey('sports', setSportsItems);
+    loadKey('gallery', setGalleryItems);
+  }, []);
 
   const handleSave = async () => {
       let endpoint = 'achievements';
-      if (activeTab === 'Aero Club') endpoint = 'aeroclub';
-      if (activeTab === 'Workshops') endpoint = 'workshop';
-      if (activeTab === 'Sports') endpoint = 'sports';
-      if (activeTab === 'Gallery') endpoint = 'gallery';
+      let currentItems: any[] = [];
+      let setFn: (data: any[]) => void = () => {};
 
-      const res = await fetch(`${API_URL}/${endpoint}`, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(editingItem)
-      });
-      const data = await res.json();
-      if (data.success) {
+      if (activeTab === 'Achievements') {
+        endpoint = 'achievements';
+        currentItems = achievements;
+        setFn = setAchievements;
+      } else if (activeTab === 'Aero Club') {
+        endpoint = 'aeroclub';
+        currentItems = aeroClubItems;
+        setFn = setAeroClubItems;
+      } else if (activeTab === 'Workshops') {
+        endpoint = 'workshop';
+        currentItems = workshopItems;
+        setFn = setWorkshopItems;
+      } else if (activeTab === 'Sports') {
+        endpoint = 'sports';
+        currentItems = sportsItems;
+        setFn = setSportsItems;
+      } else if (activeTab === 'Gallery') {
+        endpoint = 'gallery';
+        currentItems = galleryItems;
+        setFn = setGalleryItems;
+      }
+
+      let updatedItems: any[] = [];
+      if (editingItem.id) {
+         // Update existing item
+         updatedItems = currentItems.map(item => item.id === editingItem.id ? editingItem : item);
+      } else {
+         // Create new item
+         const newItem = { ...editingItem, id: Date.now().toString() };
+         updatedItems = [...currentItems, newItem];
+      }
+
+      try {
+         const docRef = doc(db, "configs", endpoint);
+         await setDoc(docRef, { items: updatedItems });
+         setFn(updatedItems);
          setIsModalOpen(false);
-         // Refresh
-         fetch(`${API_URL}/${endpoint}`).then(res => res.json()).then(data => {
-            if (activeTab === 'Achievements') setAchievements(data);
-            else if (activeTab === 'Aero Club') setAeroClubItems(data);
-            else if (activeTab === 'Workshops') setWorkshopItems(data);
-            else if (activeTab === 'Sports') setSportsItems(data);
-            else if (activeTab === 'Gallery') setGalleryItems(data);
-         });
+      } catch (e) {
+         console.error("Error saving config to Firestore:", e);
       }
   };
 
   const handleDelete = async (id: string) => {
       if (!confirm('Are you sure?')) return;
       let endpoint = 'achievements';
-      if (activeTab === 'Aero Club') endpoint = 'aeroclub';
-      if (activeTab === 'Workshops') endpoint = 'workshop';
-      if (activeTab === 'Sports') endpoint = 'sports';
-      if (activeTab === 'Gallery') endpoint = 'gallery';
+      let currentItems: any[] = [];
+      let setFn: (data: any[]) => void = () => {};
 
-      const res = await fetch(`${API_URL}/${endpoint}/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-         if (activeTab === 'Achievements') setAchievements(achievements.filter(a => a.id !== id));
-         else if (activeTab === 'Aero Club') setAeroClubItems(aeroClubItems.filter(a => a.id !== id));
-         else if (activeTab === 'Workshops') setWorkshopItems(workshopItems.filter(a => a.id !== id));
-         else if (activeTab === 'Sports') setSportsItems(sportsItems.filter(a => a.id !== id));
-         else if (activeTab === 'Gallery') setGalleryItems(galleryItems.filter(a => a.id !== id));
+      if (activeTab === 'Achievements') {
+        endpoint = 'achievements';
+        currentItems = achievements;
+        setFn = setAchievements;
+      } else if (activeTab === 'Aero Club') {
+        endpoint = 'aeroclub';
+        currentItems = aeroClubItems;
+        setFn = setAeroClubItems;
+      } else if (activeTab === 'Workshops') {
+        endpoint = 'workshop';
+        currentItems = workshopItems;
+        setFn = setWorkshopItems;
+      } else if (activeTab === 'Sports') {
+        endpoint = 'sports';
+        currentItems = sportsItems;
+        setFn = setSportsItems;
+      } else if (activeTab === 'Gallery') {
+        endpoint = 'gallery';
+        currentItems = galleryItems;
+        setFn = setGalleryItems;
+      }
+
+      const updatedItems = currentItems.filter(item => item.id !== id);
+
+      try {
+         const docRef = doc(db, "configs", endpoint);
+         await setDoc(docRef, { items: updatedItems });
+         setFn(updatedItems);
+      } catch (e) {
+         console.error("Error deleting config from Firestore:", e);
       }
   };
-
-
-
 
   const handleUpload = async (file: File | undefined) => {
      if (!file) return;
      setIsUploading(true);
-     const formData = new FormData();
-     formData.append('file', file);
      try {
-        const res = await fetch(`${API_URL}/upload`, {
-           method: 'POST',
-           body: formData
-         });
-         const data = await res.json();
-         if (data.url) {
-            setEditingItem({ ...editingItem, photo: data.url });
-         }
-      } finally {
-         setIsUploading(false);
-      }
-   };
+        const storageRef = ref(storage, `uploads/${Date.now()}-${file.name}`);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        setEditingItem({ ...editingItem, photo: url });
+     } catch (e) {
+        console.error("Firebase Storage upload error:", e);
+     } finally {
+        setIsUploading(false);
+     }
+  };
 
   return (
     <LoginGate>

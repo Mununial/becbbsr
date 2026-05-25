@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import { db } from './lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutUs } from './components/AboutUs';
@@ -200,27 +201,30 @@ export const App = () => {
   useEffect(() => {
     const loadKey = async (key: string, setFn: (data: any) => void, defaultData: any) => {
       try {
-        const res = await axios.get(`/api/config/${key}`);
-        if (res.data && Array.isArray(res.data)) {
-          setFn(res.data);
-          localStorage.setItem(key, JSON.stringify(res.data));
+        const docRef = doc(db, "configs", key);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
+          const items = docSnap.data().items;
+          setFn(items);
+          localStorage.setItem(key, JSON.stringify(items));
         } else {
           const local = localStorage.getItem(key);
           if (local) {
             const parsed = JSON.parse(local);
             if (Array.isArray(parsed)) {
               setFn(parsed);
-              axios.post(`/api/config/${key}`, parsed).catch(() => {});
+              setDoc(docRef, { items: parsed }).catch(() => {});
             } else {
               setFn(defaultData);
-              axios.post(`/api/config/${key}`, defaultData).catch(() => {});
+              setDoc(docRef, { items: defaultData }).catch(() => {});
             }
           } else {
             setFn(defaultData);
-            axios.post(`/api/config/${key}`, defaultData).catch(() => {});
+            setDoc(docRef, { items: defaultData }).catch(() => {});
           }
         }
       } catch (err) {
+        console.error(`Error loading key ${key} from Firestore:`, err);
         const local = localStorage.getItem(key);
         if (local) {
           const parsed = JSON.parse(local);
@@ -240,25 +244,25 @@ export const App = () => {
   const updateScenes = (newScenes: Scene[]) => {
     setScenes(newScenes);
     localStorage.setItem('tour-scenes-v2', JSON.stringify(newScenes));
-    axios.post('/api/config/tour-scenes-v2', newScenes).catch(() => {});
+    setDoc(doc(db, "configs", "tour-scenes-v2"), { items: newScenes }).catch(() => {});
   };
 
   const updateStudents = (newStudents: SelectedStudent[]) => {
     setStudents(newStudents);
     localStorage.setItem('selected-students-v2', JSON.stringify(newStudents));
-    axios.post('/api/config/selected-students-v2', newStudents).catch(() => {});
+    setDoc(doc(db, "configs", "selected-students-v2"), { items: newStudents }).catch(() => {});
   };
 
   const updateHighlights = (newHighlights: Highlight[]) => {
     setHighlights(newHighlights);
     localStorage.setItem('events-highlights', JSON.stringify(newHighlights));
-    axios.post('/api/config/events-highlights', newHighlights).catch(() => {});
+    setDoc(doc(db, "configs", "events-highlights"), { items: newHighlights }).catch(() => {});
   };
 
   const updateLeaders = (newLeaders: Leader[]) => {
     setLeaders(newLeaders);
     localStorage.setItem('leadership-data', JSON.stringify(newLeaders));
-    axios.post('/api/config/leadership-data', newLeaders).catch(() => {});
+    setDoc(doc(db, "configs", "leadership-data"), { items: newLeaders }).catch(() => {});
   };
 
 

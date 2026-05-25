@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { type Notice, type Slide, type GalleryImage, type Faculty } from '../types';
-import axios from 'axios';
+import { db } from '../lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 interface DataContextType {
   notices: Notice[];
@@ -24,27 +25,30 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const loadKey = async (key: string, setFn: (data: any) => void, defaultData: any) => {
       try {
-        const res = await axios.get(`/api/config/${key}`);
-        if (res.data && Array.isArray(res.data)) {
-          setFn(res.data);
-          localStorage.setItem(key, JSON.stringify(res.data));
+        const docRef = doc(db, "configs", key);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
+          const items = docSnap.data().items;
+          setFn(items);
+          localStorage.setItem(key, JSON.stringify(items));
         } else {
           const local = localStorage.getItem(key);
           if (local) {
             const parsed = JSON.parse(local);
             if (Array.isArray(parsed)) {
               setFn(parsed);
-              axios.post(`/api/config/${key}`, parsed).catch(() => {});
+              setDoc(docRef, { items: parsed }).catch(() => {});
             } else {
               setFn(defaultData);
-              axios.post(`/api/config/${key}`, defaultData).catch(() => {});
+              setDoc(docRef, { items: defaultData }).catch(() => {});
             }
           } else {
             setFn(defaultData);
-            axios.post(`/api/config/${key}`, defaultData).catch(() => {});
+            setDoc(docRef, { items: defaultData }).catch(() => {});
           }
         }
       } catch (err) {
+        console.error(`Error loading key ${key} from Firestore:`, err);
         const local = localStorage.getItem(key);
         if (local) {
           const parsed = JSON.parse(local);
@@ -81,25 +85,25 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const updateNotices = (newNotices: Notice[]) => {
     setNotices(newNotices);
     localStorage.setItem('university-notices', JSON.stringify(newNotices));
-    axios.post('/api/config/university-notices', newNotices).catch(() => {});
+    setDoc(doc(db, "configs", "university-notices"), { items: newNotices }).catch(() => {});
   };
 
   const updateSlides = (newSlides: Slide[]) => {
     setSlides(newSlides);
     localStorage.setItem('hero-slides', JSON.stringify(newSlides));
-    axios.post('/api/config/hero-slides', newSlides).catch(() => {});
+    setDoc(doc(db, "configs", "hero-slides"), { items: newSlides }).catch(() => {});
   };
 
   const updateGallery = (newGallery: GalleryImage[]) => {
     setGallery(newGallery);
     localStorage.setItem('campus-gallery', JSON.stringify(newGallery));
-    axios.post('/api/config/campus-gallery', newGallery).catch(() => {});
+    setDoc(doc(db, "configs", "campus-gallery"), { items: newGallery }).catch(() => {});
   };
 
   const updateFaculties = (newFaculties: Faculty[]) => {
     setFaculties(newFaculties);
     localStorage.setItem('university-faculties', JSON.stringify(newFaculties));
-    axios.post('/api/config/university-faculties', newFaculties).catch(() => {});
+    setDoc(doc(db, "configs", "university-faculties"), { items: newFaculties }).catch(() => {});
   };
 
   return (
