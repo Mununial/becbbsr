@@ -141,14 +141,13 @@ export const AdmissionBot = () => {
                   className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`flex gap-3 max-w-[85%] ${msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm
-                      ${msg.type === 'user' ? 'bg-secondary' : 'bg-primary'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm ${msg.type === 'user' ? 'bg-[#1d4ed8]' : 'bg-[#0a1628]'}`}>
                       {msg.type === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
                     </div>
                     <div className={`p-4 rounded-2xl text-sm shadow-sm leading-relaxed
-                      ${msg.type === 'user' 
-                        ? 'bg-secondary text-white rounded-tr-none' 
-                        : 'bg-white text-navy-900 border border-slate-100 rounded-tl-none'}`}>
+                      ${msg.type === 'user'
+                        ? 'bg-[#1d4ed8] text-white rounded-tr-none'
+                        : 'bg-white text-gray-800 border border-slate-100 rounded-tl-none'}`}>
                       {msg.text}
                     </div>
                   </div>
