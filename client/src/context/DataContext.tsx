@@ -135,8 +135,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 2. Latest Notices
     const unsubNotices = setupListener('university-notices', setNotices, [
-      { id: '1', title: 'Admission 2026-27: Application portal now live', date: 'Dec 15, 2024', category: 'Admission', url: '/admission_query', type: 'image', isNew: true },
-      { id: '2', title: 'National Level Workshop on Blockchain', date: 'April 02, 2026', category: 'Events', url: '/admission/news', type: 'image', isNew: true }
+      { id: '1', title: 'Admission Open 2026-27: Application portal is now officially open for B.Tech, Diploma, and MBA programs.', date: 'May 26, 2026', category: 'Admission', url: '/admission_query', type: 'image', isNew: true },
+      { id: '2', title: 'BEC Campus Notice: General Holiday declared on May 28, 2026; all academic operations suspended.', date: 'May 28, 2026', category: 'Events', url: '/admission/news', type: 'image', isNew: true }
     ]);
 
     // 3. Photo Gallery

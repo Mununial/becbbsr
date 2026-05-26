@@ -6,7 +6,7 @@ const socials = [
   { 
     name: 'Facebook', 
     icon: Facebook, 
-    href: 'https://facebook.com/becbbsr', 
+    href: 'https://www.facebook.com/share/1HfMc4PV1Z/', 
     color: 'bg-[#3b5998]' 
   },
   { 
@@ -37,7 +37,7 @@ const socials = [
   { 
     name: 'Youtube', 
     icon: Youtube, 
-    href: 'https://youtube.com/@becbbsr', 
+    href: 'https://youtube.com/@becbhubaneswar?si=DRtLAbVf19Koc6jQ', 
     color: 'bg-[#FF0000]' 
   }
 ];

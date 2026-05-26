@@ -9,7 +9,7 @@ import { SEO } from '../components/SEO';
 const StudentPhoto = ({ src, name }: { src: string; name: string }) => {
   const [hasError, setHasError] = useState(false);
 
-  if (hasError || !src || src.startsWith('/images/') || src.includes('becbbsr.ac.in')) {
+  if (hasError || !src) {
     const initials = name
       ? name
           .trim()

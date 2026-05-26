@@ -11,6 +11,7 @@ const positions = [
   "CSE (Data Science)",
   "Civil Engineering",
   "Mechanical Engineering",
+  "Food Engineering",
   "Mathematics / Physics / Chemistry / English",
   "MBA Faculty"
 ];

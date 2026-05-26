@@ -6,16 +6,17 @@ import { SEO } from '../components/SEO';
 
 const courses = [
   { name: "Aeronautical Engineering", intake: 30 },
-  { name: "Aircraft Maintenance Engineering (AME)", intake: 30 },
+  { name: "Aircraft Maintenance Engineering", intake: 30 },
   { name: "Agriculture Engineering", intake: 60 },
-  { name: "Computer Science & Engineering", intake: 60 },
-  { name: "Computer Science & Engg. (Data Science)", intake: 30 },
-  { name: "Civil Engineering", intake: 30 },
+  { name: "Food Engineering", intake: 30 },
+  { name: "Civil Engineering", intake: 60 },
   { name: "Civil and Environmental Engineering", intake: 30 },
-  { name: "Electrical Engineering", intake: 30 },
+  { name: "Computer Science Engineering", intake: 60 },
+  { name: "CSE (Data Science)", intake: 60 },
+  { name: "Electrical Engineering", intake: 60 },
   { name: "Electrical and Computer Engineering", intake: 30 },
   { name: "Mechanical Engineering", intake: 60 },
-  { name: "Mechanical Mechatronics Engineering (Additive Manufacturing)", intake: 30 }
+  { name: "Mechanical Mechatronics Engineering", intake: 30 }
 ];
 
 export const BTech = () => {

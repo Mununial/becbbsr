@@ -57,6 +57,22 @@ const PLACEMENT_DATA: YearData[] = [
     ]
   },
   {
+    year: "2025",
+    companies: [
+      { name: "TCS", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629444/becweb/tcs.png", branches: "CSE,ECE,EE,AERO,CIVIL,MECHANICAL", stats: "45", package: "4.0-8.5" },
+      { name: "TECH MAHINDRA", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png", branches: "CSE,ECE,EE,AERO,CIVIL,MECHANICAL", stats: "38", package: "4.5-8.0" },
+      { name: "INFOSYS", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629416/becweb/Infosys.png", branches: "AERO,MECHANICAL,CSE,CIVIL,EE", stats: "32", package: "4.2-9.5" },
+      { name: "CAPGEMINI", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629404/becweb/Capgemini.png", branches: "CSE,EE,AERO,CIVIL", stats: "18", package: "4.5-7.8" },
+      { name: "WIPRO", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629459/becweb/wipro2018.png", branches: "CSE,EE,EEE,AERO", stats: "24", package: "3.8-7.2" },
+      { name: "TATA STEEL", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629443/becweb/TATA_STEEL.png", branches: "MECHANICAL,EE,EEE,CIVIL", stats: "20", package: "4.0-7.0" },
+      { name: "AIRDIT SOFTWARE", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629401/becweb/Airdit.jpg", branches: "CSE,ECE,EE,MECHANICAL,AERO", stats: "16", package: "5.5-12.5" },
+      { name: "BYJU'S", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629352/becweb/180074byjus2019.jpg", branches: "MBA,CSE,CE,MECH", stats: "25", package: "6.5-12.0" },
+      { name: "GENPACT", logo: "/images/events/genpact.jpg", branches: "MBA,CSE", stats: "16", package: "3.8-6.0" },
+      { name: "DAIKIN AIR-CONDITIONING", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629408/becweb/Daikin.png", branches: "AERO,MECHANICAL,CSE,EE,ECE", stats: "12", package: "4.8-8.2" },
+      { name: "ATHER", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629457/becweb/Untitled8.png", branches: "EE,EEE,MECHANICAL", stats: "06", package: "5.0-10.5" }
+    ]
+  },
+  {
     year: "2024",
     companies: [
       { name: "TECH MAHINDRA", logo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png", branches: "CSE,ECE,EE,AERO,CIVIL,MECHANICAL", stats: "42", package: "4.5-8.2" },
@@ -221,6 +237,124 @@ const PLACEMENT_DATA: YearData[] = [
 export const Placement = () => {
   const [selectedYear, setSelectedYear] = useState("2026 (Live)");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const downloadReport = () => {
+    const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    // Build year sections
+    const yearSections = PLACEMENT_DATA.map((yearGroup, yIdx) => {
+      const totalSelections = yearGroup.companies.reduce((sum, c) => sum + (parseInt(c.stats || '0') || 0), 0);
+      const rows = yearGroup.companies.map((company, idx) => `
+        <tr style="background:${idx % 2 === 0 ? '#f8faff' : '#ffffff'};">
+          <td style="padding:10px 14px;border:1px solid #dde6f7;font-weight:600;color:#1e3a5f;">${idx + 1}</td>
+          <td style="padding:10px 14px;border:1px solid #dde6f7;font-weight:700;color:#0a2259;">${company.name}</td>
+          <td style="padding:10px 14px;border:1px solid #dde6f7;color:#374151;">${company.branches.split(',').join(', ')}</td>
+          <td style="padding:10px 14px;border:1px solid #dde6f7;text-align:center;font-weight:700;color:#0284c7;">${company.stats || '–'}</td>
+          <td style="padding:10px 14px;border:1px solid #dde6f7;text-align:center;font-weight:700;color:#059669;">${company.package ? company.package + ' LPA' : '–'}</td>
+        </tr>`).join('');
+
+      return `
+      <div style="margin-bottom:40px;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
+        <div style="background:linear-gradient(135deg,#0a2259 0%,#0e4da4 60%,#0284c7 100%);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:1px;">📅 BATCH ${yearGroup.year}</span>
+          <span style="background:rgba(255,255,255,0.2);color:#fff;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:700;">Total Selections: ${totalSelections}+</span>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:#e8f0fe;">
+              <th style="padding:11px 14px;border:1px solid #dde6f7;text-align:left;color:#0a2259;font-weight:800;">#</th>
+              <th style="padding:11px 14px;border:1px solid #dde6f7;text-align:left;color:#0a2259;font-weight:800;">Company Name</th>
+              <th style="padding:11px 14px;border:1px solid #dde6f7;text-align:left;color:#0a2259;font-weight:800;">Eligible Branches</th>
+              <th style="padding:11px 14px;border:1px solid #dde6f7;text-align:center;color:#0a2259;font-weight:800;">Selections</th>
+              <th style="padding:11px 14px;border:1px solid #dde6f7;text-align:center;color:#0a2259;font-weight:800;">Package (LPA)</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+    }).join('');
+
+    const totalCompanies = PLACEMENT_DATA.reduce((s, y) => s + y.companies.length, 0);
+    const totalStudents = PLACEMENT_DATA.reduce((s, y) => s + y.companies.reduce((ss, c) => ss + (parseInt(c.stats || '0') || 0), 0), 0);
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>BEC Placement Report 2024-26</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    body { margin:0; font-family:'Inter',Arial,sans-serif; background:#f1f5fb; color:#1e293b; }
+    .watermark { position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:80px;color:rgba(10,34,89,0.04);font-weight:900;white-space:nowrap;pointer-events:none;z-index:0; }
+    .page { max-width:1100px; margin:0 auto; padding:40px 24px; position:relative; z-index:1; }
+    @media print { body{background:#fff;} .page{padding:20px;} }
+  </style>
+</head>
+<body>
+<div class="watermark">BHUBANESWAR ENGINEERING COLLEGE</div>
+<div class="page">
+  <!-- Header -->
+  <div style="background:linear-gradient(135deg,#0a2259 0%,#0e4da4 60%,#0284c7 100%);border-radius:16px;padding:36px 40px;color:#fff;margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+    <div>
+      <div style="font-size:13px;letter-spacing:3px;opacity:0.75;text-transform:uppercase;margin-bottom:4px;">Official Document</div>
+      <h1 style="margin:0;font-size:32px;font-weight:900;letter-spacing:1px;">PLACEMENT REPORT</h1>
+      <div style="font-size:16px;margin-top:6px;opacity:0.9;font-weight:600;">Bhubaneswar Engineering College (BEC)</div>
+
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:13px;opacity:0.75;">Generated on</div>
+      <div style="font-size:18px;font-weight:800;">${today}</div>
+      <div style="margin-top:12px;background:rgba(255,255,255,0.15);border-radius:10px;padding:10px 20px;text-align:center;">
+        <div style="font-size:11px;opacity:0.8;letter-spacing:2px;text-transform:uppercase;">Academic Years</div>
+        <div style="font-size:20px;font-weight:900;">2024 – 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Strip -->
+  <div style="display:flex;gap:16px;margin-bottom:32px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:160px;background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border-top:4px solid #0284c7;">
+      <div style="font-size:11px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Total Companies</div>
+      <div style="font-size:36px;font-weight:900;color:#0a2259;">${totalCompanies}+</div>
+    </div>
+    <div style="flex:1;min-width:160px;background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border-top:4px solid #059669;">
+      <div style="font-size:11px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Students Placed</div>
+      <div style="font-size:36px;font-weight:900;color:#059669;">${totalStudents}+</div>
+    </div>
+    <div style="flex:1;min-width:160px;background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border-top:4px solid #f59e0b;">
+      <div style="font-size:11px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Highest Package</div>
+      <div style="font-size:36px;font-weight:900;color:#d97706;">14 LPA</div>
+    </div>
+    <div style="flex:1;min-width:160px;background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);border-top:4px solid #8b5cf6;">
+      <div style="font-size:11px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Academic Years</div>
+      <div style="font-size:36px;font-weight:900;color:#7c3aed;">${PLACEMENT_DATA.length}</div>
+    </div>
+  </div>
+
+  <!-- Year-wise Tables -->
+  ${yearSections}
+
+  <!-- Footer -->
+  <div style="background:#0a2259;border-radius:12px;padding:24px 32px;color:#fff;text-align:center;margin-top:16px;">
+    <div style="font-size:16px;font-weight:800;margin-bottom:4px;">Bhubaneswar Engineering College</div>
+    <div style="font-size:12px;opacity:0.7;">Barang, Bhubaneswar, Odisha – 754003 &nbsp;|&nbsp; www.becbbsr.ac.in &nbsp;|&nbsp; Corporate Relations Cell</div>
+    <div style="margin-top:12px;font-size:11px;opacity:0.5;">This is an auto-generated report. For official verification contact the Placement Cell.</div>
+  </div>
+</div>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `BEC_Placement_Report_2024-26.html`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
 
   const currentYearData = PLACEMENT_DATA.find(d => d.year === selectedYear);
   const filteredCompanies = currentYearData?.companies.filter(c => 
@@ -451,7 +585,7 @@ export const Placement = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                </div>
-               <button className="flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-primary to-cyan-600 text-white rounded-[2rem] text-xs font-black uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all">
+               <button onClick={downloadReport} className="flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-primary to-cyan-600 text-white rounded-[2rem] text-xs font-black uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all">
                   <Download className="w-5 h-5" />
                   Download Report
                </button>

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
 
 const specializations = [
-  "Marketing", "Finance", "Human Resource", "Systems", "Operations Management", "Agri-Business"
+  "Marketing", "Finance", "Human Resource", "Agri-Business"
 ];
 
 const faculty = [

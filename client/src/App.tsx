@@ -254,9 +254,10 @@ export const App = () => {
           },
           "telephone": "+91-9437044218",
           "sameAs": [
-            "https://www.facebook.com/becbbsr/",
+            "https://www.facebook.com/share/1HfMc4PV1Z/",
             "https://www.instagram.com/becbbsr_official/",
-            "https://twitter.com/becbbsr"
+            "https://twitter.com/becbbsr",
+            "https://youtube.com/@becbhubaneswar?si=DRtLAbVf19Koc6jQ"
           ]
         }}
       />

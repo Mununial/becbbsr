@@ -135,7 +135,7 @@ export const ContactUs = () => {
                  <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.25em] mb-1 font-poppins">Social Networks</h4>
                  <h3 className="text-xl font-black text-navy-950 uppercase tracking-tighter mb-4 font-poppins">Stay Connected</h3>
                  <div className="flex items-center gap-3 mt-1.5">
-                    <a href="https://facebook.com/becbbsr" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
+                    <a href="https://www.facebook.com/share/1HfMc4PV1Z/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
                        <Facebook className="w-4.5 h-4.5" />
                     </a>
                     <a href="https://www.linkedin.com/school/bhubaneswar-engineering-college-bec-bhubaneswar-kh/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
@@ -144,7 +144,7 @@ export const ContactUs = () => {
                     <a href="https://www.instagram.com/becbbsr?igsh=MW1jbDJxZ3QxYzdxZQ==" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
                        <Instagram className="w-4.5 h-4.5" />
                     </a>
-                    <a href="https://youtube.com/@becbbsr" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
+                    <a href="https://youtube.com/@becbhubaneswar?si=DRtLAbVf19Koc6jQ" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
                        <Youtube className="w-4.5 h-4.5" />
                     </a>
                  </div>

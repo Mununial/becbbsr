@@ -99,8 +99,8 @@ export const Footer = () => {
               {[
                 { Icon: Linkedin, href: "https://www.linkedin.com/school/bhubaneswar-engineering-college-bec-bhubaneswar-kh/" },
                 { Icon: Instagram, href: "https://www.instagram.com/becbbsr?igsh=MW1jbDJxZ3QxYzdxZQ==" },
-                { Icon: Facebook, href: "https://facebook.com/becbbsr" },
-                { Icon: Youtube, href: "https://youtube.com/@becbbsr" }
+                { Icon: Facebook, href: "https://www.facebook.com/share/1HfMc4PV1Z/" },
+                { Icon: Youtube, href: "https://youtube.com/@becbhubaneswar?si=DRtLAbVf19Koc6jQ" }
               ].map(({ Icon, href }, i) => (
                 <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-slate-500 hover:text-accent hover:bg-white/10 hover:border-accent/20 transition-all duration-300">
                   <Icon className="w-4 h-4" />
@@ -172,13 +172,23 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="text-slate-600 text-xs font-bold uppercase tracking-[0.2em] font-inter">
-            © 2026 Bhubaneswar Engineering College (BEC). Digital Nexus by BEC IT.
+        <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col gap-1 text-center md:text-left">
+            <div className="text-slate-600 text-xs font-bold uppercase tracking-[0.2em] font-inter">
+              © 2026 Bhubaneswar Engineering College (BEC). All Rights Reserved.
+            </div>
+            <a
+              href="https://www.ayushtechnologies.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-600 hover:text-accent transition-colors text-[11px] font-bold uppercase tracking-[0.15em] font-inter"
+            >
+              ⚡ Designed &amp; Developed by Ayush Technologies
+            </a>
           </div>
           <div className="flex gap-8 text-xs font-bold uppercase tracking-[0.2em] font-inter">
             <a href="/admin" className="text-slate-600 hover:text-accent transition-colors">Website Editor</a>
-            <a href="#" className="text-slate-600 hover:text-accent transition-colors">Privacy</a>
+            <a href="/privacy-policy" className="text-slate-600 hover:text-accent transition-colors">Privacy Policy</a>
             <a href="#" className="text-slate-600 hover:text-accent transition-colors">Terms</a>
             <a href="#" className="text-slate-600 hover:text-accent transition-colors">Anti-Ragging</a>
           </div>

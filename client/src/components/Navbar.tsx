@@ -28,7 +28,6 @@ const navItems: NavItem[] = [
     name: 'Admissions', 
     href: '#',
     dropdown: [
-       { name: "Programme", href: "/admission/programme" },
        { name: "Admission Procedure", href: "/admission/procedure" },
        { name: "Doc Required For Admission", href: "/admission/documents" },
        { name: "Bank Loan Procedures", href: "/admission/bank-loan" },

@@ -45,7 +45,7 @@ const trustees = [
 const stats = [
   { value: '16+', label: 'Years of Excellence' },
   { value: '5k+', label: 'Alumni Network' },
-  { value: '6', label: 'Engineering Branches' },
+  { value: '12', label: 'B.Tech Branches' },
   { value: '90%+', label: 'Placement Rate' },
 ];
 

@@ -92,7 +92,7 @@ export const LatestEvents = ({ notices = [] }: LatestEventsProps) => {
             </div>
 
             <div className="p-8 bg-slate-50 z-20 border-t border-slate-100">
-              <Link to="/activities" className="inline-flex items-center justify-center gap-3 bg-[#BA1631] hover:bg-primary text-white w-full py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl shadow-[#BA1631]/20 group">
+              <Link to="/admission/news" className="inline-flex items-center justify-center gap-3 bg-[#BA1631] hover:bg-primary text-white w-full py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl shadow-[#BA1631]/20 group">
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /> View All Notices
               </Link>
             </div>

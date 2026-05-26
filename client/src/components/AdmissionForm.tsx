@@ -11,7 +11,7 @@ import {
 const WHY_BEC = [
   { icon: Trophy,        text: 'AICTE Approved • BPUT Affiliated' },
   { icon: Star,          text: '90%+ Placements — TCS, Infosys & more' },
-  { icon: GraduationCap, text: 'B.Tech | MBA | Diploma | 6 Branches' },
+  { icon: GraduationCap, text: 'B.Tech | MBA | Diploma | 12 Branches' },
   { icon: Building2,     text: 'Aeronautical Hangar & Modern Labs' },
   { icon: Clock,         text: '40-Acre Eco Campus, Bhubaneswar' },
 ];
@@ -20,7 +20,7 @@ const STATS = [
   { value: '16+', label: 'Years' },
   { value: '5k+', label: 'Alumni' },
   { value: '90%', label: 'Placed' },
-  { value: '6',   label: 'Branches' },
+  { value: '12',  label: 'B.Tech Branches' },
 ];
 
 const COURSES = [
@@ -36,12 +36,23 @@ const QUALIFICATIONS = [
 ];
 
 const BRANCHES = [
-  'Aero & AME Engg.',
-  'Agriculture Engg.',
-  'Civil & Civil (Env.) Engg.',
-  'CSE & CSE (Data Science)',
-  'EE & Electrical (CS) Engg.',
-  'Mech & MM (Additive Mfg.)',
+  'Aeronautical Engineering',
+  'Aircraft Maintenance Engineering',
+  'Agriculture Engineering',
+  'Food Engineering',
+  'Civil Engineering',
+  'Civil and Environmental Engineering',
+  'Computer Science Engineering',
+  'CSE (Data Science)',
+  'Electrical Engineering',
+  'Electrical and Computer Engineering',
+  'Mechanical Engineering',
+  'Mechanical Mechatronics Engineering',
+  'Diploma - Aeronautical Engg.',
+  'Diploma - Aircraft Maintenance Engg. (AME)',
+  'Diploma - Civil Engg.',
+  'Diploma - Electrical Engg.',
+  'Diploma - Mechanical Engg.',
   'MBA',
 ];
 

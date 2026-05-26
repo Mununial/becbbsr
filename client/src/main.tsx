@@ -35,6 +35,7 @@ const Achievements = React.lazy(() => import('./pages/Achievements').then(m => (
 const AeroClub = React.lazy(() => import('./pages/AeroClub').then(m => ({ default: m.AeroClub })))
 const SeminarWorkshop = React.lazy(() => import('./pages/SeminarWorkshop').then(m => ({ default: m.SeminarWorkshop })))
 const SportsGames = React.lazy(() => import('./pages/SportsGames').then(m => ({ default: m.SportsGames })))
+const Activities = React.lazy(() => import('./pages/Activities').then(m => ({ default: m.Activities })))
 const Syllabus = React.lazy(() => import('./pages/Syllabus').then(m => ({ default: m.Syllabus })))
 const AdmissionQuery = React.lazy(() => import('./pages/AdmissionQuery').then(m => ({ default: m.AdmissionQuery })))
 const Fees = React.lazy(() => import('./pages/Fees').then(m => ({ default: m.Fees })))
@@ -45,6 +46,7 @@ import { DataProvider } from './context/DataContext'
 const NewsAndEvents = React.lazy(() => import('./pages/NewsAndEvents').then(m => ({ default: m.NewsAndEvents })))
 const Placement = React.lazy(() => import('./pages/Placement').then(m => ({ default: m.Placement })))
 const AdmissionsMaster = React.lazy(() => import('./pages/AdmissionsMaster').then(m => ({ default: m.AdmissionsMaster })))
+const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })))
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -89,6 +91,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/career" element={<Career />} />
           <Route path="/photo-gallery" element={<PhotoGallery />} />
           <Route path="/achievements" element={<Achievements />} />
+          <Route path="/activities" element={<Activities />} />
           <Route path="/areo-club" element={<AeroClub />} />
           <Route path="/seminar-workshop" element={<SeminarWorkshop />} />
           <Route path="/sports-games" element={<SportsGames />} />
@@ -104,6 +107,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/admission/news" element={<NewsAndEvents />} />
           <Route path="/fees" element={<Fees />} />
           
+          {/* Legal Pages */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
           {/* Catch-all route for any undefined page paths right now */}
           <Route path="*" element={<CatchAllPage />} />
         </Routes>

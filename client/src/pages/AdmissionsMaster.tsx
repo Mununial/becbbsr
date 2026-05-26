@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { SEO } from '../components/SEO';
@@ -34,17 +34,41 @@ const ADMISSION_CONTENT: Record<string, any> = {
       {
         heading: 'B.Tech (Bachelor of Technology)',
         text: 'Bhubaneswar Engineering College (BEC) offers a 4-year undergraduate B.Tech program in various elite disciplines. Our curriculum is designed to merge historical engineering principles with future technology requirements like AI, Data Science, and Additive Manufacturing.',
-        bullets: ['Aeronautical Engineering', 'Computer Science & Engineering', 'Civil & Environmental Engineering', 'Electrical & Computer Science', 'Mechanical Engineering', 'Agriculture Engineering']
+        bullets: [
+          'Aeronautical Engineering',
+          'Aircraft Maintenance Engineering',
+          'Agriculture Engineering',
+          'Food Engineering',
+          'Civil Engineering',
+          'Civil and Environmental Engineering',
+          'Computer Science Engineering',
+          'CSE (Data Science)',
+          'Electrical Engineering',
+          'Electrical and Computer Engineering',
+          'Mechanical Engineering',
+          'Mechanical Mechatronics Engineering'
+        ]
       },
       {
         heading: 'MBA (Master of Business Administration)',
-        text: 'Our 2-year MBA program focuses on creating visionary managers for the global industry. Specializations include Marketing, Finance, HR, and Operations Management with a strong focus on technical entrepreneurship.',
-        bullets: ['Affiliated to BPUT', 'Industry Focused Curriculum', 'Live Projects & Internships']
+        text: 'Our 2-year MBA program focuses on creating visionary managers for the global industry. Specializations include Marketing, Finance, HR, and Agri-Business with a strong focus on technical entrepreneurship.',
+        bullets: [
+          'Marketing',
+          'Finance',
+          'Human Resource',
+          'Agri-Business'
+        ]
       },
       {
         heading: 'Diploma (Engineering)',
         text: 'We provide 3-year Diploma programs for students aiming for early entry into the technical workforce, focusing on practical skills and workshop training.',
-        bullets: ['Aeronautical Engineering', 'Mechanical Engineering', 'Civil Engineering']
+        bullets: [
+          'Aeronautical Engineering',
+          'Aircraft Maintenance Engineering (AME)',
+          'Civil Engineering',
+          'Electrical Engineering',
+          'Mechanical Engineering'
+        ]
       }
     ]
   },
@@ -231,6 +255,55 @@ export const AdmissionsMaster = () => {
   const seoData = ADMISSION_SEO[pathname] || ADMISSION_SEO['/admission/programme'];
   const Icon = data.icon;
 
+  const [activeTab, setActiveTab] = useState<'btech' | 'diploma' | 'mba'>('btech');
+  const [userQual, setUserQual] = useState<string>('');
+  const [eligibilityResult, setEligibilityResult] = useState<{ eligible: boolean; text: string } | null>(null);
+
+  const checkEligibility = (qual: string) => {
+    setUserQual(qual);
+    if (!qual) {
+      setEligibilityResult(null);
+      return;
+    }
+    
+    let result = { eligible: false, text: "" };
+    switch (qual) {
+      case '10th':
+        result = {
+          eligible: true,
+          text: "🎉 You qualify for our 3-Year Diploma in Engineering! You can choose from Aeronautical, AME, Civil, Electrical, or Mechanical."
+        };
+        break;
+      case '12th-pcm':
+        result = {
+          eligible: true,
+          text: "🚀 Excellent! You qualify for all 12 B.Tech degree branches (Aeronautical, CSE, Agriculture, Civil, Electrical, Food, Mechanical, etc.) and all Diploma programs! Admissions are processed via OJEE / JEE Main counseling."
+        };
+        break;
+      case '12th-other':
+        result = {
+          eligible: false,
+          text: "⚠️ Direct admission to B.Tech requires Physics, Chemistry & Math in Class 12. However, you can register for our management courses or contact our counselors for direct seats."
+        };
+        break;
+      case 'diploma':
+        result = {
+          eligible: true,
+          text: "⚡ Fantastic! You qualify for Direct Lateral Entry into the 2nd Year (3rd Semester) of B.Tech Degree! Skip the first year and complete your B.Tech in just 3 years."
+        };
+        break;
+      case 'graduate':
+        result = {
+          eligible: true,
+          text: "🎓 Congratulations! You qualify for our 2-Year Post-Graduate MBA Program! You can choose from Marketing, Finance, HR, and Agri-Business specializations."
+        };
+        break;
+      default:
+        result = { eligible: false, text: "" };
+    }
+    setEligibilityResult(result);
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-inter">
       <SEO 
@@ -269,42 +342,259 @@ export const AdmissionsMaster = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           
           {/* Main Content (Left) */}
-          <div className="lg:col-span-8 flex flex-col gap-16">
-            {data.content.map((section: any, idx: number) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="group p-8 md:p-12 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500"
-              >
-                <div className="flex items-start gap-8">
-                  <div className="hidden md:flex w-12 h-12 rounded-2xl bg-primary/5 items-center justify-center text-primary font-black shrink-0 border border-primary/10">
-                    0{idx + 1}
+          <div className="lg:col-span-8 flex flex-col gap-10">
+            
+            {pathname === '/admission/programme' ? (
+              // UNIQUE AND PREMIUM ADMISSIONS INTERACTIVE DASHBOARD
+              <div className="flex flex-col gap-10">
+                
+                {/* 1. Quick Eligibility Checker Widget */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-8 md:p-10 bg-gradient-to-br from-[#1E3A8A] to-[#0b1c3a] rounded-[2.5rem] text-white shadow-xl relative overflow-hidden border border-white/5"
+                >
+                  <div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none">
+                     <GraduationCap className="w-64 h-64 text-accent" />
                   </div>
-                  <div className="flex-1">
-                    <h2 className="text-2xl md:text-3xl font-black text-primary mb-6 tracking-tighter uppercase font-poppins">
-                      {section.heading}
-                    </h2>
-                    <p className="text-slate-500 text-base md:text-lg leading-relaxed mb-8 font-medium">
-                      {section.text}
-                    </p>
+                  <div className="relative z-10 flex flex-col gap-6">
+                     <div>
+                        <span className="text-accent text-[9px] font-black uppercase tracking-[0.25em] block mb-2">Smart Admission Bot</span>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter">Check Your Eligibility Instantly</h3>
+                        <p className="text-white/60 font-medium text-xs leading-relaxed max-w-lg mt-2">
+                           Select your current educational qualification below to find out which elite engineering and management programs you qualify for at BEC.
+                        </p>
+                     </div>
+                     
+                     <div className="flex flex-col sm:flex-row gap-4 items-center">
+                        <select 
+                          value={userQual}
+                          onChange={(e) => checkEligibility(e.target.value)}
+                          className="w-full sm:w-auto min-w-[240px] px-5 py-3.5 bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-xl text-xs font-black uppercase tracking-widest text-white border border-white/10 outline-none cursor-pointer transition-all"
+                        >
+                           <option value="" className="text-navy-950 font-semibold">-- Select Qualification --</option>
+                           <option value="10th" className="text-navy-950 font-semibold">Class 10th Passed</option>
+                           <option value="12th-pcm" className="text-navy-950 font-semibold">Class 12th Passed (PCM)</option>
+                           <option value="12th-other" className="text-navy-950 font-semibold">Class 12th Passed (Other)</option>
+                           <option value="diploma" className="text-navy-950 font-semibold">Diploma in Engineering Holder</option>
+                           <option value="graduate" className="text-navy-950 font-semibold">Graduate Degree / Bachelor</option>
+                        </select>
+                        
+                        {userQual && (
+                          <button 
+                            onClick={() => { setUserQual(''); setEligibilityResult(null); }}
+                            className="text-[10px] font-black text-white/50 hover:text-white uppercase tracking-widest transition-colors py-2 px-4"
+                          >
+                             Reset
+                          </button>
+                        )}
+                     </div>
 
-                    {section.bullets && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {section.bullets.map((bullet: string, bidx: number) => (
-                          <div key={bidx} className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100/50 group-hover:bg-white group-hover:border-accent/30 transition-all duration-500">
-                            <CheckCircle2 className="w-4 h-4 text-accent" />
-                            <span className="text-[11px] font-bold text-primary uppercase tracking-tight">{bullet}</span>
+                     {eligibilityResult && (
+                       <motion.div 
+                         initial={{ opacity: 0, scale: 0.98 }}
+                         animate={{ opacity: 1, scale: 1 }}
+                         className={`p-6 rounded-2xl border backdrop-blur-md flex items-start gap-4 ${
+                           eligibilityResult.eligible 
+                             ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-100' 
+                             : 'bg-amber-500/10 border-amber-500/20 text-amber-100'
+                         }`}
+                       >
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                            eligibilityResult.eligible ? 'bg-emerald-500/20' : 'bg-amber-500/20'
+                          }`}>
+                             {eligibilityResult.eligible ? '✓' : '!'}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                          <div className="flex-1">
+                             <p className="text-[13px] font-semibold leading-relaxed">{eligibilityResult.text}</p>
+                             {eligibilityResult.eligible && (
+                               <Link 
+                                 to="/admission_query"
+                                 className="inline-flex items-center gap-2 mt-4 text-[10px] font-black uppercase tracking-widest text-accent hover:underline"
+                               >
+                                  Apply Online Now &rarr;
+                               </Link>
+                             )}
+                          </div>
+                       </motion.div>
+                     )}
                   </div>
+                </motion.div>
+
+                {/* 2. Interactive Intake & Branch Portfolio Matrix */}
+                <div className="p-8 md:p-12 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col gap-8">
+                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-100 pb-8">
+                      <div>
+                         <h3 className="text-xl md:text-2xl font-black text-primary uppercase tracking-tighter font-poppins">Programs Matrix</h3>
+                         <p className="text-slate-400 text-xs font-medium mt-1">Explore all branches, intake capacity, and quick facts.</p>
+                      </div>
+                      
+                      {/* Premium Tab Bar Selector */}
+                      <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100/50 self-start md:self-auto">
+                         {[
+                           { key: 'btech', label: 'B.Tech Degree' },
+                           { key: 'diploma', label: 'Diploma Poly' },
+                           { key: 'mba', label: 'MBA Post-Grad' }
+                         ].map(tab => (
+                           <button
+                             key={tab.key}
+                             onClick={() => setActiveTab(tab.key as any)}
+                             className={`px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                               activeTab === tab.key 
+                                 ? 'bg-primary text-white shadow-md' 
+                                 : 'text-slate-400 hover:text-primary'
+                             }`}
+                           >
+                              {tab.label}
+                           </button>
+                         ))}
+                      </div>
+                   </div>
+
+                   {/* Tab Contents */}
+                   <AnimatePresence mode="wait">
+                      <motion.div
+                        key={activeTab}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25 }}
+                        className="space-y-6"
+                      >
+                         {activeTab === 'btech' && (
+                           <div className="space-y-6">
+                              <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                                 Bhubaneswar Engineering College (BEC) offers a 4-year undergraduate B.Tech program in 12 advanced disciplines, fully approved by AICTE and affiliated to BPUT.
+                              </p>
+                              
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                 {data.content[0].bullets.map((bullet: string, bidx: number) => (
+                                   <div key={bidx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100/50 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300 group">
+                                      <div className="flex items-center gap-3">
+                                         <CheckCircle2 className="w-4 h-4 text-accent" />
+                                         <span className="text-[11px] font-black text-primary uppercase tracking-tight">{bullet}</span>
+                                      </div>
+                                      <span className="bg-white px-2.5 py-1 rounded-lg text-[9px] font-black text-primary/50 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                                         {['Agriculture Engineering', 'Computer Science Engineering', 'Mechanical Engineering', 'Civil Engineering', 'CSE (Data Science)', 'Electrical Engineering'].includes(bullet) ? '60 Seats' : '30 Seats'}
+                                      </span>
+                                   </div>
+                                 ))}
+                              </div>
+                           </div>
+                         )}
+
+                         {activeTab === 'diploma' && (
+                           <div className="space-y-6">
+                              <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                                 We provide a 3-year Diploma in Engineering affiliated to SCTE & VT, Odisha. Focusing heavily on job-oriented vocational and practical industrial skills.
+                              </p>
+                              
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                 {data.content[2].bullets.map((bullet: string, bidx: number) => (
+                                   <div key={bidx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100/50 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300 group">
+                                      <div className="flex items-center gap-3">
+                                         <CheckCircle2 className="w-4 h-4 text-accent" />
+                                         <span className="text-[11px] font-black text-primary uppercase tracking-tight">{bullet}</span>
+                                      </div>
+                                      <span className="bg-white px-2.5 py-1 rounded-lg text-[9px] font-black text-primary/50 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                                         {bullet.includes('Aero') || bullet.includes('AME') ? '30 Seats' : '60 Seats'}
+                                      </span>
+                                   </div>
+                                 ))}
+                              </div>
+                           </div>
+                         )}
+
+                         {activeTab === 'mba' && (
+                           <div className="space-y-6">
+                              <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                                 Our 2-year MBA program focuses on creating visionary managers for global business. We offer 5 premium dual specializations aligned with industry demands.
+                              </p>
+                              
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                 {data.content[1].bullets.map((bullet: string, bidx: number) => (
+                                   <div key={bidx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100/50 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300 group">
+                                      <div className="flex items-center gap-3">
+                                         <CheckCircle2 className="w-4 h-4 text-accent" />
+                                         <span className="text-[11px] font-black text-primary uppercase tracking-tight">{bullet}</span>
+                                      </div>
+                                      <span className="bg-white px-2.5 py-1 rounded-lg text-[9px] font-black text-primary/50 group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                                         120 Seats
+                                      </span>
+                                   </div>
+                                 ))}
+                              </div>
+                           </div>
+                         )}
+                      </motion.div>
+                   </AnimatePresence>
                 </div>
-              </motion.div>
-            ))}
+              </div>
+            ) : (
+              // ORIGINAL LIST FOR OTHER PAGES
+              data.content.map((section: any, idx: number) => (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="group p-8 md:p-12 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500"
+                >
+                  <div className="flex items-start gap-8">
+                    <div className="hidden md:flex w-12 h-12 rounded-2xl bg-primary/5 items-center justify-center text-primary font-black shrink-0 border border-primary/10">
+                      0{idx + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-2xl md:text-3xl font-black text-primary mb-6 tracking-tighter uppercase font-poppins">
+                        {section.heading}
+                      </h2>
+                      <p className="text-slate-500 text-base md:text-lg leading-relaxed mb-8 font-medium">
+                        {section.text}
+                      </p>
+
+                      {section.bullets && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {section.bullets.map((bullet: string, bidx: number) => {
+                            let href: string | undefined = undefined;
+                            if (bullet.includes('Prerana') || bullet.includes('Medhabruti')) {
+                              href = 'https://scholarship.odisha.gov.in/website/home';
+                            } else if (bullet.includes('National Scholarship') || bullet.includes('Minorities')) {
+                              href = 'https://scholarships.gov.in/';
+                            }
+
+                            if (href) {
+                              return (
+                                <a 
+                                  key={bidx} 
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100/50 hover:bg-primary/5 hover:border-accent/30 hover:shadow-md transition-all duration-300 group/link cursor-pointer"
+                                >
+                                  <div className="flex items-center gap-3">
+                                     <CheckCircle2 className="w-4 h-4 text-accent" />
+                                     <span className="text-[11px] font-bold text-primary uppercase tracking-tight group-hover/link:text-accent transition-colors">{bullet}</span>
+                                  </div>
+                                  <span className="text-[9px] font-black text-accent uppercase tracking-widest bg-accent/10 px-2.5 py-1 rounded-lg opacity-80 group-hover/link:opacity-100 transition-all shadow-sm">Portal &rarr;</span>
+                                </a>
+                              );
+                            }
+
+                            return (
+                              <div key={bidx} className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100/50 group-hover:bg-white group-hover:border-accent/30 transition-all duration-500">
+                                <CheckCircle2 className="w-4 h-4 text-accent" />
+                                <span className="text-[11px] font-bold text-primary uppercase tracking-tight">{bullet}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))
+            )}
 
             {pathname === '/admission/prospectus' && (
               <div className="flex justify-center mt-4">

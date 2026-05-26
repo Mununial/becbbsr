@@ -8,12 +8,18 @@ const syllabusData = [
   {
     course: "B.Tech",
     branches: [
-      { name: "Aeronautical Engineering", sub: "AME Specialization", href: "#" },
+      { name: "Aeronautical Engineering", sub: "Aviation Design", href: "#" },
+      { name: "Aircraft Maintenance Engineering", sub: "Aviation Maintenance", href: "#" },
       { name: "Agriculture Engineering", sub: "Precision Farming", href: "#" },
-      { name: "Civil Engineering", sub: "Environmental Focus", href: "#" },
-      { name: "Computer Science & Engineering", sub: "AI & Data Science", href: "#" },
+      { name: "Food Engineering", sub: "Food Processing Tech", href: "#" },
+      { name: "Civil Engineering", sub: "Structural Design", href: "#" },
+      { name: "Civil and Environmental Engineering", sub: "Environmental Tech", href: "#" },
+      { name: "Computer Science Engineering", sub: "AI & Software Systems", href: "#" },
+      { name: "CSE (Data Science)", sub: "Big Data & AI", href: "#" },
       { name: "Electrical Engineering", sub: "Power Systems", href: "#" },
-      { name: "Mechanical Engineering", sub: "Mechatronics Specialization", href: "#" }
+      { name: "Electrical and Computer Engineering", sub: "Hardware-Software Co-Design", href: "#" },
+      { name: "Mechanical Engineering", sub: "Machinery Systems", href: "#" },
+      { name: "Mechanical Mechatronics Engineering", sub: "Mechatronics & Design", href: "#" }
     ],
     color: "text-blue-500",
     bg: "bg-blue-500/10"
@@ -22,6 +28,7 @@ const syllabusData = [
     course: "Diploma",
     branches: [
       { name: "Aeronautical Engineering", sub: "Technical Diploma", href: "#" },
+      { name: "Aircraft Maintenance Engineering (AME)", sub: "Aviation Maintenance", href: "#" },
       { name: "Civil Engineering", sub: "Construction Tech", href: "#" },
       { name: "Electrical Engineering", sub: "Power Distribution", href: "#" },
       { name: "Mechanical Engineering", sub: "Machinist Training", href: "#" }

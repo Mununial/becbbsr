@@ -1018,10 +1018,11 @@ export const AdminDashboard = () => {
                   <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Notice Title</span>
                   <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingNotice.title} onChange={(e) => setEditingNotice({ ...editingNotice, title: e.target.value })} placeholder="Enter update banner title" />
                 </label>
+                
                 <div className="grid grid-cols-2 gap-4">
                   <label className="block space-y-2">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Category</span>
-                    <select className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingNotice.category} onChange={(e) => setEditingNotice({ ...editingNotice, category: e.target.value })}>
+                    <select className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingNotice.category} onChange={(e) => setEditingNotice({ ...editingNotice, category: e.target.value as any })}>
                       <option value="Admission">Admission</option>
                       <option value="Academic">Academic</option>
                       <option value="Placement">Placement</option>
@@ -1030,10 +1031,110 @@ export const AdminDashboard = () => {
                     </select>
                   </label>
                   <label className="block space-y-2">
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Redirection Path</span>
-                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingNotice.url} onChange={(e) => setEditingNotice({ ...editingNotice, url: e.target.value })} placeholder="e.g. /fees or external url" />
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">New Alert Badge</span>
+                    <button 
+                      onClick={() => setEditingNotice({ ...editingNotice, isNew: !editingNotice.isNew })}
+                      className={cn("w-full py-4 px-6 rounded-xl font-bold text-xs uppercase tracking-wider text-center transition-all border", 
+                        editingNotice.isNew ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' : 'bg-slate-950 text-slate-500 border-white/5'
+                      )}
+                    >
+                      {editingNotice.isNew ? '✨ New Alert Active' : 'Not marked as new'}
+                    </button>
                   </label>
                 </div>
+
+                <div className="space-y-4">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Notice Attachment (PDF or Image)</span>
+                  
+                  {editingNotice.url ? (
+                    <div className="p-4 bg-slate-950 rounded-2xl border border-white/5 flex items-center justify-between gap-4">
+                      <div className="truncate flex-1">
+                        <span className="text-[9px] font-black uppercase text-slate-500 block">Current Attachment</span>
+                        <span className="text-xs font-semibold text-cyan-400 truncate block mt-0.5">{editingNotice.url}</span>
+                      </div>
+                      <span className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[8px] font-black uppercase tracking-widest text-slate-400">
+                        {editingNotice.type || (editingNotice.url.toLowerCase().endsWith('.pdf') ? 'pdf' : 'image')}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="text-center p-6 bg-slate-950/60 rounded-2xl border border-dashed border-white/5">
+                      <span className="text-xs text-slate-500 font-medium">No Attachment Uploaded</span>
+                    </div>
+                  )}
+
+                  <div className="flex gap-4">
+                    <label className="flex-1">
+                      <div className="w-full text-center py-4 bg-cyan-600 hover:bg-cyan-700 text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all cursor-pointer shadow-lg shadow-cyan-600/10">
+                        {uploading ? 'Uploading...' : 'Upload Attachment'}
+                      </div>
+                      <input 
+                        type="file" 
+                        className="hidden" 
+                        accept="image/*,application/pdf" 
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          await handleMediaUpload(e, (url) => {
+                            const isPdf = file.name.toLowerCase().endsWith('.pdf');
+                            setEditingNotice({ 
+                              ...editingNotice, 
+                              url: url, 
+                              type: isPdf ? 'pdf' : 'image' 
+                            });
+                          });
+                        }} 
+                      />
+                    </label>
+                    <div className="flex-1">
+                      <input 
+                        className="w-full bg-slate-950 p-3.5 border border-white/5 rounded-xl text-xs font-semibold text-white focus:outline-none" 
+                        value={editingNotice.url} 
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditingNotice({ 
+                            ...editingNotice, 
+                            url: val, 
+                            type: val.toLowerCase().endsWith('.pdf') ? 'pdf' : 'image' 
+                          });
+                        }} 
+                        placeholder="Or paste external URL" 
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Notice Card Thumbnail (Optional)</span>
+                  <div className="flex gap-4 items-center">
+                    {editingNotice.image && (
+                      <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/10 shrink-0 bg-black">
+                        <img src={editingNotice.image} className="w-full h-full object-cover" alt="" />
+                      </div>
+                    )}
+                    <label className="flex-1">
+                      <div className="w-full text-center py-3.5 bg-white/5 hover:bg-white/10 text-white border border-white/10 font-black text-[10px] uppercase tracking-widest rounded-xl transition-all cursor-pointer">
+                        {uploading ? 'Uploading...' : 'Upload Thumbnail'}
+                      </div>
+                      <input 
+                        type="file" 
+                        className="hidden" 
+                        accept="image/*" 
+                        onChange={async (e) => {
+                          await handleMediaUpload(e, (url) => {
+                            setEditingNotice({ ...editingNotice, image: url });
+                          });
+                        }} 
+                      />
+                    </label>
+                    <input 
+                      className="flex-[1.5] bg-slate-950 p-3 border border-white/5 rounded-xl text-xs font-semibold text-white focus:outline-none" 
+                      value={editingNotice.image || ''} 
+                      onChange={(e) => setEditingNotice({ ...editingNotice, image: e.target.value })} 
+                      placeholder="Or paste thumbnail image URL" 
+                    />
+                  </div>
+                </div>
+
               </div>
               <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
                 <button onClick={() => setEditingNotice(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
