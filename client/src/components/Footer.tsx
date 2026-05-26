@@ -1,4 +1,6 @@
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Send, MapPin, Phone, Mail } from 'lucide-react';
+import { useState } from 'react';
+import axios from 'axios';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Send, MapPin, Phone, Mail, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const usefulLinks = [
@@ -13,6 +15,23 @@ const usefulLinks = [
 ];
 
 export const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus('loading');
+    try {
+      await axios.post('/api/subscribe', { email });
+      setStatus('success');
+      setEmail('');
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+    }
+  };
+
   return (
     <footer className="pt-24 pb-12 bg-[#0F172A] border-t border-white/5 overflow-hidden relative font-inter" id="contact">
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
@@ -24,15 +43,40 @@ export const Footer = () => {
             <h3 className="text-2xl md:text-3xl font-black text-white mb-3 uppercase tracking-tighter font-poppins">Subscribe to <span className="text-accent underline decoration-accent/20 underline-offset-8">Intelligence</span></h3>
             <p className="text-slate-400 text-sm font-medium font-inter leading-relaxed">Join 5000+ students and professionals receiving our monthly tech & career bulletins.</p>
           </div>
-          <div className="flex flex-col sm:flex-row w-full lg:w-fit gap-3">
-            <input 
-              type="email" 
-              placeholder="Enter your email" 
-              className="flex-1 lg:w-72 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm focus:outline-none focus:border-accent/40 focus:bg-white/10 transition-all font-medium"
-            />
-            <button className="bg-accent hover:bg-white text-primary px-10 py-4 rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 group font-black text-xs uppercase tracking-widest shadow-lg shadow-accent/20">
-              Subscribe <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-            </button>
+          <div className="w-full lg:w-fit">
+            {status === 'success' ? (
+              <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 px-6 py-4 rounded-2xl text-emerald-400 font-bold text-sm">
+                <CheckCircle2 className="w-5 h-5 shrink-0" />
+                <span>Subscribed Successfully! Welcome to BEC Intelligence.</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row w-full lg:w-fit gap-3">
+                <div className="flex flex-col gap-1 flex-1 lg:w-72">
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm focus:outline-none focus:border-accent/40 focus:bg-white/10 transition-all font-medium"
+                  />
+                  {status === 'error' && (
+                    <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest pl-2">Subscription failed. Try again.</span>
+                  )}
+                </div>
+                <button 
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="bg-accent hover:bg-white text-primary px-10 py-4 rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 group font-black text-xs uppercase tracking-widest shadow-lg shadow-accent/20 disabled:opacity-75 disabled:pointer-events-none"
+                >
+                  {status === 'loading' ? (
+                    <>Subscribing... <Loader2 className="w-4 h-4 animate-spin" /></>
+                  ) : (
+                    <>Subscribe <Send className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></>
+                  )}
+                </button>
+              </form>
+            )}
           </div>
         </div>
 

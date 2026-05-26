@@ -24,12 +24,17 @@ cloudinary.config({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Email Transporter setup
+// Email Transporter setup (Robust SMTP Configuration for Production cloud servers)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // SSL/TLS
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false // Bypasses self-signed certificate blocks on certain VPS networks
   }
 });
 
@@ -223,6 +228,62 @@ app.post('/api/contact', async (req, res) => {
         <div class="grid-row"><span class="grid-label">Email Address:</span><span class="grid-value">${email}</span></div>
         <div class="grid-row"><span class="grid-label">Course:</span><span class="grid-value">${course}</span></div>
         <div class="grid-row"><span class="grid-label">Branch:</span><span class="grid-value">${branch}</span></div>
+      </div>
+
+      <!-- Course, Branches, Placement & Early Bird Promotion -->
+      <div style="margin-top: 30px; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background: #fafafb; font-family: 'Segoe UI', Roboto, sans-serif;">
+        <div style="background: #0b1c3a; color: #ffffff; padding: 15px; text-align: center; font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;">
+          🎓 ADMISSION FEE STRUCTURE & SPECIAL OFFER
+        </div>
+        <div style="padding: 20px;">
+          <div style="border-bottom: 1px solid #cbd5e1; padding-bottom: 15px; margin-bottom: 15px; text-align: center;">
+            <span style="font-size: 11px; font-weight: 900; color: #10b981; background: rgba(16,185,129,0.1); padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; margin-right: 10px;">
+              🛡️ 100% Placement Guarantee
+            </span>
+            <span style="font-size: 11px; font-weight: 900; color: #ffaa00; background: rgba(255,170,0,0.1); padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px;">
+              🎁 Scholarship Benefits Active
+            </span>
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <div style="display: table; width: 100%; margin-bottom: 8px;">
+              <span style="display: table-cell; width: 60%; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase;">Total Course Fees:</span>
+              <span style="display: table-cell; width: 40%; color: #0b1c3a; font-size: 14px; font-weight: 800;">₹70,000 / Year</span>
+            </div>
+            <div style="display: table; width: 100%; margin-bottom: 8px;">
+              <span style="display: table-cell; width: 60%; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase;">Premium Hostel Accomodation:</span>
+              <span style="display: table-cell; width: 40%; color: #0b1c3a; font-size: 14px; font-weight: 800;">₹50,000 / Year</span>
+            </div>
+          </div>
+
+          <div style="background: rgba(30,58,138,0.05); border-left: 4px solid #1e3a8a; padding: 12px 15px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; line-height: 1.5; text-align: left;">
+            ⚡ <strong>Early Admission Privilege:</strong> Confirm your registration or speak with our counseling team today to unlock an <strong>exclusive early-bird discount</strong> on this season's B.Tech / Diploma / MBA admission!
+          </div>
+
+          <div>
+            <div style="color: #0b1c3a; font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; text-align: left;">
+              📍 Available Integrated Specializations & Branches
+            </div>
+            <div style="display: table; width: 100%; text-align: left;">
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Aero & AME Engineering</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• CSE & CSE (Data Science)</div>
+              </div>
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Agriculture Engineering</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Civil & Environmental Engg.</div>
+              </div>
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• EE & Electrical (CS) Engg.</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Mechanical & Additive Mfg.</div>
+              </div>
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• MBA (Dual Specialization)</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Diploma Programs</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="stats-container">
@@ -425,6 +486,62 @@ app.post('/api/admission', async (req, res) => {
         ${qualification ? `<div class="grid-row"><span class="grid-label">Qualification:</span><span class="grid-value">${qualification}</span></div>` : ''}
       </div>
 
+      <!-- Course, Branches, Placement & Early Bird Promotion -->
+      <div style="margin-top: 30px; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background: #fafafb; font-family: 'Segoe UI', Roboto, sans-serif;">
+        <div style="background: #0b1c3a; color: #ffffff; padding: 15px; text-align: center; font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;">
+          🎓 ADMISSION FEE STRUCTURE & SPECIAL OFFER
+        </div>
+        <div style="padding: 20px;">
+          <div style="border-bottom: 1px solid #cbd5e1; padding-bottom: 15px; margin-bottom: 15px; text-align: center;">
+            <span style="font-size: 11px; font-weight: 900; color: #10b981; background: rgba(16,185,129,0.1); padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; margin-right: 10px;">
+              🛡️ 100% Placement Guarantee
+            </span>
+            <span style="font-size: 11px; font-weight: 900; color: #ffaa00; background: rgba(255,170,0,0.1); padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px;">
+              🎁 Scholarship Benefits Active
+            </span>
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <div style="display: table; width: 100%; margin-bottom: 8px;">
+              <span style="display: table-cell; width: 60%; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase;">Total Course Fees:</span>
+              <span style="display: table-cell; width: 40%; color: #0b1c3a; font-size: 14px; font-weight: 800;">₹70,000 / Year</span>
+            </div>
+            <div style="display: table; width: 100%; margin-bottom: 8px;">
+              <span style="display: table-cell; width: 60%; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase;">Premium Hostel Accomodation:</span>
+              <span style="display: table-cell; width: 40%; color: #0b1c3a; font-size: 14px; font-weight: 800;">₹50,000 / Year</span>
+            </div>
+          </div>
+
+          <div style="background: rgba(30,58,138,0.05); border-left: 4px solid #1e3a8a; padding: 12px 15px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; line-height: 1.5; text-align: left;">
+            ⚡ <strong>Early Admission Privilege:</strong> Confirm your registration or speak with our counseling team today to unlock an <strong>exclusive early-bird discount</strong> on this season's B.Tech / Diploma / MBA admission!
+          </div>
+
+          <div>
+            <div style="color: #0b1c3a; font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; text-align: left;">
+              📍 Available Integrated Specializations & Branches
+            </div>
+            <div style="display: table; width: 100%; text-align: left;">
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Aero & AME Engineering</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• CSE & CSE (Data Science)</div>
+              </div>
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Agriculture Engineering</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Civil & Environmental Engg.</div>
+              </div>
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• EE & Electrical (CS) Engg.</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Mechanical & Additive Mfg.</div>
+              </div>
+              <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• MBA (Dual Specialization)</div>
+                <div style="display: table-cell; width: 50%; font-size: 11px; font-weight: 700; color: #475569; padding: 4px 0;">• Diploma Programs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="stats-container">
         <div class="stat-box">
           <p class="stat-number">16+</p>
@@ -472,6 +589,185 @@ app.post('/api/admission', async (req, res) => {
     res.json({ success: true, message: 'Admission query sent and auto-reply triggered successfully' });
   } catch (error) {
     console.error("Mail error:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Newsletter Subscription Route
+app.post('/api/subscribe', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, error: 'Email is required.' });
+  }
+
+  // 1. Send subscription notification to Admin
+  const adminMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.RECEIVER_EMAIL || 'becgroupbbsr@gmail.com',
+    subject: `New Newsletter Subscriber: ${email}`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+    .email-container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.15); border: 1px solid rgba(0,0,0,0.05); }
+    .header-banner { background: linear-gradient(135deg, #0b1c3a 0%, #1e3a8a 100%); padding: 25px; text-align: center; }
+    .logo { height: 60px; width: auto; margin-bottom: 8px; }
+    .college-name { color: #ffffff; font-size: 16px; font-weight: 800; margin: 0; letter-spacing: 0.5px; text-transform: uppercase; }
+    .college-tagline { color: #ffaa00; font-size: 9px; font-weight: 700; margin: 2px 0 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .notification-header { background: #ffaa00; color: #0b1c3a; text-align: center; padding: 12px; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+    .content-body { padding: 35px; background: #ffffff; }
+    .intro-text { color: #4b5563; font-size: 14px; line-height: 1.6; font-weight: 600; margin-bottom: 25px; }
+    .data-grid { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; }
+    .grid-row { display: table; width: 100%; margin-bottom: 12px; }
+    .grid-label { display: table-cell; width: 35%; color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .grid-value { display: table-cell; width: 65%; color: #0b1c3a; font-size: 13px; font-weight: 700; }
+    .footer { background: #0f172a; padding: 20px; text-align: center; color: #94a3b8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header-banner">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC Logo" class="logo" />
+      <div class="college-name">Bhubaneswar Engineering College</div>
+      <div class="college-tagline">Intelligence & Career Bulletins</div>
+    </div>
+    <div class="notification-header">📰 NEW NEWSLETTER SUBSCRIBER</div>
+    <div class="content-body">
+      <p class="intro-text">
+        A new user has subscribed to the BEC Intelligence Newsletter from the website footer.
+      </p>
+      
+      <div class="data-grid">
+        <div class="grid-row"><span class="grid-label">Subscriber Email:</span><span class="grid-value" style="color: #1e3a8a; font-size: 15px; font-weight: 800;"><a href="mailto:${email}" style="color: #1e3a8a; text-decoration: none;">${email}</a></span></div>
+        <div class="grid-row"><span class="grid-label">Subscription Time:</span><span class="grid-value">${new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })} (IST)</span></div>
+      </div>
+    </div>
+    <div class="footer">
+      BEC AUTOMATED SYSTEM • NEWSLETTER LOG
+    </div>
+  </div>
+</body>
+</html>
+    `
+  };
+
+  // 2. Send premium Thank You Auto-Reply to the Subscriber
+  const subscriberMailOptions = {
+    from: `"Bhubaneswar Engineering College (BEC)" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: `Welcome to BEC Intelligence! 🚀 - Subscription Confirmed`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+    .email-container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.15); border: 1px solid rgba(0,0,0,0.05); }
+    .header-banner { background: linear-gradient(135deg, #0b1c3a 0%, #1e3a8a 100%); padding: 30px; text-align: center; position: relative; overflow: hidden; }
+    .logo { height: 75px; width: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); margin-bottom: 10px; }
+    .college-name { color: #ffffff; font-size: 20px; font-weight: 800; margin: 5px 0 0 0; letter-spacing: 1px; text-transform: uppercase; }
+    .college-tagline { color: #ffaa00; font-size: 10px; font-weight: 700; margin: 2px 0 0 0; letter-spacing: 3px; text-transform: uppercase; }
+    .hero-image-container { position: relative; width: 100%; height: 220px; overflow: hidden; }
+    .hero-image { width: 100%; height: 100%; object-fit: cover; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,28,58,0) 40%, rgba(11,28,58,0.7) 100%); }
+    .badge { position: absolute; bottom: 20px; left: 20px; background: #ffaa00; color: #0b1c3a; padding: 6px 16px; border-radius: 50px; font-size: 10px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+    .content-body { padding: 40px 35px; background: #ffffff; }
+    .greeting { color: #0b1c3a; font-size: 22px; font-weight: 800; margin-top: 0; margin-bottom: 15px; }
+    .main-text { color: #4b5563; font-size: 15px; line-height: 1.65; font-weight: 500; margin-bottom: 25px; }
+    .callout-box { background: linear-gradient(135deg, rgba(255,170,0,0.05) 0%, rgba(255,170,0,0.1) 100%); border-left: 5px solid #ffaa00; border-radius: 12px; padding: 20px; margin: 30px 0; }
+    .callout-title { color: #0b1c3a; font-size: 15px; font-weight: 800; margin-top: 0; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .callout-text { color: #1e3a8a; font-size: 14px; font-weight: 700; margin: 0; line-height: 1.5; }
+    .stats-container { display: table; width: 100%; margin-top: 30px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+    .stat-box { display: table-cell; width: 33.3%; }
+    .stat-number { color: #ffaa00; font-size: 20px; font-weight: 800; margin: 0; }
+    .stat-label { color: #64748b; font-size: 9px; font-weight: 800; text-transform: uppercase; margin: 2px 0 0 0; letter-spacing: 1px; }
+    .signature { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 25px; }
+    .signature-title { color: #0b1c3a; font-size: 15px; font-weight: 800; margin: 0; }
+    .signature-dept { color: #64748b; font-size: 12px; font-weight: 700; margin: 3px 0 0 0; }
+    .footer { background: #0f172a; padding: 30px; text-align: center; color: #94a3b8; font-size: 12px; font-weight: 500; }
+    .footer-address { margin: 0 0 10px 0; color: #cbd5e1; line-height: 1.5; }
+    .footer-links { margin: 15px 0 0 0; }
+    .footer-link { color: #ffaa00; text-decoration: none; font-weight: 700; margin: 0 10px; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header-banner">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC Logo" class="logo" />
+      <div class="college-name">Bhubaneswar Engineering College</div>
+      <div class="college-tagline">Excellence • Innovation • Leadership</div>
+    </div>
+    <div class="hero-image-container">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg" alt="BEC Campus" class="hero-image" />
+      <div class="hero-overlay"></div>
+      <div class="badge">BEC Intelligence</div>
+    </div>
+    <div class="content-body">
+      <h2 class="greeting">Welcome to BEC Intelligence!</h2>
+      <p class="main-text">
+        We are thrilled to have you subscribe to our monthly tech and career bulletins! You will now receive regular updates, technical articles, upcoming seminar details, campus placements highlights, and expert guides directly in your inbox.
+      </p>
+      
+      <div class="callout-box">
+        <div class="callout-title">💡 What to expect from BEC Intelligence</div>
+        <p class="callout-text">
+          • Industry-aligned technological breakthroughs<br/>
+          • Career guidance & interview prep strategies from placement cells<br/>
+          • Notifications of technical seminars, workshops & global conferences at BEC<br/>
+          • Real stories of success from our 5000+ alumni network
+        </p>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-box">
+          <p class="stat-number">16+</p>
+          <p class="stat-label">Years of Legacy</p>
+        </div>
+        <div class="stat-box">
+          <p class="stat-number">90%+</p>
+          <p class="stat-label">Placements Track</p>
+        </div>
+        <div class="stat-box">
+          <p class="stat-number">40-Acre</p>
+          <p class="stat-label">Green Eco-Campus</p>
+        </div>
+      </div>
+
+      <div class="signature">
+        <p class="signature-title">Warm Regards,</p>
+        <p class="signature-title" style="color: #ffaa00;">Editorial Board, BEC IT Cell</p>
+        <p class="signature-dept">Bhubaneswar Engineering College (BEC)</p>
+      </div>
+    </div>
+    <div class="footer">
+      <p class="footer-address">
+        Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha, India<br/>
+        Helpline Number: +91 94370 44215 | +91 94370 90875
+      </p>
+      <div class="footer-links">
+        <a href="https://becbbsr.ac.in" class="footer-link">Official Website</a>
+        <a href="https://becbbsr.ac.in/facilities" class="footer-link">Facilities</a>
+        <a href="https://becbbsr.ac.in/placement" class="footer-link">Placements</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+    `
+  };
+
+  try {
+    await Promise.all([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(subscriberMailOptions)
+    ]);
+    res.json({ success: true, message: 'Subscribed successfully and notifications sent' });
+  } catch (error) {
+    console.error("Subscription mail error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

@@ -1,9 +1,40 @@
+import { useState } from 'react';
+import axios from 'axios';
 import { PageLayout } from '../components/PageLayout';
-import { Mail, Phone, MapPin, Globe, Clock, Building, Send, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, Clock, Building, Send, Facebook, Linkedin, Instagram, Youtube, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
 
 export const ContactUs = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+    try {
+      await axios.post('/api/contact', {
+        name,
+        email,
+        phone,
+        course: 'General Inquiry',
+        branch: 'General Inquiry',
+        message
+      });
+      setStatus('success');
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+    }
+  };
+
   return (
     <PageLayout title="Contact Us">
       <SEO 
@@ -164,17 +195,75 @@ export const ContactUs = () => {
            {/* Quick Message Form */}
            <div className="bg-white rounded-[40px] p-12 border border-gray-100 shadow-2xl flex flex-col gap-8">
               <h3 className="text-2xl font-black text-primary uppercase tracking-tighter">Send a Message</h3>
-              <form className="flex flex-col gap-6">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" placeholder="Your Name" className="bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all" />
-                    <input type="email" placeholder="Your Email" className="bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all" />
-                 </div>
-                 <input type="text" placeholder="Subject" className="bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all" />
-                 <textarea rows={4} placeholder="Your Message" className="bg-gray-50 border border-gray-100 rounded-3xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all resize-none"></textarea>
-                 <button className="bg-primary text-white font-black py-5 rounded-2xl uppercase text-xs tracking-[0.3em] shadow-xl flex items-center justify-center gap-3 hover:-translate-y-1 transition-transform group">
-                    Send Message <Send className="w-4 h-4 text-accent group-hover:translate-x-1 transition-transform" />
-                 </button>
-              </form>
+              {status === 'success' ? (
+                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center text-center py-10">
+                    <div className="w-20 h-20 rounded-2xl bg-emerald-500 text-white flex items-center justify-center mb-6 shadow-lg shadow-emerald-200">
+                       <CheckCircle2 className="w-10 h-10" />
+                    </div>
+                    <h4 className="text-2xl font-black text-primary uppercase tracking-tighter mb-2">Message Sent!</h4>
+                    <p className="text-gray-500 font-medium max-w-sm mb-6 leading-relaxed text-sm">
+                       Thank you for reaching out. We will get back to you shortly via WhatsApp / Email.
+                    </p>
+                    <button onClick={() => setStatus('idle')} className="px-8 py-3 bg-primary text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-md hover:bg-navy-900 transition-colors">
+                       Send Another Message
+                    </button>
+                 </motion.div>
+              ) : (
+                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       <input 
+                          type="text" 
+                          placeholder="Your Name" 
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          required
+                          className="bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all" 
+                       />
+                       <input 
+                          type="email" 
+                          placeholder="Your Email" 
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          className="bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all" 
+                       />
+                    </div>
+                    <input 
+                       type="tel" 
+                       placeholder="WhatsApp Number" 
+                       value={phone}
+                       onChange={(e) => setPhone(e.target.value)}
+                       required
+                       className="bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all" 
+                    />
+                    <textarea 
+                       rows={4} 
+                       placeholder="Your Message" 
+                       value={message}
+                       onChange={(e) => setMessage(e.target.value)}
+                       required
+                       className="bg-gray-50 border border-gray-100 rounded-3xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:ring-2 focus:ring-primary outline-none transition-all resize-none"
+                    ></textarea>
+
+                    {status === 'error' && (
+                       <p className="text-[10px] font-bold text-red-500 text-center uppercase tracking-widest">
+                          Submission failed. Please check your connection and try again.
+                       </p>
+                    )}
+
+                    <button 
+                       type="submit"
+                       disabled={status === 'loading'}
+                       className="bg-primary text-white font-black py-5 rounded-2xl uppercase text-xs tracking-[0.3em] shadow-xl flex items-center justify-center gap-3 hover:-translate-y-1 transition-transform group disabled:opacity-75 disabled:pointer-events-none"
+                    >
+                       {status === 'loading' ? (
+                          <>Sending... <Loader2 className="w-4 h-4 animate-spin text-accent" /></>
+                       ) : (
+                          <>Send Message <Send className="w-4 h-4 text-accent group-hover:translate-x-1 transition-transform" /></>
+                       )}
+                    </button>
+                 </form>
+              )}
            </div>
         </div>
 
