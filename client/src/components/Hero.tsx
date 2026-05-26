@@ -330,7 +330,7 @@ export const Hero = ({ slides, onTourClick }: { slides: Slide[], onTourClick: ()
                     className="absolute bottom-0 w-[95%] max-w-[320px] sm:max-w-[360px] h-[85%] sm:h-[95%] flex items-end justify-center"
                   >
                     <img 
-                      src="/student_hero_cutout.png" 
+                      src={current?.url || "https://res.cloudinary.com/dpogq7cbe/image/upload/v1779825331/becweb/student_hero_cutout.jpg"} 
                       alt="Student Campaign" 
                       className="w-full h-full object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.15)] z-20"
                     />

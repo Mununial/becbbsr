@@ -106,17 +106,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       }, 3000);
 
       // 4. Parallel live Firestore websocket listener
-      // Only update from Firestore if server hasn't responded yet (avoids stale Firestore data overwriting fresh server data)
+      // Always apply Firestore updates to enable instant real-time multi-device synchronization
       const docRef = doc(db, "configs", key);
       const unsubFirestore = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
           const items = docSnap.data().items;
-          // Only apply Firestore data if Express server hasn't loaded anything yet
-          // This prevents old Firestore data from overwriting newer server JSON files
-          if (!serverHasResponded) {
-            setFn(items);
-            localStorage.setItem(key, JSON.stringify(items));
-          }
+          setFn(items);
+          localStorage.setItem(key, JSON.stringify(items));
         }
       }, (err) => {
         console.warn(`Firestore live sync suspended for key ${key}: ${err.message}`);
@@ -132,7 +128,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 1. Home Slides
     const unsubSlides = setupListener('hero-slides', setSlides, [
-      { id: '1', type: 'modern', url: '/student_hero_cutout.png', title: 'Join the BEC Community', subtitle: 'Admissions Open 2026-27', description: 'Admissions for the 2026-27 session are now open. Secure your future with us today.', ctaText: 'Apply Now' },
+      { id: '1', type: 'modern', url: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1779825331/becweb/student_hero_cutout.jpg', title: 'Join the BEC Community', subtitle: 'Admissions Open 2026-27', description: 'Admissions for the 2026-27 session are now open. Secure your future with us today.', ctaText: 'Apply Now' },
       { id: '2', type: 'video', url: 'https://res.cloudinary.com/dpogq7cbe/video/upload/v1777008335/bec_web_assets/uqfnp6eghnygsiepu7bq.mp4', title: 'BHUBANESWAR ENGINEERING COLLEGE (BEC)', subtitle: 'Excellence • Innovation • Leadership', description: 'A Premier Institution for tomorrow\'s global engineering leaders.', ctaText: 'Explore Campus' },
       { id: '3', type: 'video', url: 'https://res.cloudinary.com/dpogq7cbe/video/upload/v1776627787/bec_web_assets/khelbjx19zqw0nxysdam.mp4', title: 'EXCELLENCE IN LEARNING', subtitle: 'Aeronautical • Research • Global', description: 'Experience the state-of-the-art infrastructure and vibrant student life at BEC.', ctaText: 'Apply Now' }
     ]);
