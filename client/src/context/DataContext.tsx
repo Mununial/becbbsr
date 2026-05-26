@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader } from '../types';
 import { db, auth } from '../lib/firebase';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc, collection, query, orderBy } from 'firebase/firestore';
 import axios from 'axios';
 
 interface DataContextType {
@@ -29,6 +29,8 @@ interface DataContextType {
   updateWorkshops: (workshop: any[]) => void;
   sports: any[];
   updateSports: (sports: any[]) => void;
+  inquiries: any[];
+  updateInquiries: (inquiries: any[]) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -47,6 +49,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [aeroclub, setAeroclub] = useState<any[]>([]);
   const [workshop, setWorkshop] = useState<any[]>([]);
   const [sports, setSports] = useState<any[]>([]);
+  const [inquiries, setInquiries] = useState<any[]>([]);
 
   useEffect(() => {
     // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
@@ -202,6 +205,42 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     // 12. Sports
     const unsubSports = setupListener('sports', setSports, []);
 
+    // 13. Chatbot Inquiries (Real-time Firestore Collection Listener with local Express API backup)
+    let firestoreFailed = false;
+    const inquiriesQuery = query(collection(db, "chatbot_inquiries"), orderBy("timestamp", "desc"));
+    const unsubInquiries = onSnapshot(inquiriesQuery, (snapshot) => {
+      const list: any[] = [];
+      snapshot.forEach(docSnap => {
+        list.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      setInquiries(list);
+      localStorage.setItem("chatbot-inquiries", JSON.stringify(list));
+    }, (err) => {
+      console.warn("Firestore inquiries listener failed, falling back to local API:", err.message);
+      firestoreFailed = true;
+      axios.get('/api/chatbot/inquiries')
+        .then(res => {
+          if (Array.isArray(res.data)) {
+            setInquiries(res.data);
+            localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+          }
+        })
+        .catch(() => {});
+    });
+
+    const backupInterval = setInterval(() => {
+      if (firestoreFailed) {
+        axios.get('/api/chatbot/inquiries')
+          .then(res => {
+            if (Array.isArray(res.data)) {
+              setInquiries(res.data);
+              localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+            }
+          })
+          .catch(() => {});
+      }
+    }, 5000);
+
     // Clean up connections on unmount to prevent memory leaks
     return () => {
       unsubSlides();
@@ -216,6 +255,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       unsubAeroclub();
       unsubWorkshop();
       unsubSports();
+      unsubInquiries();
+      clearInterval(backupInterval);
     };
   }, []);
 
@@ -304,6 +345,32 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("sports", JSON.stringify(newSports));
   };
 
+  const updateInquiries = async (newInquiries: any[]) => {
+    const latestInquiry = newInquiries[0];
+    if (latestInquiry) {
+      try {
+        const { collection, addDoc } = await import('firebase/firestore');
+        await addDoc(collection(db, "chatbot_inquiries"), {
+          name: latestInquiry.name,
+          language: latestInquiry.language,
+          course: latestInquiry.course,
+          phone: latestInquiry.phone,
+          email: latestInquiry.email,
+          timestamp: latestInquiry.timestamp || new Date().toISOString(),
+          ip: latestInquiry.ip || "Client Portal"
+        });
+      } catch (firestoreErr) {
+        console.error("Firestore collection write failed:", firestoreErr);
+      }
+
+      try {
+        await axios.post('/api/chatbot/inquiry', latestInquiry);
+      } catch (expressErr) {
+        console.error("Express backup write failed:", expressErr);
+      }
+    }
+  };
+
   return (
     <DataContext.Provider value={{ 
       notices, updateNotices, 
@@ -317,7 +384,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       achievements, updateAchievements,
       aeroclub, updateAeroClub,
       workshop, updateWorkshops,
-      sports, updateSports
+      sports, updateSports,
+      inquiries, updateInquiries
     }}>
       {children}
     </DataContext.Provider>

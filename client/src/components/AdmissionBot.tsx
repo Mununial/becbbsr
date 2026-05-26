@@ -4,6 +4,7 @@ import { MessageSquare, X, Send, User, Bot, Volume2, VolumeX, Sun, Moon, CheckCi
 import { db } from '../lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import axios from 'axios';
+import { useData } from '../context/DataContext';
 
 interface Message {
   id: string;
@@ -91,6 +92,7 @@ const translations = {
 };
 
 export const AdmissionBot = () => {
+  const { inquiries, updateInquiries } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -108,6 +110,23 @@ export const AdmissionBot = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Responsive dynamic drag constraints to prevent button from going off-screen
+  const [dragConstraints, setDragConstraints] = useState({ left: -400, right: 0, top: -600, bottom: 0 });
+
+  useEffect(() => {
+    const updateConstraints = () => {
+      setDragConstraints({
+        left: -window.innerWidth + 80,
+        right: 0,
+        top: -window.innerHeight + 80,
+        bottom: 0
+      });
+    };
+    updateConstraints();
+    window.addEventListener('resize', updateConstraints);
+    return () => window.removeEventListener('resize', updateConstraints);
+  }, []);
 
   // Sound generator using Web Audio API
   const playNotificationSound = (type: 'receive' | 'send' | 'success') => {
@@ -238,26 +257,18 @@ export const AdmissionBot = () => {
         setStep(6);
         playNotificationSound('success');
 
-        // Save data to Firebase and Express API concurrently
-        // 1. Direct Client-side Firestore write (Fulfills firebase database spec)
-        try {
-          await addDoc(collection(db, "chatbot_inquiries"), {
-            ...finalUserData,
-            timestamp: new Date().toISOString(),
-            ip: "Client Portal"
-          });
-          console.log("Inquiry saved directly to Firestore.");
-        } catch (fireErr) {
-          console.warn("Direct Firestore save failed, moving to server backup:", fireErr);
-        }
-
-        // 2. Direct Express server local API backup (Fulfills backend specs)
-        try {
-          await axios.post('/api/chatbot/inquiry', finalUserData);
-          console.log("Inquiry saved to server inquiries.json.");
-        } catch (apiErr) {
-          console.error("Express backend save failed:", apiErr);
-        }
+        // Save data to Firebase and Express API concurrently in real-time
+        const newInquiry = {
+          id: Date.now().toString(),
+          name: finalUserData.name,
+          language: finalUserData.language,
+          course: finalUserData.course,
+          phone: finalUserData.phone,
+          email: finalUserData.email,
+          timestamp: new Date().toISOString(),
+          ip: "Client Portal"
+        };
+        updateInquiries([newInquiry, ...(inquiries || [])]);
 
         setMessages(prev => [
           ...prev, 
@@ -586,10 +597,15 @@ export const AdmissionBot = () => {
 
       {/* Floating Trigger Core Ring */}
       <motion.button
+        drag
+        dragConstraints={dragConstraints}
+        dragElastic={0.1}
+        dragMomentum={false}
+        animate={isOpen ? { x: 0, y: 0 } : undefined}
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-primary dark:bg-cyan-600 text-white rounded-full shadow-2xl flex items-center justify-center relative group active:scale-95 transition-all duration-300 shadow-primary/20 dark:shadow-cyan-900/30"
+        className="w-16 h-16 bg-primary dark:bg-cyan-600 text-white rounded-full shadow-2xl flex items-center justify-center relative group active:scale-95 transition-all duration-300 shadow-primary/20 dark:shadow-cyan-900/30 cursor-grab active:cursor-grabbing touch-none"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (

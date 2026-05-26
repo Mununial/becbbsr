@@ -40,65 +40,27 @@ export const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Chatbot inquiries state variables
-  const [inquiries, setInquiries] = useState<any[]>([]);
-  const [loadingInquiries, setLoadingInquiries] = useState(false);
+  const loadingInquiries = false;
   const [searchInquiry, setSearchInquiry] = useState('');
   const [filterLang, setFilterLang] = useState('');
   const [filterCourse, setFilterCourse] = useState('');
 
-  // Sync inquiries from Express server and direct client-side Firestore fallback
-  useEffect(() => {
-    if (activeTab === 'Chatbot Inquiries') {
-      loadInquiriesList();
-    }
-  }, [activeTab]);
-
-  const loadInquiriesList = async () => {
-    setLoadingInquiries(true);
-    let expressInquiries: any[] = [];
-    let firestoreInquiries: any[] = [];
-
-    // 1. Fetch from local Express server JSON database
-    try {
-      const res = await axios.get('/api/chatbot/inquiries');
-      if (Array.isArray(res.data)) {
-        expressInquiries = res.data;
-      }
-    } catch (e) {
-      console.warn("Failed to load inquiries from Express backend:", e);
-    }
-
-    // 2. Fetch from client-side Firestore collection
-    try {
-      const { getDocs, collection } = await import('firebase/firestore');
-      const snap = await getDocs(collection(db, "chatbot_inquiries"));
-      snap.forEach(docSnap => {
-        firestoreInquiries.push({ id: docSnap.id, ...docSnap.data() });
-      });
-    } catch (firestoreErr) {
-      console.warn("Failed to load inquiries from Firestore:", firestoreErr);
-    }
-
-    // 3. Merging and Deduplication
-    const mergedMap = new Map();
-    // Load Firestore records first
-    firestoreInquiries.forEach(inq => {
-      const key = inq.id || inq.phone || inq.timestamp;
-      if (key) mergedMap.set(key, inq);
-    });
-    // Compliment/overwrite with Express records
-    expressInquiries.forEach(inq => {
-      const key = inq.id || inq.phone || inq.timestamp;
-      if (key) mergedMap.set(key, inq);
-    });
-
-    const mergedList = Array.from(mergedMap.values());
-    // Sort by timestamp descending (newest leads first)
-    mergedList.sort((a, b) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime());
-
-    setInquiries(mergedList);
-    setLoadingInquiries(false);
-  };
+  // Real-time Firestore sync context integration
+  const {
+    slides, updateSlides,
+    notices, updateNotices,
+    gallery, updateGallery,
+    faculties, updateFaculties,
+    students, updateStudents,
+    scenes, updateScenes,
+    highlights, updateHighlights,
+    leaders, updateLeaders,
+    achievements, updateAchievements,
+    aeroclub: aeroClubItems, updateAeroClub,
+    workshop: workshopItems, updateWorkshops,
+    sports: sportsItems, updateSports,
+    inquiries
+  } = useData();
 
   const handleDeleteInquiry = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this student inquiry?")) return;
@@ -110,7 +72,6 @@ export const AdminDashboard = () => {
       } catch (firestoreErr) {
         console.warn("Firestore delete skipped/failed: ", firestoreErr);
       }
-      setInquiries(prev => prev.filter(inq => inq.id !== id));
     } catch (e: any) {
       alert("Failed to delete inquiry: " + e.message);
     }
@@ -134,7 +95,6 @@ export const AdminDashboard = () => {
       } catch (firestoreErr) {
         console.warn("Firestore bulk clear warning: ", firestoreErr);
       }
-      setInquiries([]);
       alert("All inquiries deleted successfully!");
     } catch (e: any) {
       alert("Failed to clear inquiries: " + e.message);
@@ -184,21 +144,7 @@ export const AdminDashboard = () => {
     return matchesSearch && matchesLang && matchesCourse;
   });
   
-  // Real-time Firestore sync context integration
-  const {
-    slides, updateSlides,
-    notices, updateNotices,
-    gallery, updateGallery,
-    faculties, updateFaculties,
-    students, updateStudents,
-    scenes, updateScenes,
-    highlights, updateHighlights,
-    leaders, updateLeaders,
-    achievements, updateAchievements,
-    aeroclub: aeroClubItems, updateAeroClub,
-    workshop: workshopItems, updateWorkshops,
-    sports: sportsItems, updateSports
-  } = useData();
+  // Real-time Firestore sync context integration mapped at the top
 
   // Editing Item States
   const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
