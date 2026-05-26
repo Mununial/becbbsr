@@ -5,7 +5,8 @@ import {
   Settings, LogOut, Plus, Search, Trash2, Edit, Award, Plane, 
   Monitor, Trophy, Zap, BellRing, Sparkles, Navigation as MapNavigation, 
   ArrowUp, ArrowDown, Upload, FileVideo, FileImage, Loader2, X, PlusCircle, 
-  GraduationCap, ArrowUpRight, HelpCircle, Menu
+  GraduationCap, ArrowUpRight, HelpCircle, Menu, MessageSquare, Download,
+  FileSpreadsheet
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
@@ -31,11 +32,157 @@ const sidebarItems = [
   { name: 'Aero Club', icon: Plane },
   { name: 'Workshops', icon: Monitor },
   { name: 'Sports', icon: Trophy },
+  { name: 'Chatbot Inquiries', icon: MessageSquare },
 ];
 
 export const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // Chatbot inquiries state variables
+  const [inquiries, setInquiries] = useState<any[]>([]);
+  const [loadingInquiries, setLoadingInquiries] = useState(false);
+  const [searchInquiry, setSearchInquiry] = useState('');
+  const [filterLang, setFilterLang] = useState('');
+  const [filterCourse, setFilterCourse] = useState('');
+
+  // Sync inquiries from Express server and direct client-side Firestore fallback
+  useEffect(() => {
+    if (activeTab === 'Chatbot Inquiries') {
+      loadInquiriesList();
+    }
+  }, [activeTab]);
+
+  const loadInquiriesList = async () => {
+    setLoadingInquiries(true);
+    let expressInquiries: any[] = [];
+    let firestoreInquiries: any[] = [];
+
+    // 1. Fetch from local Express server JSON database
+    try {
+      const res = await axios.get('/api/chatbot/inquiries');
+      if (Array.isArray(res.data)) {
+        expressInquiries = res.data;
+      }
+    } catch (e) {
+      console.warn("Failed to load inquiries from Express backend:", e);
+    }
+
+    // 2. Fetch from client-side Firestore collection
+    try {
+      const { getDocs, collection } = await import('firebase/firestore');
+      const snap = await getDocs(collection(db, "chatbot_inquiries"));
+      snap.forEach(docSnap => {
+        firestoreInquiries.push({ id: docSnap.id, ...docSnap.data() });
+      });
+    } catch (firestoreErr) {
+      console.warn("Failed to load inquiries from Firestore:", firestoreErr);
+    }
+
+    // 3. Merging and Deduplication
+    const mergedMap = new Map();
+    // Load Firestore records first
+    firestoreInquiries.forEach(inq => {
+      const key = inq.id || inq.phone || inq.timestamp;
+      if (key) mergedMap.set(key, inq);
+    });
+    // Compliment/overwrite with Express records
+    expressInquiries.forEach(inq => {
+      const key = inq.id || inq.phone || inq.timestamp;
+      if (key) mergedMap.set(key, inq);
+    });
+
+    const mergedList = Array.from(mergedMap.values());
+    // Sort by timestamp descending (newest leads first)
+    mergedList.sort((a, b) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime());
+
+    setInquiries(mergedList);
+    setLoadingInquiries(false);
+  };
+
+  const handleDeleteInquiry = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this student inquiry?")) return;
+    try {
+      await axios.delete(`/api/chatbot/inquiry/${id}`);
+      try {
+        const { doc: fireDoc, deleteDoc } = await import('firebase/firestore');
+        await deleteDoc(fireDoc(db, "chatbot_inquiries", id));
+      } catch (firestoreErr) {
+        console.warn("Firestore delete skipped/failed: ", firestoreErr);
+      }
+      setInquiries(prev => prev.filter(inq => inq.id !== id));
+    } catch (e: any) {
+      alert("Failed to delete inquiry: " + e.message);
+    }
+  };
+
+  const handleClearInquiries = async () => {
+    if (!window.confirm("🚨 WARNING: Are you sure you want to delete ALL inquiries? This action CANNOT be undone!")) return;
+    const confirmText = window.prompt("Type 'DELETE' to confirm bulk deletion:");
+    if (confirmText !== 'DELETE') {
+      alert("Confirmation mismatch. Bulk clear aborted.");
+      return;
+    }
+
+    try {
+      await axios.post('/api/chatbot/inquiries/clear');
+      try {
+        const { getDocs, collection, doc: fireDoc, deleteDoc } = await import('firebase/firestore');
+        const snap = await getDocs(collection(db, "chatbot_inquiries"));
+        const batchDeletes = snap.docs.map(docSnap => deleteDoc(fireDoc(db, "chatbot_inquiries", docSnap.id)));
+        await Promise.all(batchDeletes);
+      } catch (firestoreErr) {
+        console.warn("Firestore bulk clear warning: ", firestoreErr);
+      }
+      setInquiries([]);
+      alert("All inquiries deleted successfully!");
+    } catch (e: any) {
+      alert("Failed to clear inquiries: " + e.message);
+    }
+  };
+
+  const handleExportCSV = () => {
+    if (inquiries.length === 0) {
+      alert("No inquiries available to export.");
+      return;
+    }
+
+    const headers = ["Name", "Language", "Course", "WhatsApp/Phone", "Email Address", "Logged Time", "IP/Location"];
+    const rows = filteredInquiries.map(inq => [
+      inq.name || "",
+      inq.language || "",
+      inq.course || "",
+      inq.phone || "",
+      inq.email || "",
+      inq.timestamp ? new Date(inq.timestamp).toLocaleString('en-US') : "",
+      inq.ip || ""
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + [headers, ...rows].map(e => e.map(val => `"${val.replace(/"/g, '""')}"`).join(",")).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `BEC_Admissions_Inquiries_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const filteredInquiries = inquiries.filter(inq => {
+    const term = searchInquiry.toLowerCase();
+    const matchesSearch = 
+      (inq.name || "").toLowerCase().includes(term) ||
+      (inq.phone || "").toLowerCase().includes(term) ||
+      (inq.email || "").toLowerCase().includes(term) ||
+      (inq.course || "").toLowerCase().includes(term);
+
+    const matchesLang = filterLang ? inq.language === filterLang : true;
+    const matchesCourse = filterCourse ? inq.course === filterCourse : true;
+
+    return matchesSearch && matchesLang && matchesCourse;
+  });
   
   // Real-time Firestore sync context integration
   const {
@@ -943,6 +1090,153 @@ export const AdminDashboard = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 14: CHATBOT INQUIRIES */}
+          {activeTab === 'Chatbot Inquiries' && (
+            <div className="space-y-12 animate-fade-in text-slate-300">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/5 pb-8 gap-4">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Chatbot Admission Inquiries</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Real-time leads collected from the official website Admission Assistant chatbot.</p>
+                </div>
+                
+                <div className="flex gap-3">
+                  <button 
+                    onClick={handleExportCSV}
+                    className="px-5 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-2xl flex items-center gap-2.5 transition-transform hover:scale-105"
+                  >
+                    <FileSpreadsheet className="w-4.5 h-4.5 text-cyan-400" /> Export Excel/CSV
+                  </button>
+                  <button 
+                    onClick={handleClearInquiries}
+                    className="px-5 py-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white text-xs font-black uppercase tracking-widest rounded-2xl flex items-center gap-2.5 transition-all active:scale-95"
+                  >
+                    <Trash2 className="w-4.5 h-4.5" /> Clear All Data
+                  </button>
+                </div>
+              </div>
+
+              {/* Inquiry Analytics Header Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col justify-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 block mb-1">Total Leads Logged</span>
+                  <span className="text-4xl font-black italic text-cyan-400">{inquiries.length}</span>
+                </div>
+                <div className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col justify-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 block mb-1">English Language</span>
+                  <span className="text-3xl font-black text-white">{inquiries.filter(i => i.language === 'English').length}</span>
+                </div>
+                <div className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col justify-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 block mb-1">Hindi Language</span>
+                  <span className="text-3xl font-black text-white">{inquiries.filter(i => i.language === 'Hindi (हिन्दी)').length}</span>
+                </div>
+                <div className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col justify-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 block mb-1">Odia Language</span>
+                  <span className="text-3xl font-black text-white">{inquiries.filter(i => i.language === 'Odia (ଓଡ଼ିଆ)').length}</span>
+                </div>
+              </div>
+
+              {/* Advanced Search Filter Bar */}
+              <div className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-4 flex items-center pointer-events-none opacity-40"><Search className="w-4.5 h-4.5" /></span>
+                  <input 
+                    type="text" 
+                    value={searchInquiry}
+                    onChange={(e) => setSearchInquiry(e.target.value)}
+                    placeholder="Search by name, email, phone..." 
+                    className="w-full bg-slate-900 border border-white/5 rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-cyan-500/50 text-white placeholder-slate-500"
+                  />
+                </div>
+                <div>
+                  <select 
+                    value={filterCourse}
+                    onChange={(e) => setFilterCourse(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-400 focus:outline-none focus:border-cyan-500/50"
+                  >
+                    <option value="">All Courses</option>
+                    <option value="B.Tech">B.Tech</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="MBA">MBA</option>
+                  </select>
+                </div>
+                <div>
+                  <select 
+                    value={filterLang}
+                    onChange={(e) => setFilterLang(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-400 focus:outline-none focus:border-cyan-500/50"
+                  >
+                    <option value="">All Languages</option>
+                    <option value="English">English</option>
+                    <option value="Hindi (हिन्दी)">Hindi</option>
+                    <option value="Odia (ଓଡ଼ିଆ)">Odia</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Table inquiries layout */}
+              <div className="bg-slate-950 border border-white/5 rounded-[32px] shadow-2xl overflow-hidden relative">
+                {loadingInquiries ? (
+                  <div className="flex items-center justify-center py-20 gap-3">
+                    <Loader2 className="w-6 h-6 animate-spin text-cyan-400" />
+                    <span className="text-sm font-bold uppercase tracking-wider text-slate-500">Loading Leads...</span>
+                  </div>
+                ) : filteredInquiries.length === 0 ? (
+                  <div className="text-center py-20 text-slate-500 font-semibold">
+                    No matching inquiries logged yet.
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm border-collapse">
+                      <thead>
+                        <tr className="border-b border-white/5 text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white/5">
+                          <th className="px-6 py-5">Student Name</th>
+                          <th className="px-6 py-5">Language</th>
+                          <th className="px-6 py-5">Course</th>
+                          <th className="px-6 py-5">WhatsApp/Phone</th>
+                          <th className="px-6 py-5">Email Address</th>
+                          <th className="px-6 py-5">Log Date & Time</th>
+                          <th className="px-6 py-5">IP Location</th>
+                          <th className="px-6 py-5 text-center">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5 font-semibold text-slate-200">
+                        {filteredInquiries.map((inq) => (
+                          <tr key={inq.id} className="hover:bg-white/5 transition-colors">
+                            <td className="px-6 py-5 font-black tracking-tight">{inq.name}</td>
+                            <td className="px-6 py-5">
+                              <span className="px-2.5 py-1 text-[9px] bg-slate-900 border border-white/5 text-slate-400 font-bold uppercase rounded-lg tracking-wide">
+                                {inq.language === 'English' ? 'EN' : inq.language === 'Hindi (हिन्दी)' ? 'HI' : 'OR'}
+                              </span>
+                            </td>
+                            <td className="px-6 py-5 text-cyan-400">{inq.course}</td>
+                            <td className="px-6 py-5 text-green-400">
+                              <a href={`https://wa.me/91${inq.phone}`} target="_blank" rel="noreferrer" className="hover:underline">
+                                📞 {inq.phone}
+                              </a>
+                            </td>
+                            <td className="px-6 py-5 text-slate-400">{inq.email}</td>
+                            <td className="px-6 py-5 text-xs text-slate-500">
+                              {inq.timestamp ? new Date(inq.timestamp).toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A'}
+                            </td>
+                            <td className="px-6 py-5 text-xs text-slate-600">{inq.ip || 'Client'}</td>
+                            <td className="px-6 py-5 text-center">
+                              <button 
+                                onClick={() => handleDeleteInquiry(inq.id)}
+                                className="p-2.5 bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white rounded-xl transition-all"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
           )}

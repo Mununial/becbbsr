@@ -819,6 +819,85 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
+// Chatbot Inquiry Persistence Endpoints
+const inquiriesFile = path.join(__dirname, 'inquiries.json');
+
+const getInquiries = () => {
+  if (!fs.existsSync(inquiriesFile)) return [];
+  try {
+    const data = JSON.parse(fs.readFileSync(inquiriesFile, 'utf8'));
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    return [];
+  }
+};
+
+const saveInquiries = (data) => {
+  fs.writeFileSync(inquiriesFile, JSON.stringify(data, null, 2));
+};
+
+// 1. Get all inquiries
+app.get('/api/chatbot/inquiries', (req, res) => {
+  try {
+    const inquiries = getInquiries();
+    res.json(inquiries);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 2. Add an inquiry
+app.post('/api/chatbot/inquiry', (req, res) => {
+  try {
+    const { name, language, course, phone, email } = req.body;
+    if (!name || !phone || !email) {
+      return res.status(400).json({ success: false, error: 'Name, phone and email are required.' });
+    }
+
+    const inquiries = getInquiries();
+    const newInquiry = {
+      id: Date.now().toString(),
+      name,
+      language: language || 'English',
+      course: course || 'B.Tech',
+      phone,
+      email,
+      timestamp: new Date().toISOString(),
+      ip: req.ip || req.headers['x-forwarded-for'] || '127.0.0.1'
+    };
+
+    inquiries.unshift(newInquiry); // Add to the beginning
+    saveInquiries(inquiries);
+
+    res.json({ success: true, inquiry: newInquiry });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 3. Delete an inquiry
+app.delete('/api/chatbot/inquiry/:id', (req, res) => {
+  try {
+    const id = req.params.id;
+    let inquiries = getInquiries();
+    inquiries = inquiries.filter(inq => inq.id !== id);
+    saveInquiries(inquiries);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 4. Clear all inquiries
+app.post('/api/chatbot/inquiries/clear', (req, res) => {
+  try {
+    saveInquiries([]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Generic Config Persistence Endpoints
 app.get('/api/config/:key', (req, res) => {
   const key = req.params.key;
