@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Cpu, Globe, Rocket, Shield, HardDrive, Smartphone, ChevronRight, GraduationCap, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { useAdmission } from '../hooks/useAdmission';
 
@@ -9,39 +10,45 @@ const departments = [
     desc: 'Only college in Odisha to offer these combined aviation programs. Master aircraft design and propulsion.',
     icon: Rocket,
     gradient: 'from-[#1E3A8A] to-[#06B6D4]',
-    tag: 'Exclusive'
+    tag: 'Exclusive',
+    link: '/aeronautical-engg'
   },
   {
     name: 'Agriculture Engineering',
     desc: 'Innovate the future of farming with modern technology, sustainable practices, and food systems.',
     icon: Globe,
     gradient: 'from-[#1E3A8A] to-[#1E3A8A]',
-    tag: 'Future-Tech'
+    tag: 'Future-Tech',
+    link: '/agriculture-engg'
   },
   {
     name: 'Data Science & CS',
     desc: 'Explore Big Data, AI, and modern software architectures with focus on Data Science.',
     icon: Cpu,
     gradient: 'from-[#06B6D4] to-[#06B6D4]',
-    tag: 'Trending'
+    tag: 'Trending',
+    link: '/cse-engg'
   },
   {
     name: 'Civil & Environmental',
     desc: 'Build the infrastructure of tomorrow with a focus on both structure and sustainability.',
     icon: HardDrive,
     gradient: 'from-[#1E3A8A] to-[#1E3A8A]',
+    link: '/civil-engg'
   },
   {
     name: 'Electrical & CS',
     desc: 'Bridge the gap between hardware and software in power systems and computing.',
     icon: Smartphone,
     gradient: 'from-[#06B6D4] to-[#06B6D4]',
+    link: '/ee-engg'
   },
   {
     name: 'Mechanical & Additive',
     desc: 'Master mechanical systems alongside cutting-edge 3D printing technologies.',
     icon: Shield,
     gradient: 'from-[#1E3A8A] to-[#06B6D4]',
+    link: '/mechanical-engg'
   },
 ];
 
@@ -69,29 +76,36 @@ export const Departments = () => {
               key={dept.name}
               data-aos="fade-up"
               data-aos-delay={index * 100}
-              className="group relative bg-white rounded-[32px] overflow-hidden border border-slate-100 transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(30,58,138,0.15)] hover:-translate-y-2"
+              className="flex"
             >
-              <div className={cn("h-3 w-full bg-gradient-to-r", dept.gradient)} />
-
-              <div className="p-12 pt-0 relative">
-                <div className="w-16 h-16 rounded-2xl bg-white shadow-xl flex items-center justify-center mb-10 -mt-8 relative z-10 border border-slate-50 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6">
-                  <dept.icon className="w-8 h-8 text-primary group-hover:text-accent transition-colors" />
-                </div>
-
-                <h3 className="text-xl font-bold text-primary mb-4 font-poppins tracking-tight uppercase leading-tight">{dept.name}</h3>
-                <p className="text-[13px] text-slate-500 leading-relaxed mb-10 font-medium font-inter h-16 overflow-hidden">
-                  {dept.desc}
-                </p>
-
-                <div className="flex items-center justify-between border-t border-slate-50 pt-8">
-                  <button className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-accent transition-all duration-300">
-                    Syllabus <ChevronRight className="w-4 h-4" />
-                  </button>
-                  <div className="text-5xl font-black text-slate-50 select-none font-poppins group-hover:text-accent/10 transition-colors">
-                    {index + 1}
+              <Link
+                to={dept.link}
+                className="group relative w-full bg-white rounded-[32px] overflow-hidden border border-slate-100 transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(30,58,138,0.15)] hover:-translate-y-2 flex flex-col justify-between text-left"
+              >
+                <div>
+                  <div className={cn("h-3 w-full bg-gradient-to-r", dept.gradient)} />
+                  <div className="p-12 pb-0 pt-0 relative">
+                    <div className="w-16 h-16 rounded-2xl bg-white shadow-xl flex items-center justify-center mb-10 -mt-8 relative z-10 border border-slate-50 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6">
+                      <dept.icon className="w-8 h-8 text-primary group-hover:text-accent transition-colors" />
+                    </div>
+                    <h3 className="text-xl font-bold text-primary mb-4 font-poppins tracking-tight uppercase leading-tight">{dept.name}</h3>
+                    <p className="text-[13px] text-slate-500 leading-relaxed mb-8 font-medium font-inter h-16 overflow-hidden">
+                      {dept.desc}
+                    </p>
                   </div>
                 </div>
-              </div>
+
+                <div className="px-12 pb-12">
+                  <div className="flex items-center justify-between border-t border-slate-50 pt-8">
+                    <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-primary/40 group-hover:text-accent transition-all duration-300">
+                      Explore Course <ChevronRight className="w-4 h-4" />
+                    </div>
+                    <div className="text-5xl font-black text-slate-50 select-none font-poppins group-hover:text-accent/10 transition-colors">
+                      {index + 1}
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
