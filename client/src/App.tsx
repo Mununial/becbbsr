@@ -53,7 +53,7 @@ const DEFAULT_HIGHLIGHTS: Highlight[] = [
     id: '4',
     title: 'Alumni Meet 2026',
     date: 'Global Network',
-    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629462/becweb/hero-bg.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg',
     link: '/photo-gallery'
   }
 ];

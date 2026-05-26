@@ -159,7 +159,7 @@ const ADMISSION_CONTENT: Record<string, any> = {
     title: 'Download Prospectus',
     subtitle: 'Everything about BEC in one neat file',
     icon: Download,
-    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629462/becweb/hero-bg.jpg',
+    image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629485/becweb/campus_exterior.jpg',
     content: [
       {
         heading: 'Academic Brochure 2026-27',
