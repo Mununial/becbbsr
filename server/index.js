@@ -618,8 +618,18 @@ app.get('/sitemap.xml', (req, res) => {
 // Serve static assets from React client build folder
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// SPA Routing: any non-API route serves index.html from dist
-app.get('/*splat', (req, res) => {
+// SPA Routing: any non-API route serves index.html from dist with strict no-cache headers to prevent loading stale chunks
+app.get('/*', (req, res) => {
+  // If the request is for a missing static file asset (contains an extension), do not fallback to index.html; return 404
+  if (path.extname(req.path)) {
+    return res.status(404).send('Not Found');
+  }
+
+  // Set strict headers to prevent caching of index.html across browsers, CDNs, and proxies
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
