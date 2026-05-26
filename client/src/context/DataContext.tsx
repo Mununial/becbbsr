@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader } from '../types';
 import { db, auth } from '../lib/firebase';
-import { signInAnonymously } from 'firebase/auth';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import axios from 'axios';
 
@@ -50,11 +49,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [sports, setSports] = useState<any[]>([]);
 
   useEffect(() => {
-    // Authenticate anonymously so unauthenticated visitors can write to config paths matching Firestore rules
-    signInAnonymously(auth).catch((err) => {
-      console.warn("Firebase Storage/Firestore anonymous auth skipped:", err);
-    });
-
     // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
     const setupListener = (key: string, setFn: (data: any[]) => void, defaultData: any) => {
       // Track if the Express server has already provided fresh data (server = ground truth)

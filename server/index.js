@@ -174,6 +174,104 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+// Admission Query/Form submission
+app.post('/api/admission', async (req, res) => {
+  const { name, email, phone, city, course, qualification, branch, message } = req.body;
+  
+  // 1. Send Inquiry to Admin (aimsbbsrsupport@gmail.com)
+  const adminMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.RECEIVER_EMAIL || 'aimsbbsrsupport@gmail.com',
+    subject: `New Admission Query: ${course} - ${name}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 600px; margin: auto;">
+        <h2 style="color: #0b1a40; border-bottom: 3px solid #ffaa00; padding-bottom: 10px;">New Admission Query</h2>
+        <div style="padding: 10px 0;">
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>City/Location:</strong> ${city}</p>
+          <p><strong>Course:</strong> ${course}</p>
+          <p><strong>Qualification:</strong> ${qualification}</p>
+          <p><strong>Preferred Branch:</strong> ${branch}</p>
+        </div>
+        <p><strong>Message:</strong></p>
+        <div style="background: #fdfdfd; padding: 15px; border-radius: 8px; font-style: italic; border: 1px solid #eee;">
+          ${message || 'No additional message.'}
+        </div>
+        <p style="margin-top: 30px; font-size: 11px; color: #888;">Logged securely from BEC Admission Portal</p>
+      </div>
+    `
+  };
+
+  // 2. Send 'Thank You' Auto-Reply to the Student/Applicant
+  const studentMailOptions = {
+    from: `"Bhubaneswar Engineering College (BEC)" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: `Thank You for applying to BEC, ${name}! - Admission Query 2026-27`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <!-- Banner Image -->
+        <div style="width: 100%; height: 200px; overflow: hidden; background-color: #0b1a40;">
+          <img 
+            src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg" 
+            alt="BEC Campus" 
+            style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" 
+          />
+        </div>
+        
+        <!-- Content -->
+        <div style="padding: 30px; background-color: #ffffff;">
+          <h2 style="color: #0b1a40; margin-top: 0;">Dear ${name},</h2>
+          <p style="color: #444; font-size: 16px; line-height: 1.6;">
+            Thank you for submitting your admission query to <strong>Bhubaneswar Engineering College (BEC)</strong>. We have received your application details for the <strong>${course}</strong> program successfully.
+          </p>
+          <p style="color: #444; font-size: 16px; line-height: 1.6;">
+            Our dedicated career counselor will contact you within 30 minutes at <strong>${phone}</strong> or via this email for a free counselling session.
+          </p>
+          
+          <div style="margin: 30px 0; padding: 20px; background: #f8fafc; border-left: 4px solid #ffaa00; border-radius: 4px;">
+            <p style="margin: 0; color: #333; font-size: 14px;"><strong>Your Submitted Details:</strong></p>
+            <ul style="margin-top: 10px; color: #666; font-size: 14px; padding-left: 20px;">
+              <li><strong>Course:</strong> ${course}</li>
+              <li><strong>Preferred Branch:</strong> ${branch}</li>
+              <li><strong>Qualification:</strong> ${qualification}</li>
+              <li><strong>City/Location:</strong> ${city}</li>
+            </ul>
+          </div>
+          
+          <p style="color: #444; font-size: 16px; line-height: 1.6;">
+            In the meantime, feel free to explore our <a href="https://becbbsr.ac.in" style="color: #0ea5e9;">official website</a> to learn more about our state-of-the-art facilities and placement records.
+          </p>
+          <br/>
+          <p style="color: #0b1a40; font-size: 16px; font-weight: bold; margin-bottom: 5px;">Best Regards,</p>
+          <p style="color: #666; font-size: 14px; margin-top: 0;"><strong>Admission Cell</strong><br/>Bhubaneswar Engineering College (BEC)</p>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
+          <p style="font-size: 12px; color: #94a3b8; margin: 0;">
+            Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha<br/>
+            Need immediate help? Call us at +91 94370 44215
+          </p>
+        </div>
+      </div>
+    `
+  };
+
+  try {
+    // Send both emails simultaneously
+    await Promise.all([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(studentMailOptions)
+    ]);
+    res.json({ success: true, message: 'Admission query sent and auto-reply triggered successfully' });
+  } catch (error) {
+    console.error("Mail error:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Cloudinary Upload Route
 app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
@@ -484,6 +582,38 @@ app.delete('/api/gallery/:id', (req, res) => {
 
 
 
+
+// Google Site Verification Route
+app.get('/google5c7fd6811a6b2b1f.html', (req, res) => {
+  const filePath = path.join(__dirname, 'google5c7fd6811a6b2b1f.html');
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.type('text/html');
+    res.send('google-site-verification: google5c7fd6811a6b2b1f.html');
+  }
+});
+
+// Robots.txt Route
+app.get('/robots.txt', (req, res) => {
+  const robotsPath = path.join(__dirname, '../client/public/robots.txt');
+  if (fs.existsSync(robotsPath)) {
+    res.sendFile(robotsPath);
+  } else {
+    res.type('text/plain');
+    res.send("User-agent: *\nAllow: /\nHost: https://becbbsr.ac.in\nSitemap: https://becbbsr.ac.in/sitemap.xml");
+  }
+});
+
+// Sitemap.xml Route
+app.get('/sitemap.xml', (req, res) => {
+  const sitemapPath = path.join(__dirname, '../client/public/sitemap.xml');
+  if (fs.existsSync(sitemapPath)) {
+    res.sendFile(sitemapPath);
+  } else {
+    res.status(404).send('Sitemap not found');
+  }
+});
 
 // Serve static assets from React client build folder
 app.use(express.static(path.join(__dirname, '../client/dist')));
