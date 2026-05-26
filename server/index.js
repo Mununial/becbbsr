@@ -823,7 +823,7 @@ app.get('/sitemap.xml', (req, res) => {
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // SPA Routing: any non-API route serves index.html from dist with strict no-cache headers to prevent loading stale chunks
-app.get('/*', (req, res) => {
+app.get('/{*splat}', (req, res) => {
   // If the request is for a missing static file asset (contains an extension), do not fallback to index.html; return 404
   if (path.extname(req.path)) {
     return res.status(404).send('Not Found');
