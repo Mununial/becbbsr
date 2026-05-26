@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { SEO } from '../components/SEO';
@@ -16,6 +19,16 @@ import {
 } from 'lucide-react';
 
 export const AboutCollege = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      easing: 'ease-out',
+      once: true,
+      offset: 50
+    });
+    AOS.refresh();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F9FAFB] font-inter text-[#111827]">
       <SEO 

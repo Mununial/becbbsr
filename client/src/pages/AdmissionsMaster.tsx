@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { SEO } from '../components/SEO';
 import { 
   GraduationCap, 
@@ -213,6 +216,16 @@ const ADMISSION_SEO: Record<string, { title: string; description: string; keywor
 };
 
 export const AdmissionsMaster = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      easing: 'ease-out',
+      once: true,
+      offset: 50
+    });
+    AOS.refresh();
+  }, []);
+
   const { pathname } = useLocation();
   const data = ADMISSION_CONTENT[pathname] || ADMISSION_CONTENT['/admission/programme'];
   const seoData = ADMISSION_SEO[pathname] || ADMISSION_SEO['/admission/programme'];
