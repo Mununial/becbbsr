@@ -186,8 +186,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 8. Leadership Quotes
     const unsubLeaders = setupListener('leadership-data', setLeaders, [
-      { id: '1', role: "CHAIRMAN", title: "VISIONARY FOUNDER", name: "Er. Alok Ranjan Mallick", subtitle: "Chairman, Ayush Group", quote: "Bhubaneswar Engineering College (BEC) is more than just an academic institution — it is a launchpad for visionaries who will shape the future of our nation.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg", link: "/chairman", color: "from-amber-400 to-amber-600" },
-      { id: '2', role: "DIRECTOR", title: "ACADEMICS & ADMINISTRATION", name: "Prof. Dr. B.N. Biswal", subtitle: "Director, BEC Bhubaneswar", quote: "At the end of your journey with BEC, we are certain that you will turn out to be a confident technocrat and stay blessed in all sphere of life.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg", link: "/director", color: "from-blue-400 to-blue-600" }
+      { id: '1', role: "CHAIRMAN", title: "VISIONARY FOUNDER", name: "Er. Alok Ranjan Mallick", subtitle: "Chairman, Ayush Group", quote: "Bhubaneswar Engineering College (BEC) is more than just an academic institution — it is a launchpad for visionaries who will shape the future of our nation.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg", link: "/chairman-ayush-msg", color: "from-amber-400 to-amber-600" },
+      { id: '2', role: "DIRECTOR", title: "ACADEMICS & ADMINISTRATION", name: "Prof. Dr. B.N. Biswal", subtitle: "Director, BEC Bhubaneswar", quote: "At the end of your journey with BEC, we are certain that you will turn out to be a confident technocrat and stay blessed in all sphere of life.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg", link: "/director-profile", color: "from-blue-400 to-blue-600" }
     ]);
 
     // 9. Achievements Roll
