@@ -1,6 +1,15 @@
 [
   {
     "id": "1",
+    "type": "modern",
+    "url": "/student_hero_cutout.png",
+    "title": "Join the BEC Community",
+    "subtitle": "Admissions Open 2026-27",
+    "description": "Admissions for the 2026-27 session are now open. Secure your future with us today.",
+    "ctaText": "Apply Now"
+  },
+  {
+    "id": "2",
     "type": "video",
     "url": "https://res.cloudinary.com/dpogq7cbe/video/upload/v1777008335/bec_web_assets/uqfnp6eghnygsiepu7bq.mp4",
     "title": "BHUBANESWAR ENGINEERING COLLEGE (BEC)",
@@ -9,7 +18,7 @@
     "ctaText": "Explore Campus"
   },
   {
-    "id": "2",
+    "id": "3",
     "type": "video",
     "url": "https://res.cloudinary.com/dpogq7cbe/video/upload/v1776627787/bec_web_assets/khelbjx19zqw0nxysdam.mp4",
     "title": "EXCELLENCE IN LEARNING",
