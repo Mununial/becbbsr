@@ -84,27 +84,64 @@ app.get('/api/notices', (req, res) => {
 app.post('/api/contact', async (req, res) => {
   const { name, email, phone, course, branch, message } = req.body;
   
-  // 1. Send Inquiry to Admin (aimsbbsrsupport@gmail.com)
+  // 1. Send Inquiry to Admin (becgroupbbsr@gmail.com)
   const adminMailOptions = {
     from: process.env.EMAIL_USER,
-    to: process.env.RECEIVER_EMAIL || 'aimsbbsrsupport@gmail.com',
+    to: process.env.RECEIVER_EMAIL || 'becgroupbbsr@gmail.com',
     subject: `New Admission Inquiry: ${course} - ${name}`,
     html: `
-      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 600px; margin: auto;">
-        <h2 style="color: #0b1a40; border-bottom: 3px solid #ffaa00; padding-bottom: 10px;">New Admission Inquiry</h2>
-        <div style="padding: 10px 0;">
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone}</p>
-          <p><strong>Course:</strong> ${course}</p>
-          <p><strong>Branch/Specialization:</strong> ${branch}</p>
-        </div>
-        <p><strong>Message:</strong></p>
-        <div style="background: #fdfdfd; padding: 15px; border-radius: 8px; font-style: italic; border: 1px solid #eee;">
-          ${message || 'No additional message.'}
-        </div>
-        <p style="margin-top: 30px; font-size: 11px; color: #888;">Logged securely from BEC Admission Portal</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+    .email-container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.15); border: 1px solid rgba(0,0,0,0.05); }
+    .header-banner { background: linear-gradient(135deg, #0b1c3a 0%, #1e3a8a 100%); padding: 25px; text-align: center; }
+    .logo { height: 60px; width: auto; margin-bottom: 8px; }
+    .college-name { color: #ffffff; font-size: 16px; font-weight: 800; margin: 0; letter-spacing: 0.5px; text-transform: uppercase; }
+    .college-tagline { color: #ffaa00; font-size: 9px; font-weight: 700; margin: 2px 0 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .notification-header { background: #ffaa00; color: #0b1c3a; text-align: center; padding: 12px; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+    .content-body { padding: 35px; background: #ffffff; }
+    .intro-text { color: #4b5563; font-size: 14px; line-height: 1.6; font-weight: 600; margin-bottom: 25px; }
+    .data-grid { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; }
+    .grid-row { display: table; width: 100%; margin-bottom: 12px; }
+    .grid-label { display: table-cell; width: 35%; color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .grid-value { display: table-cell; width: 65%; color: #0b1c3a; font-size: 13px; font-weight: 700; }
+    .message-box { background: #fff; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 15px; margin-top: 15px; font-style: italic; color: #475569; font-size: 13px; }
+    .footer { background: #0f172a; padding: 20px; text-align: center; color: #94a3b8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header-banner">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC Logo" class="logo" />
+      <div class="college-name">Bhubaneswar Engineering College</div>
+      <div class="college-tagline">ERP Admission Management System</div>
+    </div>
+    <div class="notification-header">🚨 NEW ADMISSION INQUIRY LOGGED</div>
+    <div class="content-body">
+      <p class="intro-text">
+        A new student has submitted an inquiry form on the BEC website. Please follow up on WhatsApp / Call immediately!
+      </p>
+      
+      <div class="data-grid">
+        <div class="grid-row"><span class="grid-label">Candidate Name:</span><span class="grid-value" style="color: #1e3a8a; font-size: 15px; font-weight: 800;">${name}</span></div>
+        <div class="grid-row"><span class="grid-label">WhatsApp No:</span><span class="grid-value" style="color: #10b981; font-size: 14px; font-weight: 800;"><a href="https://wa.me/${phone.replace(/[^0-9]/g, '')}" style="color: #10b981; text-decoration: none;">📞 ${phone} (Click to Chat)</a></span></div>
+        <div class="grid-row"><span class="grid-label">Email Address:</span><span class="grid-value"><a href="mailto:${email}" style="color: #1e3a8a; text-decoration: none;">${email}</a></span></div>
+        <div class="grid-row"><span class="grid-label">Selected Course:</span><span class="grid-value">${course}</span></div>
+        <div class="grid-row"><span class="grid-label">Preferred Branch:</span><span class="grid-value">${branch}</span></div>
+        
+        <div class="grid-label" style="display: block; width: 100%; margin-top: 15px; margin-bottom: 5px;">Student Message:</div>
+        <div class="message-box">${message || 'No additional message.'}</div>
       </div>
+    </div>
+    <div class="footer">
+      BEC AUTOMATED ERP AGENT • SECURE LOG
+    </div>
+  </div>
+</body>
+</html>
     `
   };
 
@@ -114,50 +151,115 @@ app.post('/api/contact', async (req, res) => {
     to: email,
     subject: `Thank You for your Inquiry, ${name}! - BEC Admission Cell`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-        <!-- Banner Image -->
-        <div style="width: 100%; height: 200px; overflow: hidden; background-color: #0b1a40;">
-          <img 
-            src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg" 
-            alt="BEC Campus" 
-            style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" 
-          />
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+    .email-container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.15); border: 1px solid rgba(0,0,0,0.05); }
+    .header-banner { background: linear-gradient(135deg, #0b1c3a 0%, #1e3a8a 100%); padding: 30px; text-align: center; position: relative; overflow: hidden; }
+    .header-banner::before { content: ""; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255, 170, 0, 0.15); border-radius: 50%; blur: 40px; }
+    .logo { height: 75px; width: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); margin-bottom: 10px; }
+    .college-name { color: #ffffff; font-size: 20px; font-weight: 800; margin: 5px 0 0 0; letter-spacing: 1px; text-transform: uppercase; }
+    .college-tagline { color: #ffaa00; font-size: 10px; font-weight: 700; margin: 2px 0 0 0; letter-spacing: 3px; text-transform: uppercase; }
+    .hero-image-container { position: relative; width: 100%; height: 220px; overflow: hidden; }
+    .hero-image { width: 100%; height: 100%; object-fit: cover; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,28,58,0) 40%, rgba(11,28,58,0.7) 100%); }
+    .badge { position: absolute; bottom: 20px; left: 20px; background: #ffaa00; color: #0b1c3a; padding: 6px 16px; border-radius: 50px; font-size: 10px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(255,170,0,0.3); }
+    .content-body { padding: 40px 35px; background: #ffffff; }
+    .greeting { color: #0b1c3a; font-size: 22px; font-weight: 800; margin-top: 0; margin-bottom: 15px; }
+    .main-text { color: #4b5563; font-size: 15px; line-height: 1.65; font-weight: 500; margin-bottom: 25px; }
+    .callout-box { background: linear-gradient(135deg, rgba(255,170,0,0.05) 0%, rgba(255,170,0,0.1) 100%); border-left: 5px solid #ffaa00; border-radius: 12px; padding: 20px; margin: 30px 0; }
+    .callout-title { color: #0b1c3a; font-size: 15px; font-weight: 800; margin-top: 0; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .callout-text { color: #1e3a8a; font-size: 14px; font-weight: 700; margin: 0; line-height: 1.5; }
+    .data-grid { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; margin: 30px 0; }
+    .grid-title { color: #0b1c3a; font-size: 14px; font-weight: 800; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+    .grid-row { display: table; width: 100%; margin-bottom: 12px; }
+    .grid-label { display: table-cell; width: 40%; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .grid-value { display: table-cell; width: 60%; color: #0b1c3a; font-size: 13px; font-weight: 700; }
+    .stats-container { display: table; width: 100%; margin-top: 30px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+    .stat-box { display: table-cell; width: 33.3%; }
+    .stat-number { color: #ffaa00; font-size: 20px; font-weight: 800; margin: 0; }
+    .stat-label { color: #64748b; font-size: 9px; font-weight: 800; text-transform: uppercase; margin: 2px 0 0 0; letter-spacing: 1px; }
+    .signature { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 25px; }
+    .signature-title { color: #0b1c3a; font-size: 15px; font-weight: 800; margin: 0; }
+    .signature-dept { color: #64748b; font-size: 12px; font-weight: 700; margin: 3px 0 0 0; }
+    .footer { background: #0f172a; padding: 30px; text-align: center; color: #94a3b8; font-size: 12px; font-weight: 500; }
+    .footer-address { margin: 0 0 10px 0; color: #cbd5e1; line-height: 1.5; }
+    .footer-links { margin: 15px 0 0 0; }
+    .footer-link { color: #ffaa00; text-decoration: none; font-weight: 700; margin: 0 10px; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header-banner">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC Logo" class="logo" />
+      <div class="college-name">Bhubaneswar Engineering College</div>
+      <div class="college-tagline">Excellence • Innovation • Leadership</div>
+    </div>
+    <div class="hero-image-container">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg" alt="BEC Campus" class="hero-image" />
+      <div class="hero-overlay"></div>
+      <div class="badge">Session 2026-27</div>
+    </div>
+    <div class="content-body">
+      <h2 class="greeting">Dear ${name},</h2>
+      <p class="main-text">
+        Thank you for choosing <strong>Bhubaneswar Engineering College (BEC)</strong>! We have successfully received your inquiry regarding the <strong>${course}</strong> program. 
+      </p>
+      
+      <div class="callout-box">
+        <div class="callout-title">📞 Immediate Action & Next Steps</div>
+        <p class="callout-text">
+          Our senior academic counselor has been assigned to your file and will **call you shortly** at your WhatsApp number **${phone}** to guide you through career counseling and direct admissions!
+        </p>
+      </div>
+
+      <div class="data-grid">
+        <div class="grid-title">Your Submitted Details</div>
+        <div class="grid-row"><span class="grid-label">Full Name:</span><span class="grid-value">${name}</span></div>
+        <div class="grid-row"><span class="grid-label">WhatsApp No:</span><span class="grid-value">${phone}</span></div>
+        <div class="grid-row"><span class="grid-label">Email Address:</span><span class="grid-value">${email}</span></div>
+        <div class="grid-row"><span class="grid-label">Course:</span><span class="grid-value">${course}</span></div>
+        <div class="grid-row"><span class="grid-label">Branch:</span><span class="grid-value">${branch}</span></div>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-box">
+          <p class="stat-number">16+</p>
+          <p class="stat-label">Years of Excellence</p>
         </div>
-        
-        <!-- Content -->
-        <div style="padding: 30px; background-color: #ffffff;">
-          <h2 style="color: #0b1a40; margin-top: 0;">Dear ${name},</h2>
-          <p style="color: #444; font-size: 16px; line-height: 1.6;">
-            Thank you for reaching out to <strong>Bhubaneswar Engineering College (BEC)</strong>. We have received your inquiry regarding the <strong>${course}</strong> program successfully.
-          </p>
-          <p style="color: #444; font-size: 16px; line-height: 1.6;">
-            Our dedicated academic council members are reviewing your request and will get back to you shortly at <strong>${phone}</strong> or via this email.
-          </p>
-          
-          <div style="margin: 30px 0; padding: 20px; background: #f8fafc; border-left: 4px solid #ffaa00; border-radius: 4px;">
-            <p style="margin: 0; color: #333; font-size: 14px;"><strong>Your Submitted Details:</strong></p>
-            <ul style="margin-top: 10px; color: #666; font-size: 14px; padding-left: 20px;">
-              <li><strong>Course:</strong> ${course}</li>
-              <li><strong>Branch:</strong> ${branch}</li>
-            </ul>
-          </div>
-          
-          <p style="color: #444; font-size: 16px; line-height: 1.6;">
-            In the meantime, feel free to explore our <a href="https://becbbsr.ac.in" style="color: #0ea5e9;">official website</a> to learn more about our state-of-the-art facilities and placement records.
-          </p>
-          <br/>
-          <p style="color: #0b1a40; font-size: 16px; font-weight: bold; margin-bottom: 5px;">Best Regards,</p>
-          <p style="color: #666; font-size: 14px; margin-top: 0;"><strong>Admission Cell</strong><br/>Bhubaneswar Engineering College (BEC)</p>
+        <div class="stat-box">
+          <p class="stat-number">90%+</p>
+          <p class="stat-label">Placement Record</p>
         </div>
-        
-        <!-- Footer -->
-        <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-          <p style="font-size: 12px; color: #94a3b8; margin: 0;">
-            Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha<br/>
-            Need immediate help? Call us at +91 94370 44215
-          </p>
+        <div class="stat-box">
+          <p class="stat-number">40-Acre</p>
+          <p class="stat-label">Green Eco-Campus</p>
         </div>
       </div>
+
+      <div class="signature">
+        <p class="signature-title">Best Regards,</p>
+        <p class="signature-title" style="color: #ffaa00;">Director of Admissions</p>
+        <p class="signature-dept">Bhubaneswar Engineering College (BEC)</p>
+      </div>
+    </div>
+    <div class="footer">
+      <p class="footer-address">
+        Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha, India<br/>
+        Helpline Number: +91 94370 44215 | +91 94370 90875
+      </p>
+      <div class="footer-links">
+        <a href="https://becbbsr.ac.in" class="footer-link">Official Website</a>
+        <a href="https://becbbsr.ac.in/facilities" class="footer-link">Facilities</a>
+        <a href="https://becbbsr.ac.in/placement" class="footer-link">Placements</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
     `
   };
 
@@ -178,29 +280,66 @@ app.post('/api/contact', async (req, res) => {
 app.post('/api/admission', async (req, res) => {
   const { name, email, phone, city, course, qualification, branch, message } = req.body;
   
-  // 1. Send Inquiry to Admin (aimsbbsrsupport@gmail.com)
+  // 1. Send Inquiry to Admin (becgroupbbsr@gmail.com)
   const adminMailOptions = {
     from: process.env.EMAIL_USER,
-    to: process.env.RECEIVER_EMAIL || 'aimsbbsrsupport@gmail.com',
+    to: process.env.RECEIVER_EMAIL || 'becgroupbbsr@gmail.com',
     subject: `New Admission Query: ${course} - ${name}`,
     html: `
-      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 600px; margin: auto;">
-        <h2 style="color: #0b1a40; border-bottom: 3px solid #ffaa00; padding-bottom: 10px;">New Admission Query</h2>
-        <div style="padding: 10px 0;">
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone}</p>
-          <p><strong>City/Location:</strong> ${city}</p>
-          <p><strong>Course:</strong> ${course}</p>
-          <p><strong>Qualification:</strong> ${qualification}</p>
-          <p><strong>Preferred Branch:</strong> ${branch}</p>
-        </div>
-        <p><strong>Message:</strong></p>
-        <div style="background: #fdfdfd; padding: 15px; border-radius: 8px; font-style: italic; border: 1px solid #eee;">
-          ${message || 'No additional message.'}
-        </div>
-        <p style="margin-top: 30px; font-size: 11px; color: #888;">Logged securely from BEC Admission Portal</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+    .email-container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.15); border: 1px solid rgba(0,0,0,0.05); }
+    .header-banner { background: linear-gradient(135deg, #0b1c3a 0%, #1e3a8a 100%); padding: 25px; text-align: center; }
+    .logo { height: 60px; width: auto; margin-bottom: 8px; }
+    .college-name { color: #ffffff; font-size: 16px; font-weight: 800; margin: 0; letter-spacing: 0.5px; text-transform: uppercase; }
+    .college-tagline { color: #ffaa00; font-size: 9px; font-weight: 700; margin: 2px 0 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .notification-header { background: #ffaa00; color: #0b1c3a; text-align: center; padding: 12px; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+    .content-body { padding: 35px; background: #ffffff; }
+    .intro-text { color: #4b5563; font-size: 14px; line-height: 1.6; font-weight: 600; margin-bottom: 25px; }
+    .data-grid { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; }
+    .grid-row { display: table; width: 100%; margin-bottom: 12px; }
+    .grid-label { display: table-cell; width: 35%; color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .grid-value { display: table-cell; width: 65%; color: #0b1c3a; font-size: 13px; font-weight: 700; }
+    .message-box { background: #fff; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 15px; margin-top: 15px; font-style: italic; color: #475569; font-size: 13px; }
+    .footer { background: #0f172a; padding: 20px; text-align: center; color: #94a3b8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header-banner">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC Logo" class="logo" />
+      <div class="college-name">Bhubaneswar Engineering College</div>
+      <div class="college-tagline">ERP Admission Management System</div>
+    </div>
+    <div class="notification-header">🚨 NEW ADMISSION QUERY LOGGED</div>
+    <div class="content-body">
+      <p class="intro-text">
+        A new student has submitted an inquiry form on the BEC Admission Portal. Please follow up on WhatsApp / Call immediately!
+      </p>
+      
+      <div class="data-grid">
+        <div class="grid-row"><span class="grid-label">Candidate Name:</span><span class="grid-value" style="color: #1e3a8a; font-size: 15px; font-weight: 800;">${name}</span></div>
+        <div class="grid-row"><span class="grid-label">WhatsApp No:</span><span class="grid-value" style="color: #10b981; font-size: 14px; font-weight: 800;"><a href="https://wa.me/${phone.replace(/[^0-9]/g, '')}" style="color: #10b981; text-decoration: none;">📞 ${phone} (Click to Chat)</a></span></div>
+        <div class="grid-row"><span class="grid-label">Email Address:</span><span class="grid-value"><a href="mailto:${email}" style="color: #1e3a8a; text-decoration: none;">${email}</a></span></div>
+        <div class="grid-row"><span class="grid-label">Selected Course:</span><span class="grid-value">${course}</span></div>
+        <div class="grid-row"><span class="grid-label">Preferred Branch:</span><span class="grid-value">${branch}</span></div>
+        ${city ? `<div class="grid-row"><span class="grid-label">City/Location:</span><span class="grid-value">${city}</span></div>` : ''}
+        ${qualification ? `<div class="grid-row"><span class="grid-label">Qualification:</span><span class="grid-value">${qualification}</span></div>` : ''}
+        
+        <div class="grid-label" style="display: block; width: 100%; margin-top: 15px; margin-bottom: 5px;">Student Message:</div>
+        <div class="message-box">${message || 'No additional message.'}</div>
       </div>
+    </div>
+    <div class="footer">
+      BEC AUTOMATED ERP AGENT • SECURE LOG
+    </div>
+  </div>
+</body>
+</html>
     `
   };
 
@@ -210,52 +349,117 @@ app.post('/api/admission', async (req, res) => {
     to: email,
     subject: `Thank You for applying to BEC, ${name}! - Admission Query 2026-27`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-        <!-- Banner Image -->
-        <div style="width: 100%; height: 200px; overflow: hidden; background-color: #0b1a40;">
-          <img 
-            src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg" 
-            alt="BEC Campus" 
-            style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" 
-          />
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+    .email-container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.15); border: 1px solid rgba(0,0,0,0.05); }
+    .header-banner { background: linear-gradient(135deg, #0b1c3a 0%, #1e3a8a 100%); padding: 30px; text-align: center; position: relative; overflow: hidden; }
+    .header-banner::before { content: ""; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255, 170, 0, 0.15); border-radius: 50%; blur: 40px; }
+    .logo { height: 75px; width: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); margin-bottom: 10px; }
+    .college-name { color: #ffffff; font-size: 20px; font-weight: 800; margin: 5px 0 0 0; letter-spacing: 1px; text-transform: uppercase; }
+    .college-tagline { color: #ffaa00; font-size: 10px; font-weight: 700; margin: 2px 0 0 0; letter-spacing: 3px; text-transform: uppercase; }
+    .hero-image-container { position: relative; width: 100%; height: 220px; overflow: hidden; }
+    .hero-image { width: 100%; height: 100%; object-fit: cover; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,28,58,0) 40%, rgba(11,28,58,0.7) 100%); }
+    .badge { position: absolute; bottom: 20px; left: 20px; background: #ffaa00; color: #0b1c3a; padding: 6px 16px; border-radius: 50px; font-size: 10px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(255,170,0,0.3); }
+    .content-body { padding: 40px 35px; background: #ffffff; }
+    .greeting { color: #0b1c3a; font-size: 22px; font-weight: 800; margin-top: 0; margin-bottom: 15px; }
+    .main-text { color: #4b5563; font-size: 15px; line-height: 1.65; font-weight: 500; margin-bottom: 25px; }
+    .callout-box { background: linear-gradient(135deg, rgba(255,170,0,0.05) 0%, rgba(255,170,0,0.1) 100%); border-left: 5px solid #ffaa00; border-radius: 12px; padding: 20px; margin: 30px 0; }
+    .callout-title { color: #0b1c3a; font-size: 15px; font-weight: 800; margin-top: 0; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .callout-text { color: #1e3a8a; font-size: 14px; font-weight: 700; margin: 0; line-height: 1.5; }
+    .data-grid { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; margin: 30px 0; }
+    .grid-title { color: #0b1c3a; font-size: 14px; font-weight: 800; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+    .grid-row { display: table; width: 100%; margin-bottom: 12px; }
+    .grid-label { display: table-cell; width: 40%; color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .grid-value { display: table-cell; width: 60%; color: #0b1c3a; font-size: 13px; font-weight: 700; }
+    .stats-container { display: table; width: 100%; margin-top: 30px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+    .stat-box { display: table-cell; width: 33.3%; }
+    .stat-number { color: #ffaa00; font-size: 20px; font-weight: 800; margin: 0; }
+    .stat-label { color: #64748b; font-size: 9px; font-weight: 800; text-transform: uppercase; margin: 2px 0 0 0; letter-spacing: 1px; }
+    .signature { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 25px; }
+    .signature-title { color: #0b1c3a; font-size: 15px; font-weight: 800; margin: 0; }
+    .signature-dept { color: #64748b; font-size: 12px; font-weight: 700; margin: 3px 0 0 0; }
+    .footer { background: #0f172a; padding: 30px; text-align: center; color: #94a3b8; font-size: 12px; font-weight: 500; }
+    .footer-address { margin: 0 0 10px 0; color: #cbd5e1; line-height: 1.5; }
+    .footer-links { margin: 15px 0 0 0; }
+    .footer-link { color: #ffaa00; text-decoration: none; font-weight: 700; margin: 0 10px; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header-banner">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC Logo" class="logo" />
+      <div class="college-name">Bhubaneswar Engineering College</div>
+      <div class="college-tagline">Excellence • Innovation • Leadership</div>
+    </div>
+    <div class="hero-image-container">
+      <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg" alt="BEC Campus" class="hero-image" />
+      <div class="hero-overlay"></div>
+      <div class="badge">Session 2026-27</div>
+    </div>
+    <div class="content-body">
+      <h2 class="greeting">Dear ${name},</h2>
+      <p class="main-text">
+        Thank you for choosing <strong>Bhubaneswar Engineering College (BEC)</strong>! We have successfully received your admission query regarding the <strong>${course}</strong> program. 
+      </p>
+      
+      <div class="callout-box">
+        <div class="callout-title">📞 Immediate Action & Next Steps</div>
+        <p class="callout-text">
+          Our senior academic counselor has been assigned to your file and will **call you shortly** at your WhatsApp number **${phone}** to guide you through career counseling and direct admissions!
+        </p>
+      </div>
+
+      <div class="data-grid">
+        <div class="grid-title">Your Submitted Details</div>
+        <div class="grid-row"><span class="grid-label">Full Name:</span><span class="grid-value">${name}</span></div>
+        <div class="grid-row"><span class="grid-label">WhatsApp No:</span><span class="grid-value">${phone}</span></div>
+        <div class="grid-row"><span class="grid-label">Email Address:</span><span class="grid-value">${email}</span></div>
+        <div class="grid-row"><span class="grid-label">Course:</span><span class="grid-value">${course}</span></div>
+        <div class="grid-row"><span class="grid-label">Branch:</span><span class="grid-value">${branch}</span></div>
+        ${city ? `<div class="grid-row"><span class="grid-label">City/Location:</span><span class="grid-value">${city}</span></div>` : ''}
+        ${qualification ? `<div class="grid-row"><span class="grid-label">Qualification:</span><span class="grid-value">${qualification}</span></div>` : ''}
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-box">
+          <p class="stat-number">16+</p>
+          <p class="stat-label">Years of Excellence</p>
         </div>
-        
-        <!-- Content -->
-        <div style="padding: 30px; background-color: #ffffff;">
-          <h2 style="color: #0b1a40; margin-top: 0;">Dear ${name},</h2>
-          <p style="color: #444; font-size: 16px; line-height: 1.6;">
-            Thank you for submitting your admission query to <strong>Bhubaneswar Engineering College (BEC)</strong>. We have received your application details for the <strong>${course}</strong> program successfully.
-          </p>
-          <p style="color: #444; font-size: 16px; line-height: 1.6;">
-            Our dedicated career counselor will contact you within 30 minutes at <strong>${phone}</strong> or via this email for a free counselling session.
-          </p>
-          
-          <div style="margin: 30px 0; padding: 20px; background: #f8fafc; border-left: 4px solid #ffaa00; border-radius: 4px;">
-            <p style="margin: 0; color: #333; font-size: 14px;"><strong>Your Submitted Details:</strong></p>
-            <ul style="margin-top: 10px; color: #666; font-size: 14px; padding-left: 20px;">
-              <li><strong>Course:</strong> ${course}</li>
-              <li><strong>Preferred Branch:</strong> ${branch}</li>
-              <li><strong>Qualification:</strong> ${qualification}</li>
-              <li><strong>City/Location:</strong> ${city}</li>
-            </ul>
-          </div>
-          
-          <p style="color: #444; font-size: 16px; line-height: 1.6;">
-            In the meantime, feel free to explore our <a href="https://becbbsr.ac.in" style="color: #0ea5e9;">official website</a> to learn more about our state-of-the-art facilities and placement records.
-          </p>
-          <br/>
-          <p style="color: #0b1a40; font-size: 16px; font-weight: bold; margin-bottom: 5px;">Best Regards,</p>
-          <p style="color: #666; font-size: 14px; margin-top: 0;"><strong>Admission Cell</strong><br/>Bhubaneswar Engineering College (BEC)</p>
+        <div class="stat-box">
+          <p class="stat-number">90%+</p>
+          <p class="stat-label">Placement Record</p>
         </div>
-        
-        <!-- Footer -->
-        <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-top: 1px solid #e2e8f0;">
-          <p style="font-size: 12px; color: #94a3b8; margin: 0;">
-            Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha<br/>
-            Need immediate help? Call us at +91 94370 44215
-          </p>
+        <div class="stat-box">
+          <p class="stat-number">40-Acre</p>
+          <p class="stat-label">Green Eco-Campus</p>
         </div>
       </div>
+
+      <div class="signature">
+        <p class="signature-title">Best Regards,</p>
+        <p class="signature-title" style="color: #ffaa00;">Director of Admissions</p>
+        <p class="signature-dept">Bhubaneswar Engineering College (BEC)</p>
+      </div>
+    </div>
+    <div class="footer">
+      <p class="footer-address">
+        Grama Diha, Gangapada, Bhubaneswar - 752054, Odisha, India<br/>
+        Helpline Number: +91 94370 44215 | +91 94370 90875
+      </p>
+      <div class="footer-links">
+        <a href="https://becbbsr.ac.in" class="footer-link">Official Website</a>
+        <a href="https://becbbsr.ac.in/facilities" class="footer-link">Facilities</a>
+        <a href="https://becbbsr.ac.in/placement" class="footer-link">Placements</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
     `
   };
 
