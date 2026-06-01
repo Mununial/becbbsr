@@ -830,7 +830,6 @@ export const AgricultureEngg = () => {
         </div>
       )}
 
-      </div>
     </PageLayout>
   );
 };
