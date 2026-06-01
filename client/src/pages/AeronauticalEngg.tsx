@@ -166,6 +166,38 @@ const pageSchema = {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export const AeronauticalEngg = () => {
   const [faqSearch, setFaqSearch] = useState('');
+  
+  // Modal states for Apply Pop-up
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [modalName, setModalName] = useState('');
+  const [modalEmail, setModalEmail] = useState('');
+  const [modalPhone, setModalPhone] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalStatus, setModalStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleModalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setModalStatus('loading');
+    try {
+      await axios.post('/api/contact', {
+        name: modalName,
+        email: modalEmail,
+        phone: modalPhone,
+        course: 'B.Tech',
+        branch: 'Aeronautical Engineering',
+        message: modalMessage || 'Interested in B.Tech Aeronautical Engineering Admission 2026'
+      });
+      setModalStatus('success');
+      setModalName('');
+      setModalEmail('');
+      setModalPhone('');
+      setModalMessage('');
+    } catch (err) {
+      console.error(err);
+      setModalStatus('error');
+    }
+  };
+
   const filteredFaqs = faqSearch.trim()
     ? faqs.filter(f => f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
     : faqs;
@@ -251,10 +283,10 @@ export const AeronauticalEngg = () => {
 
           {/* CTAs */}
           <div className="flex flex-wrap gap-4">
-            <a
+            <button
               id="hero-apply-now-btn"
-              href="https://becbbsr.ac.in/admissions"
-              className="inline-flex items-center gap-2 bg-accent text-primary font-black px-8 py-4 rounded-2xl hover:bg-accent/90 transition-all hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider"
+              onClick={() => setIsApplyModalOpen(true)}
+              className="inline-flex items-center gap-2 bg-accent text-primary font-black px-8 py-4 rounded-2xl hover:bg-accent/90 transition-all hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider focus:outline-none"
             >
               <Rocket className="w-4 h-4" />
               Apply Now — 2026
@@ -511,7 +543,11 @@ export const AeronauticalEngg = () => {
               <div className="text-white/70 text-sm">2026 Admission is Open. Limited Seats Available.</div>
             </div>
             <div className="flex flex-wrap gap-3">
-              <a id="mid-page-apply-btn" href="https://becbbsr.ac.in/admissions" className="bg-accent text-primary font-black px-6 py-3 rounded-xl hover:bg-accent/90 transition-all text-sm uppercase tracking-wider">
+              <button
+                id="mid-page-apply-btn"
+                onClick={() => setIsApplyModalOpen(true)}
+                className="bg-accent text-primary font-black px-6 py-3 rounded-xl hover:bg-accent/90 transition-all text-sm uppercase tracking-wider focus:outline-none"
+              >
                 Apply Now
               </a>
               <a id="mid-page-whatsapp-btn" href="https://wa.me/919437088215?text=I'm interested in Aeronautical Engineering 2026 admission at BEC Bhubaneswar" target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white font-black px-6 py-3 rounded-xl hover:bg-green-400 transition-all text-sm uppercase tracking-wider">
@@ -892,11 +928,26 @@ export const AeronauticalEngg = () => {
           </div>
 
           <div className="flex flex-col gap-3">
-            {filteredFaqs.length > 0
-              ? filteredFaqs.map((faq, i) => <FAQItem key={i} q={faq.q} a={faq.a} index={i} />)
+            {faqsToRender.length > 0
+              ? faqsToRender.map((faq, i) => <FAQItem key={i} q={faq.q} a={faq.a} index={i} />)
               : <p className="text-gray-500 text-sm py-6 text-center">No FAQs found for "{faqSearch}". Try a different keyword.</p>
             }
           </div>
+
+          {!isSearching && filteredFaqs.length > 5 && (
+            <div className="text-center mt-6">
+              <button
+                onClick={() => setShowAllFaqs(!showAllFaqs)}
+                className="bg-primary/5 hover:bg-primary/10 text-primary font-bold px-6 py-3 rounded-xl border border-primary/10 transition-all text-sm inline-flex items-center gap-2"
+              >
+                {showAllFaqs ? (
+                  <>Show Less FAQs <ChevronUp className="w-4 h-4" /></>
+                ) : (
+                  <>View All 50+ FAQs <ChevronDown className="w-4 h-4" /></>
+                )}
+              </button>
+            </div>
+          )}
 
           {/* FAQ CTA */}
           <div className="mt-8 bg-primary/5 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-primary/10">
@@ -936,14 +987,14 @@ export const AeronauticalEngg = () => {
               Join Odisha's only B.Tech Aeronautical Engineering college in Bhubaneswar. Modern labs. PhD faculty. 90%+ placements. AICTE approved. BPUT affiliated. Your career in aviation starts here.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <a
+              <button
                 id="final-apply-now-btn"
-                href="https://becbbsr.ac.in/admissions"
-                className="inline-flex items-center gap-2 bg-primary text-white font-black px-10 py-4 rounded-2xl hover:bg-primary/90 transition-all hover:shadow-xl hover:-translate-y-1 text-sm uppercase tracking-wider"
+                onClick={() => setIsApplyModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-primary text-white font-black px-10 py-4 rounded-2xl hover:bg-primary/90 transition-all hover:shadow-xl hover:-translate-y-1 text-sm uppercase tracking-wider focus:outline-none"
               >
                 <Rocket className="w-4 h-4" />
                 Apply Now — Aeronautical Engineering 2026
-              </a>
+              </button>
               <a
                 id="final-whatsapp-btn"
                 href="https://wa.me/919437088215?text=I want to apply for B.Tech Aeronautical Engineering 2026 at BEC Bhubaneswar"
@@ -971,6 +1022,137 @@ export const AeronauticalEngg = () => {
             </div>
           </div>
         </section>
+
+      </div>
+
+      {/* ── ADMISSION INQUIRY MODAL ────────────────────────────────────── */}
+      {isApplyModalOpen && (
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all">
+          <div 
+            className="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full relative shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-100 flex flex-col gap-6"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+          >
+            <button
+              onClick={() => { setIsApplyModalOpen(false); setModalStatus('idle'); }}
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-800"
+              aria-label="Close modal"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {modalStatus === 'success' ? (
+              <div className="flex flex-col items-center justify-center text-center py-6">
+                <div className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center mb-5 shadow-lg shadow-green-100">
+                  <CheckCircle className="w-8 h-8" />
+                </div>
+                <h3 id="modal-title" className="text-xl font-black text-primary uppercase tracking-tight mb-2">Inquiry Submitted!</h3>
+                <p className="text-gray-500 text-sm leading-relaxed mb-6">
+                  Thank you for your interest. Your inquiry has been sent directly to the BEC Admissions Cell. Our expert counsellors will get in touch with you shortly!
+                </p>
+                <button
+                  onClick={() => { setIsApplyModalOpen(false); setModalStatus('idle'); }}
+                  className="w-full py-4 bg-primary text-white font-black uppercase text-xs tracking-widest rounded-xl hover:bg-primary/95 transition-all shadow-md"
+                >
+                  Close Window
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleModalSubmit} className="flex flex-col gap-5">
+                <div className="flex flex-col">
+                  <h3 id="modal-title" className="text-xl font-black text-primary uppercase tracking-tighter mb-1">BEC Admissions Inquiry 2026</h3>
+                  <p className="text-xs text-gray-400 font-medium">B.Tech Aeronautical Engineering — Direct Support</p>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Full Name</label>
+                    <input
+                      type="text"
+                      placeholder="Enter student name"
+                      value={modalName}
+                      onChange={e => setModalName(e.target.value)}
+                      required
+                      className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Email Address</label>
+                    <input
+                      type="email"
+                      placeholder="Enter email address"
+                      value={modalEmail}
+                      onChange={e => setModalEmail(e.target.value)}
+                      required
+                      className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">WhatsApp / Phone Number</label>
+                    <input
+                      type="tel"
+                      placeholder="Enter 10-digit mobile number"
+                      value={modalPhone}
+                      onChange={e => setModalPhone(e.target.value)}
+                      required
+                      className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Program</label>
+                      <input
+                        type="text"
+                        value="B.Tech"
+                        disabled
+                        className="bg-gray-100 border border-gray-100 text-gray-400 rounded-xl px-4 py-3 text-sm font-semibold outline-none cursor-not-allowed"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Department</label>
+                      <input
+                        type="text"
+                        value="Aeronautical Engg"
+                        disabled
+                        className="bg-gray-100 border border-gray-100 text-gray-400 rounded-xl px-4 py-3 text-sm font-semibold outline-none cursor-not-allowed"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Brief Message / Remarks (Optional)</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Ask about fees, hostel, eligibility, scholarships..."
+                      value={modalMessage}
+                      onChange={e => setModalMessage(e.target.value)}
+                      className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
+                    />
+                  </div>
+                </div>
+
+                {modalStatus === 'error' && (
+                  <p className="text-[10px] font-bold text-red-500 text-center uppercase tracking-widest">
+                    Submission failed. Please check your connection and try again.
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={modalStatus === 'loading'}
+                  className="bg-accent text-primary font-black py-4 rounded-xl uppercase text-xs tracking-[0.2em] shadow-lg flex items-center justify-center gap-2 hover:bg-accent/90 transition-all disabled:opacity-75"
+                >
+                  {modalStatus === 'loading' ? 'Submitting Inquiry...' : 'Submit Admission Inquiry'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
 
       </div>
     </PageLayout>
