@@ -78,31 +78,7 @@ const faqs = [
   { q: "Can aeronautical engineers work in space agencies outside India?", a: "Yes. Aeronautical engineering graduates with strong academics and relevant postgraduate degrees can work at NASA (USA), ESA (Europe), JAXA (Japan), SpaceX, Blue Origin, and other global space organizations. International careers typically require MS or PhD degrees and may require security clearance depending on the role." },
 ];
 
-// ─── FAQ Accordion Component ──────────────────────────────────────────────────
-const FAQItem = ({ q, a, index }: { q: string; a: string; index: number }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className={`border border-gray-100 rounded-2xl overflow-hidden transition-all duration-300 ${open ? 'shadow-lg border-primary/20' : 'hover:border-gray-200'}`}>
-      <button
-        id={`faq-q-${index}`}
-        aria-expanded={open}
-        aria-controls={`faq-a-${index}`}
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between gap-4 p-5 md:p-6 text-left bg-white hover:bg-gray-50 transition-colors"
-      >
-        <span className="font-bold text-gray-800 text-sm md:text-base leading-snug pr-2">{q}</span>
-        {open
-          ? <ChevronUp className="w-5 h-5 text-primary shrink-0" />
-          : <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />}
-      </button>
-      {open && (
-        <div id={`faq-a-${index}`} role="region" className="px-5 md:px-6 pb-5 md:pb-6 bg-white border-t border-gray-50">
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed mt-3">{a}</p>
-        </div>
-      )}
-    </div>
-  );
-};
+
 
 // ─── Schema JSON-LD ───────────────────────────────────────────────────────────
 const pageSchema = {
@@ -166,8 +142,6 @@ const pageSchema = {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export const AeronauticalEngg = () => {
-  const [faqSearch, setFaqSearch] = useState('');
-  const [showAllFaqs, setShowAllFaqs] = useState(false);
   const [activeLabTab, setActiveLabTab] = useState('aircraft-systems-lab');
   
   // Modal states for Apply Pop-up
@@ -201,14 +175,7 @@ export const AeronauticalEngg = () => {
     }
   };
 
-  const filteredFaqs = faqSearch.trim()
-    ? faqs.filter(f => f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
-    : faqs;
 
-  const isSearching = faqSearch.trim().length > 0;
-  const faqsToRender = isSearching 
-    ? filteredFaqs 
-    : (showAllFaqs ? filteredFaqs : filteredFaqs.slice(0, 5));
 
   return (
     <PageLayout 
@@ -926,70 +893,7 @@ export const AeronauticalEngg = () => {
           </div>
         </section>
 
-        {/* ── SECTION 11: FAQ ───────────────────────────────────────────── */}
-        <section aria-labelledby="faq-section">
-          <div className="mb-8">
-            <h2 id="faq-section" className="text-2xl md:text-3xl font-black text-primary mb-2 tracking-tight">
-              Frequently Asked Questions — Aeronautical Engineering
-            </h2>
-            <div className="w-16 h-1 bg-accent mb-4 rounded-full" />
-            <p className="text-gray-600 text-base leading-relaxed max-w-3xl">
-              Here are the most common questions students, parents, and admission seekers ask about B.Tech Aeronautical Engineering — covering career scope, salary, admission process, BEC facilities, government jobs, and more.
-            </p>
-          </div>
 
-          {/* FAQ Search */}
-          <div className="mb-6">
-            <input
-              id="faq-search-input"
-              type="search"
-              placeholder="Search FAQs — e.g. 'salary', 'ISRO', 'eligibility'..."
-              value={faqSearch}
-              onChange={e => setFaqSearch(e.target.value)}
-              className="w-full md:w-1/2 border border-gray-200 rounded-xl px-5 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
-            />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {faqsToRender.length > 0
-              ? faqsToRender.map((faq, i) => <FAQItem key={i} q={faq.q} a={faq.a} index={i} />)
-              : <p className="text-gray-500 text-sm py-6 text-center">No FAQs found for "{faqSearch}". Try a different keyword.</p>
-            }
-          </div>
-
-          {!isSearching && filteredFaqs.length > 5 && (
-            <div className="text-center mt-6">
-              <button
-                onClick={() => setShowAllFaqs(!showAllFaqs)}
-                className="bg-primary/5 hover:bg-primary/10 text-primary font-bold px-6 py-3 rounded-xl border border-primary/10 transition-all text-sm inline-flex items-center gap-2"
-              >
-                {showAllFaqs ? (
-                  <>Show Less FAQs <ChevronUp className="w-4 h-4" /></>
-                ) : (
-                  <>View All 50+ FAQs <ChevronDown className="w-4 h-4" /></>
-                )}
-              </button>
-            </div>
-          )}
-
-          {/* FAQ CTA */}
-          <div className="mt-8 bg-primary/5 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-primary/10">
-            <div>
-              <div className="font-black text-primary text-base">Still have questions about Aeronautical Engineering at BEC?</div>
-              <div className="text-gray-500 text-sm">Our admissions counsellors are available to help you.</div>
-            </div>
-            <a
-              id="faq-whatsapp-btn"
-              href="https://wa.me/919437088215?text=I have a question about Aeronautical Engineering at BEC Bhubaneswar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-green-500 text-white font-black px-6 py-3 rounded-xl hover:bg-green-400 transition-all text-sm uppercase tracking-wider whitespace-nowrap"
-            >
-              <Phone className="w-4 h-4" />
-              WhatsApp Our Counsellors
-            </a>
-          </div>
-        </section>
 
         {/* ── SECTION 12: Final CTA ─────────────────────────────────────── */}
         <section
