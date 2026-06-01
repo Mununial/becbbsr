@@ -173,6 +173,7 @@ const pageSchema = {
 export const AgricultureEngg = () => {
   const [faqSearch, setFaqSearch] = useState('');
   const [showAllFaqs, setShowAllFaqs] = useState(false);
+  const [activeLabTab, setActiveLabTab] = useState('farm-machinery-lab');
 
   // Modal states for Apply Pop-up
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
@@ -209,8 +210,18 @@ export const AgricultureEngg = () => {
     ? faqs.filter(f => f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
     : faqs;
 
+  const isSearching = faqSearch.trim().length > 0;
+  const faqsToRender = isSearching 
+    ? filtered 
+    : (showAllFaqs ? filtered : filtered.slice(0, 5));
+
   return (
-    <PageLayout title="Agriculture Engineering">
+    <PageLayout 
+      title="B.Tech Agriculture Engineering"
+      subtitle="Odisha's leading AICTE-approved B.Tech Agriculture Engineering College in Bhubaneswar"
+      badge="Admission 2026 Open — Apply Now"
+      badgeColor="bg-green-100 text-green-700 border-green-200"
+    >
       <SEO
         title="B.Tech Agriculture Engineering in Odisha | BEC"
         description="Study B.Tech Agriculture Engineering at BEC Bhubaneswar — AICTE-approved, BPUT-affiliated. Modern agri-labs, expert faculty, government job focus & placements. Apply 2026."
@@ -242,72 +253,52 @@ export const AgricultureEngg = () => {
 
       <div className="flex flex-col gap-16 mt-4">
 
-        {/* ── HERO / H1 ──────────────────────────────────────────────────── */}
-        <section
-          aria-labelledby="agri-main-heading"
-          className="bg-gradient-to-br from-green-900 via-green-800 to-primary rounded-3xl shadow-[0_30px_80px_-15px_rgba(0,80,30,0.4)] p-8 md:p-16 text-white relative overflow-hidden"
-        >
-          <Leaf className="absolute top-6 right-8 w-64 h-64 text-white/5 rotate-12 pointer-events-none" />
-          <Sun className="absolute bottom-6 right-32 w-40 h-40 text-white/5 pointer-events-none" />
-
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-2 text-xs text-white/50 font-semibold uppercase tracking-wider">
-              <li><Link to="/" className="hover:text-white/80 transition-colors">Home</Link></li>
-              <li aria-hidden="true">›</li>
-              <li className="text-white/70">Agriculture Engineering</li>
-            </ol>
-          </nav>
-
-          {/* Admission Badge */}
-          <div className="inline-flex items-center gap-2 bg-green-500/20 border border-green-400/30 text-green-300 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6 animate-pulse">
-            <Star className="w-3.5 h-3.5" />
-            Admission 2026 Open — Apply Now
+        {/* ── SECTION 1: Overview & Compact Stats/CTA ─────────────────── */}
+        <section aria-labelledby="agri-overview" className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-sm flex flex-col lg:flex-row gap-8 items-center">
+          <div className="flex-1 space-y-4">
+            <h2 id="agri-overview" className="text-xl md:text-2xl font-black text-primary uppercase tracking-tight flex items-center gap-2">
+              <Leaf className="w-5 h-5 text-green-600 animate-pulse" /> Program Overview
+            </h2>
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              Bhubaneswar Engineering College (BEC) offers an <strong className="text-gray-800">AICTE-approved, BPUT-affiliated B.Tech in Agriculture Engineering</strong>. Located near Bhubaneswar's leading academic zone, this program provides hands-on practical training in modern agriculture and food processing labs. Train with expert faculty, get hands-on in 6+ advanced research labs, and launch your career in agritech, machinery, and prestigious government roles.
+            </p>
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              <button
+                onClick={() => setIsApplyModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-black px-5 py-3 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider focus:outline-none"
+              >
+                <Leaf className="w-4 h-4" /> Apply Now
+              </button>
+              <a
+                href="https://wa.me/919437088215?text=I'm interested in B.Tech Agriculture Engineering admission 2026 at BEC Bhubaneswar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-black px-5 py-3 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider"
+              >
+                <Phone className="w-4 h-4" /> WhatsApp
+              </a>
+              <a
+                href="tel:+919437088215"
+                className="inline-flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-primary font-black px-5 py-3 rounded-xl transition-all border border-gray-200 text-xs uppercase tracking-wider"
+              >
+                <Phone className="w-4 h-4" /> Call Admissions
+              </a>
+            </div>
           </div>
-
-          <h1 id="agri-main-heading" className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight mb-6 text-white">
-            B.Tech Agriculture Engineering<br />
-            <span className="text-green-300">in Bhubaneswar — BEC Odisha</span>
-          </h1>
-
-          <p className="text-white/80 text-lg leading-relaxed mb-4 max-w-3xl">
-            Bhubaneswar Engineering College (BEC) offers <strong className="text-white">AICTE-approved, BPUT-affiliated B.Tech Agriculture Engineering</strong> — one of the most future-ready engineering programs in Odisha. Train with experienced faculty in modern agri-labs and launch your career in government departments, agritech companies, food processing industries, and research organizations.
-          </p>
-          <p className="text-white/70 text-base leading-relaxed mb-8 max-w-3xl">
-            India feeds 1.4 billion people. With agritech growing at 25% annually, smart farming revolution spreading, and government investment in rural engineering at an all-time high — <strong className="text-white/90">agriculture engineers from BEC are shaping the future of food</strong>.
-          </p>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          {/* Compact Stats */}
+          <div className="w-full lg:w-auto grid grid-cols-2 gap-3 shrink-0">
             {[
-              { label: "Program Duration", value: "4 Years" },
-              { label: "Placement Rate", value: "90%+" },
-              { label: "Faculty Members", value: "7+" },
-              { label: "Labs & Workshops", value: "5+" },
+              { label: "Duration", value: "4 Years", color: "bg-green-50 text-green-800" },
+              { label: "Placements", value: "90%+", color: "bg-amber-50 text-amber-800" },
+              { label: "Faculty", value: "7+ Experts", color: "bg-blue-50 text-blue-800" },
+              { label: "Agri Labs", value: "6+ Advanced", color: "bg-purple-50 text-purple-800" },
             ].map((s, i) => (
-              <div key={i} className="bg-white/10 rounded-2xl p-4 text-center border border-white/10">
-                <div className="text-2xl md:text-3xl font-black text-green-300">{s.value}</div>
-                <div className="text-white/60 text-xs uppercase tracking-widest mt-1">{s.label}</div>
+              <div key={i} className={`rounded-2xl p-4 text-center border border-gray-100 ${s.color} shadow-sm w-full lg:w-36`}>
+                <div className="text-xl md:text-2xl font-black">{s.value}</div>
+                <div className="text-[10px] uppercase tracking-wider font-bold opacity-70 mt-1">{s.label}</div>
               </div>
             ))}
-          </div>
-
-          {/* CTAs */}
-          <div className="flex flex-wrap gap-4">
-            <button id="agri-hero-apply-btn" onClick={() => setIsApplyModalOpen(true)}
-              className="inline-flex items-center gap-2 bg-green-500 text-white font-black px-8 py-4 rounded-2xl hover:bg-green-400 transition-all hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider focus:outline-none">
-              <Leaf className="w-4 h-4" /> Apply Now — 2026
-            </button>
-            <a id="agri-hero-whatsapp-btn"
-              href="https://wa.me/919437088215?text=I'm interested in B.Tech Agriculture Engineering admission 2026 at BEC Bhubaneswar"
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white text-green-900 font-black px-8 py-4 rounded-2xl hover:bg-green-50 transition-all hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider">
-              <Phone className="w-4 h-4" /> WhatsApp Inquiry
-            </a>
-            <a id="agri-hero-call-btn" href="tel:+919437088215"
-              className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white font-black px-6 py-4 rounded-2xl hover:bg-white/20 transition-all text-sm uppercase tracking-wider">
-              <Phone className="w-4 h-4" /> Call Admissions
-            </a>
           </div>
         </section>
 
@@ -516,29 +507,57 @@ export const AgricultureEngg = () => {
             The Department of Agriculture Engineering at BEC Bhubaneswar blends rigorous theoretical training with hands-on practical experience in modern, well-equipped laboratories. The curriculum is designed to prepare graduates for both government examinations and private sector careers in the rapidly growing agritech and food processing industries.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          {/* Labs Dynamic Tab Selector */}
+          <div className="flex flex-wrap gap-2 mb-6 bg-white p-2 rounded-2xl border border-gray-100">
             {[
-              { id: "farm-machinery-lab", title: "Farm Machinery & Power Laboratory", icon: "🚜", desc: "BEC's Farm Machinery Lab provides hands-on training with agricultural equipment including tractors, power tillers, seed drills, harvesters, threshers, and irrigation pumps. Students learn machine design principles, maintenance procedures, performance testing, and ergonomic design for Indian farming conditions. They analyze tractor PTO systems, implement attachments, and field operation efficiency.", highlights: ["Tractor & power tiller training", "Seed drill & harvester units", "Farm implement design", "Machine performance testing", "Ergonomic equipment design"] },
-              { id: "irrigation-lab", title: "Irrigation Engineering Laboratory", icon: "💧", desc: "The Irrigation Lab at BEC trains students in the design and analysis of water delivery systems for agriculture. Using hydraulic benches, flow measurement equipment, and irrigation system models, students understand open channel hydraulics, pipe flow, drip and sprinkler irrigation design, water distribution efficiency, and micro-irrigation technology — critical skills for India's water-scarce future.", highlights: ["Hydraulic flow measurement", "Drip irrigation system design", "Sprinkler layout planning", "Canal seepage analysis", "Water use efficiency testing"] },
-              { id: "soil-water-lab", title: "Soil and Water Conservation Laboratory", icon: "🌱", desc: "The Soil and Water Conservation Lab enables students to analyze soil properties, measure erosion rates, test water quality, design watershed management structures, and model runoff scenarios. Using soil testing instruments, laboratory flumes, and GIS mapping tools, students develop skills in watershed planning, soil erosion control, water harvesting, and conservation engineering.", highlights: ["Soil texture & permeability tests", "Erosion measurement tools", "Watershed model simulation", "Water quality analysis", "GIS mapping training"] },
-              { id: "food-processing-lab", title: "Food Processing & Post-Harvest Technology Lab", icon: "🍎", desc: "BEC's Food Processing Lab provides training in agricultural produce handling, preservation techniques, and food plant operations. Students learn grain storage engineering, cold chain logistics, food drying and dehydration, canning and packaging technology, quality control testing, and HACCP food safety systems — preparing them for careers in India's rapidly expanding food processing industry.", highlights: ["Grain storage engineering", "Food drying & dehydration", "Quality control testing", "Cold chain management", "HACCP food safety systems"] },
-              { id: "agri-tech-lab", title: "Agricultural Technology Laboratory", icon: "🛰️", desc: "The Agricultural Technology Lab exposes students to modern precision farming tools and technologies. Training covers GPS and GIS applications in agriculture, drone technology fundamentals, IoT sensor setup for smart irrigation, remote sensing data analysis, automated spraying systems, and agricultural data management using software platforms — preparing students for India's agritech revolution.", highlights: ["GPS & GIS training", "Drone technology basics", "IoT sensor configuration", "Remote sensing data analysis", "Smart irrigation automation"] },
-              { id: "research-facility", title: "Research & Innovation Programs", icon: "🔬", desc: "BEC encourages agriculture engineering students to pursue applied research through final-year projects, interdepartmental innovation programs, and faculty-mentored research initiatives. Students have worked on projects in solar irrigation, low-cost drip systems, precision fertigation, agritech app development, and post-harvest loss reduction — building research skills valued by ICAR and agritech companies.", highlights: ["Faculty-guided research projects", "Solar irrigation design", "Low-cost drip irrigation", "Agritech app development", "Post-harvest innovation"] },
-            ].map((lab) => (
-              <div key={lab.id} id={lab.id} className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
-                <div className="text-4xl mb-4">{lab.icon}</div>
-                <h3 className="font-black text-primary text-lg mb-3">{lab.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-5">{lab.desc}</p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {lab.highlights.map((h, j) => (
-                    <li key={j} className="flex items-center gap-2 text-xs text-gray-500 font-semibold">
-                      <CheckCircle className="w-3.5 h-3.5 text-green-600 shrink-0" /> {h}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              { id: "farm-machinery-lab", title: "Farm Machinery & Power", icon: "🚜" },
+              { id: "irrigation-lab", title: "Irrigation Engineering", icon: "💧" },
+              { id: "soil-water-lab", title: "Soil & Water Conservation", icon: "🌱" },
+              { id: "food-processing-lab", title: "Food Processing", icon: "🍎" },
+              { id: "agri-tech-lab", title: "Agricultural Tech", icon: "🛰️" },
+              { id: "research-facility", title: "Research & Innovation", icon: "🔬" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveLabTab(tab.id)}
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
+                  activeLabTab === tab.id
+                    ? 'bg-green-700 text-white shadow-md'
+                    : 'text-gray-500 hover:text-green-700 hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-lg">{tab.icon}</span>
+                {tab.title}
+              </button>
             ))}
           </div>
+
+          {/* Active Lab Content Display */}
+          {[
+            { id: "farm-machinery-lab", title: "Farm Machinery & Power Laboratory", icon: "🚜", desc: "BEC's Farm Machinery Lab provides hands-on training with agricultural equipment including tractors, power tillers, seed drills, harvesters, threshers, and irrigation pumps. Students learn machine design principles, maintenance procedures, performance testing, and ergonomic design for Indian farming conditions. They analyze tractor PTO systems, implement attachments, and field operation efficiency.", highlights: ["Tractor & power tiller training", "Seed drill & harvester units", "Farm implement design", "Machine performance testing", "Ergonomic equipment design"] },
+            { id: "irrigation-lab", title: "Irrigation Engineering Laboratory", icon: "💧", desc: "The Irrigation Lab at BEC trains students in the design and analysis of water delivery systems for agriculture. Using hydraulic benches, flow measurement equipment, and irrigation system models, students understand open channel hydraulics, pipe flow, drip and sprinkler irrigation design, water distribution efficiency, and micro-irrigation technology — critical skills for India's water-scarce future.", highlights: ["Hydraulic flow measurement", "Drip irrigation system design", "Sprinkler layout planning", "Canal seepage analysis", "Water use efficiency testing"] },
+            { id: "soil-water-lab", title: "Soil and Water Conservation Laboratory", icon: "🌱", desc: "The Soil and Water Conservation Lab enables students to analyze soil properties, measure erosion rates, test water quality, design watershed management structures, and model runoff scenarios. Using soil testing instruments, laboratory flumes, and GIS mapping tools, students develop skills in watershed planning, soil erosion control, water harvesting, and conservation engineering.", highlights: ["Soil texture & permeability tests", "Erosion measurement tools", "Watershed model simulation", "Water quality analysis", "GIS mapping training"] },
+            { id: "food-processing-lab", title: "Food Processing & Post-Harvest Technology Lab", icon: "🍎", desc: "BEC's Food Processing Lab provides training in agricultural produce handling, preservation techniques, and food plant operations. Students learn grain storage engineering, cold chain logistics, food drying and dehydration, canning and packaging technology, quality control testing, and HACCP food safety systems — preparing them for careers in India's rapidly expanding food processing industry.", highlights: ["Grain storage engineering", "Food drying & dehydration", "Quality control testing", "Cold chain management", "HACCP food safety systems"] },
+            { id: "agri-tech-lab", title: "Agricultural Technology Laboratory", icon: "🛰️", desc: "The Agricultural Technology Lab exposes students to modern precision farming tools and technologies. Training covers GPS and GIS applications in agriculture, drone technology fundamentals, IoT sensor setup for smart irrigation, remote sensing data analysis, automated spraying systems, and agricultural data management using software platforms — preparing students for India's agritech revolution.", highlights: ["GPS & GIS training", "Drone technology basics", "IoT sensor configuration", "Remote sensing data analysis", "Smart irrigation automation"] },
+            { id: "research-facility", title: "Research & Innovation Programs", icon: "🔬", desc: "BEC encourages agriculture engineering students to pursue applied research through final-year projects, interdepartmental innovation programs, and faculty-mentored research initiatives. Students have worked on projects in solar irrigation, low-cost drip systems, precision fertigation, agritech app development, and post-harvest loss reduction — building research skills valued by ICAR and agritech companies.", highlights: ["Faculty-guided research projects", "Solar irrigation design", "Low-cost drip irrigation", "Agritech app development", "Post-harvest innovation"] }
+          ].filter(lab => lab.id === activeLabTab).map((lab) => (
+            <div key={lab.id} className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm flex flex-col gap-6 mb-10">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">{lab.icon}</div>
+                <h3 className="font-black text-primary text-xl">{lab.title}</h3>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed">{lab.desc}</p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                {lab.highlights.map((h, j) => (
+                  <li key={j} className="flex items-center gap-2 text-xs text-gray-500 font-bold bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                    <CheckCircle className="w-3.5 h-3.5 text-green-600 shrink-0" />
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           <div className="bg-white rounded-2xl p-6 md:p-10 border border-gray-100">
             <h3 className="text-xl font-black text-primary mb-6">Industry Exposure & Practical Learning</h3>

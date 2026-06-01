@@ -1,8 +1,9 @@
 import { PageLayout } from '../components/PageLayout';
-import { Plane, Users, Target, Rocket, GraduationCap, Mail, CheckCircle, MapPin, Phone, ChevronDown, ChevronUp, Star, Award, BookOpen, Briefcase, Building, Zap, Shield, TrendingUp } from 'lucide-react';
+import { Plane, Users, Target, Rocket, GraduationCap, Mail, CheckCircle, MapPin, Phone, ChevronDown, ChevronUp, Star, Award, BookOpen, Briefcase, Building, Zap, Shield, TrendingUp, X } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 // ─── Faculty Data ─────────────────────────────────────────────────────────────
 const faculty = [
@@ -166,6 +167,8 @@ const pageSchema = {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export const AeronauticalEngg = () => {
   const [faqSearch, setFaqSearch] = useState('');
+  const [showAllFaqs, setShowAllFaqs] = useState(false);
+  const [activeLabTab, setActiveLabTab] = useState('aircraft-systems-lab');
   
   // Modal states for Apply Pop-up
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
@@ -202,8 +205,17 @@ export const AeronauticalEngg = () => {
     ? faqs.filter(f => f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
     : faqs;
 
+  const isSearching = faqSearch.trim().length > 0;
+  const faqsToRender = isSearching 
+    ? filteredFaqs 
+    : (showAllFaqs ? filteredFaqs : filteredFaqs.slice(0, 5));
+
   return (
-    <PageLayout title="Aeronautical Engineering">
+    <PageLayout 
+      title="B.Tech Aeronautical Engineering"
+      subtitle="Odisha's only dedicated AICTE-approved B.Tech Aeronautical College in Bhubaneswar"
+      badge="Admission 2026 Open — Apply Now"
+    >
       <SEO
         title="B.Tech Aeronautical Engineering in Odisha | BEC"
         description="Study B.Tech Aeronautical Engineering at BEC Bhubaneswar — Odisha's top AICTE-approved aviation college. Modern labs, expert faculty & top placements. Apply 2026."
@@ -232,68 +244,54 @@ export const AeronauticalEngg = () => {
 
       <div className="flex flex-col gap-16 mt-4">
 
-        {/* ── SECTION 1: Hero / H1 ─────────────────────────────────────── */}
-        <section
-          aria-labelledby="aero-main-heading"
-          className="bg-gradient-to-br from-primary via-primary/95 to-blue-900 rounded-3xl shadow-[0_30px_80px_-15px_rgba(11,29,58,0.4)] p-8 md:p-16 text-white relative overflow-hidden"
-        >
-          <Plane className="absolute top-6 right-8 w-64 h-64 text-white/5 -rotate-12 pointer-events-none" />
-          <Rocket className="absolute bottom-4 right-48 w-32 h-32 text-white/5 rotate-45 pointer-events-none" />
-
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-2 text-xs text-white/50 font-semibold uppercase tracking-wider">
-              <li><Link to="/" className="hover:text-white/80 transition-colors">Home</Link></li>
-              <li aria-hidden="true">›</li>
-              <li className="text-white/70">Aeronautical Engineering</li>
-            </ol>
-          </nav>
-
-          {/* Admission Badge */}
-          <div className="inline-flex items-center gap-2 bg-accent/20 border border-accent/30 text-accent px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6 animate-pulse">
-            <Star className="w-3.5 h-3.5" />
-            Admission 2026 Open — Apply Now
+        {/* ── SECTION 1: Overview & Compact Stats/CTA ─────────────────── */}
+        <section aria-labelledby="aero-overview" className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-sm flex flex-col lg:flex-row gap-8 items-center">
+          <div className="flex-1 space-y-4">
+            <h2 id="aero-overview" className="text-xl md:text-2xl font-black text-primary uppercase tracking-tight flex items-center gap-2">
+              <Plane className="w-5 h-5 text-accent animate-pulse" /> Program Overview
+            </h2>
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              Bhubaneswar Engineering College (BEC) is the <strong className="text-gray-800">only AICTE-approved, BPUT-affiliated engineering college in Bhubaneswar</strong> offering a full-time B.Tech in Aeronautical Engineering. Our campus is strategically situated just 15 km from the airport, providing unmatched aviation proximity. Train with PhD-led expert faculty, get hands-on in 5+ advanced aerospace laboratories, and secure placements at leading airlines and aerospace companies.
+            </p>
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              <button
+                onClick={() => setIsApplyModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-primary font-black px-5 py-3 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider"
+              >
+                <Rocket className="w-4 h-4" /> Apply Now
+              </button>
+              <a
+                href="https://wa.me/919437088215?text=I'm interested in B.Tech Aeronautical Engineering admission 2026 at BEC Bhubaneswar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-black px-5 py-3 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider"
+              >
+                <Phone className="w-4 h-4" /> WhatsApp
+              </a>
+              <a
+                href="tel:+919437088215"
+                className="inline-flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-primary font-black px-5 py-3 rounded-xl transition-all border border-gray-200 text-xs uppercase tracking-wider"
+              >
+                <Phone className="w-4 h-4" /> Call Admissions
+              </a>
+            </div>
           </div>
-
-          <h1 id="aero-main-heading" className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight mb-6 text-white">
-            B.Tech Aeronautical Engineering<br />
-            <span className="text-accent">in Bhubaneswar — BEC Odisha</span>
-          </h1>
-          <p className="text-white/80 text-lg leading-relaxed mb-4 max-w-3xl">
-            Bhubaneswar Engineering College (BEC) is the <strong className="text-white">only AICTE-approved, BPUT-affiliated college in Bhubaneswar</strong> offering a full-time B.Tech Aeronautical Engineering program. Train with PhD-qualified faculty, work in modern aerospace labs, and launch your career with India's top airlines, defence organizations, and aerospace companies.
-          </p>
-          <p className="text-white/70 text-base leading-relaxed mb-8 max-w-3xl">
-            India is becoming the world's third-largest aviation market. The UDAN scheme is expanding airports, ISRO is breaking frontiers in space, HAL is delivering fighter jets, and the drone industry is growing at record speed. Your aeronautical engineering career starts here — at BEC Bhubaneswar.
-          </p>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          {/* Compact Stats */}
+          <div className="w-full lg:w-auto grid grid-cols-2 gap-3 shrink-0">
             {[
-              { label: "Years Program", value: "4" },
-              { label: "Placement Rate", value: "90%+" },
-              { label: "Faculty Members", value: "8+" },
-              { label: "Labs & Workshops", value: "5+" },
+              { label: "Duration", value: "4 Years", color: "bg-blue-50 text-primary" },
+              { label: "Placements", value: "90%+", color: "bg-amber-50 text-amber-800" },
+              { label: "Faculty", value: "8+ Experts", color: "bg-green-50 text-green-800" },
+              { label: "Labs", value: "5+ Advanced", color: "bg-purple-50 text-purple-800" },
             ].map((s, i) => (
-              <div key={i} className="bg-white/10 rounded-2xl p-4 text-center border border-white/10">
-                <div className="text-2xl md:text-3xl font-black text-accent">{s.value}</div>
-                <div className="text-white/60 text-xs uppercase tracking-widest mt-1">{s.label}</div>
+              <div key={i} className={`rounded-2xl p-4 text-center border border-gray-100 ${s.color} shadow-sm w-full lg:w-36`}>
+                <div className="text-xl md:text-2xl font-black">{s.value}</div>
+                <div className="text-[10px] uppercase tracking-wider font-bold opacity-70 mt-1">{s.label}</div>
               </div>
             ))}
           </div>
-
-          {/* CTAs */}
-          <div className="flex flex-wrap gap-4">
-            <button
-              id="hero-apply-now-btn"
-              onClick={() => setIsApplyModalOpen(true)}
-              className="inline-flex items-center gap-2 bg-accent text-primary font-black px-8 py-4 rounded-2xl hover:bg-accent/90 transition-all hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider focus:outline-none"
-            >
-              <Rocket className="w-4 h-4" />
-              Apply Now — 2026
-            </a>
-            <a
-              id="hero-whatsapp-btn"
-              href="https://wa.me/919437088215?text=I'm interested in B.Tech Aeronautical Engineering admission 2026 at BEC Bhubaneswar"
+        </section>t=I'm interested in B.Tech Aeronautical Engineering admission 2026 at BEC Bhubaneswar"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-green-500 text-white font-black px-8 py-4 rounded-2xl hover:bg-green-400 transition-all hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider"
@@ -567,52 +565,77 @@ export const AeronauticalEngg = () => {
             The Department of Aeronautical Engineering at BEC Bhubaneswar combines rigorous academic training with cutting-edge laboratory experience. Established with the vision of producing industry-ready aerospace professionals, the department maintains modern infrastructure aligned with BPUT curriculum requirements and AICTE standards.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          {/* Labs Dynamic Tab Selector */}
+          <div className="flex flex-wrap gap-2 mb-6 bg-white p-2 rounded-2xl border border-gray-100">
             {[
-              {
-                id: "aircraft-systems-lab",
-                title: "Aircraft Systems Laboratory",
-                icon: "✈️",
-                desc: "The Aircraft Systems Lab at BEC is equipped with real aircraft components including fuselage sections, wing assemblies, control surface mechanisms, landing gear systems, and hydraulic actuators. Students learn aircraft system integration, component identification, and systems troubleshooting through hands-on training with actual aviation hardware.",
-                highlights: ["Real aircraft components", "Fuselage & wing sections", "Control surface training", "Hydraulic systems", "Landing gear mechanisms"]
-              },
-              {
-                id: "aerodynamics-lab",
-                title: "Aerodynamics Laboratory",
-                icon: "💨",
-                desc: "BEC's Aerodynamics Lab introduces students to the fundamental principles of fluid flow, lift generation, drag reduction, and boundary layer behavior. With wind tunnel demonstration equipment, pressure measurement tools, and CFD software workstations, students can visualize airflow patterns and validate theoretical aerodynamic concepts.",
-                highlights: ["Wind tunnel demonstration", "CFD software (ANSYS)", "Pressure measurement", "Flow visualization", "Lift & drag analysis"]
-              },
-              {
-                id: "propulsion-lab",
-                title: "Propulsion & Jet Engines Laboratory",
-                icon: "🔥",
-                desc: "The Propulsion Lab at BEC gives students direct exposure to aircraft engine principles. With jet engine cut-section models, turbine blade assemblies, piston engine setups, and propulsion simulation software, students understand thermodynamic cycles, engine performance parameters, and combustion principles that are central to aircraft propulsion.",
-                highlights: ["Jet engine cut-sections", "Turbine blade assemblies", "Piston engine systems", "Propulsion simulation", "Thermodynamic analysis"]
-              },
-              {
-                id: "maintenance-workshop",
-                title: "Aircraft Maintenance Workshop",
-                icon: "🔧",
-                desc: "The Aircraft Maintenance Workshop provides practical training in airframe inspection, maintenance procedures, NDT (Non-Destructive Testing) techniques, and aircraft component repair. Students learn industry-standard maintenance protocols following DGCA guidelines, preparing them for technical operations roles at airlines, MRO companies, and HAL.",
-                highlights: ["Airframe inspection", "NDT techniques", "Component repair", "DGCA-standard procedures", "MRO training protocols"]
-              },
-            ].map((lab) => (
-              <div key={lab.id} id={lab.id} className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
-                <div className="text-4xl mb-4">{lab.icon}</div>
-                <h3 className="font-black text-primary text-lg mb-3">{lab.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-5">{lab.desc}</p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {lab.highlights.map((h, j) => (
-                    <li key={j} className="flex items-center gap-2 text-xs text-gray-500 font-semibold">
-                      <CheckCircle className="w-3.5 h-3.5 text-primary shrink-0" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              { id: "aircraft-systems-lab", title: "Aircraft Systems Lab", icon: "✈️" },
+              { id: "aerodynamics-lab", title: "Aerodynamics Lab", icon: "💨" },
+              { id: "propulsion-lab", title: "Propulsion & Jet Engines", icon: "🔥" },
+              { id: "maintenance-workshop", title: "Aircraft Maintenance Workshop", icon: "🔧" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveLabTab(tab.id)}
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
+                  activeLabTab === tab.id
+                    ? 'bg-primary text-white shadow-md'
+                    : 'text-gray-500 hover:text-primary hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-lg">{tab.icon}</span>
+                {tab.title}
+              </button>
             ))}
           </div>
+
+          {/* Active Lab Content Display */}
+          {[
+            {
+              id: "aircraft-systems-lab",
+              title: "Aircraft Systems Laboratory",
+              icon: "✈️",
+              desc: "The Aircraft Systems Lab at BEC is equipped with real aircraft components including fuselage sections, wing assemblies, control surface mechanisms, landing gear systems, and hydraulic actuators. Students learn aircraft system integration, component identification, and systems troubleshooting through hands-on training with actual aviation hardware.",
+              highlights: ["Real aircraft components", "Fuselage & wing sections", "Control surface training", "Hydraulic systems", "Landing gear mechanisms"]
+            },
+            {
+              id: "aerodynamics-lab",
+              title: "Aerodynamics Laboratory",
+              icon: "💨",
+              desc: "BEC's Aerodynamics Lab introduces students to the fundamental principles of fluid flow, lift generation, drag reduction, and boundary layer behavior. With wind tunnel demonstration equipment, pressure measurement tools, and CFD software workstations, students can visualize airflow patterns and validate theoretical aerodynamic concepts.",
+              highlights: ["Wind tunnel demonstration", "CFD software (ANSYS)", "Pressure measurement", "Flow visualization", "Lift & drag analysis"]
+            },
+            {
+              id: "propulsion-lab",
+              title: "Propulsion & Jet Engines Laboratory",
+              icon: "🔥",
+              desc: "The Propulsion Lab at BEC gives students direct exposure to aircraft engine principles. With jet engine cut-section models, turbine blade assemblies, piston engine setups, and propulsion simulation software, students understand thermodynamic cycles, engine performance parameters, and combustion principles that are central to aircraft propulsion.",
+              highlights: ["Jet engine cut-sections", "Turbine blade assemblies", "Piston engine systems", "Propulsion simulation", "Thermodynamic analysis"]
+            },
+            {
+              id: "maintenance-workshop",
+              title: "Aircraft Maintenance Workshop",
+              icon: "🔧",
+              desc: "The Aircraft Maintenance Workshop provides practical training in airframe inspection, maintenance procedures, NDT (Non-Destructive Testing) techniques, and aircraft component repair. Students learn industry-standard maintenance protocols following DGCA guidelines, preparing them for technical operations roles at airlines, MRO companies, and HAL.",
+              highlights: ["Airframe inspection", "NDT techniques", "Component repair", "DGCA-standard procedures", "MRO training protocols"]
+            },
+          ].filter(lab => lab.id === activeLabTab).map((lab) => (
+            <div key={lab.id} className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm flex flex-col gap-6 mb-10">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">{lab.icon}</div>
+                <h3 className="font-black text-primary text-xl">{lab.title}</h3>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed">{lab.desc}</p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                {lab.highlights.map((h, j) => (
+                  <li key={j} className="flex items-center gap-2 text-xs text-gray-500 font-bold bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                    <CheckCircle className="w-3.5 h-3.5 text-primary shrink-0" />
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           {/* Practical Learning */}
           <div className="bg-white rounded-2xl p-6 md:p-10 border border-gray-100">
