@@ -82,31 +82,7 @@ const faqs = [
   { q: "What is the salary of Agriculture Development Officers (ADO) in India?", a: "Agriculture Development Officers (ADO) in India earn ₹35,400–₹1,12,400 per month (Pay Level 6) under the 7th Pay Commission, plus DA, HRA, and other allowances — making it a highly attractive government career. ADOs are recruited by state PSCs and the central government, with B.Tech Agriculture Engineering being the primary qualification." },
 ];
 
-// ─── FAQ Accordion ────────────────────────────────────────────────────────────
-const FAQItem = ({ q, a, index }: { q: string; a: string; index: number }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className={`border border-gray-100 rounded-2xl overflow-hidden transition-all duration-300 ${open ? 'shadow-lg border-green-200' : 'hover:border-gray-200'}`}>
-      <button
-        id={`agr-faq-q-${index}`}
-        aria-expanded={open}
-        aria-controls={`agr-faq-a-${index}`}
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between gap-4 p-5 md:p-6 text-left bg-white hover:bg-gray-50 transition-colors"
-      >
-        <span className="font-bold text-gray-800 text-sm md:text-base leading-snug pr-2">{q}</span>
-        {open
-          ? <ChevronUp className="w-5 h-5 text-green-700 shrink-0" />
-          : <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />}
-      </button>
-      {open && (
-        <div id={`agr-faq-a-${index}`} role="region" className="px-5 md:px-6 pb-5 md:pb-6 bg-white border-t border-gray-50">
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed mt-3">{a}</p>
-        </div>
-      )}
-    </div>
-  );
-};
+
 
 // ─── Schema JSON-LD ───────────────────────────────────────────────────────────
 const pageSchema = {
@@ -171,8 +147,6 @@ const pageSchema = {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export const AgricultureEngg = () => {
-  const [faqSearch, setFaqSearch] = useState('');
-  const [showAllFaqs, setShowAllFaqs] = useState(false);
   const [activeLabTab, setActiveLabTab] = useState('farm-machinery-lab');
 
   // Modal states for Apply Pop-up
@@ -206,14 +180,7 @@ export const AgricultureEngg = () => {
     }
   };
 
-  const filtered = faqSearch.trim()
-    ? faqs.filter(f => f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
-    : faqs;
 
-  const isSearching = faqSearch.trim().length > 0;
-  const faqsToRender = isSearching 
-    ? filtered 
-    : (showAllFaqs ? filtered : filtered.slice(0, 5));
 
   return (
     <PageLayout 
@@ -884,64 +851,6 @@ export const AgricultureEngg = () => {
           </div>
         </section>
 
-        {/* ── FAQ ──────────────────────────────────────────────────────── */}
-        <section aria-labelledby="agri-faq">
-          <div className="mb-8">
-            <h2 id="agri-faq" className="text-2xl md:text-3xl font-black text-primary mb-2 tracking-tight">
-              Frequently Asked Questions — Agriculture Engineering
-            </h2>
-            <div className="w-16 h-1 bg-green-600 mb-4 rounded-full" />
-            <p className="text-gray-600 text-base leading-relaxed max-w-3xl">
-              Everything students and parents want to know about B.Tech Agriculture Engineering — from career scope and government job pathways to salary details, admission process at BEC, lab facilities, and much more.
-            </p>
-          </div>
-
-          <div className="mb-6">
-            <input
-              id="agri-faq-search"
-              type="search"
-              placeholder="Search FAQs — e.g. 'salary', 'ICAR', 'government jobs', 'eligibility'..."
-              value={faqSearch}
-              onChange={e => setFaqSearch(e.target.value)}
-              className="w-full md:w-1/2 border border-gray-200 rounded-xl px-5 py-3 text-sm outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all"
-            />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {faqsToRender.length > 0
-              ? faqsToRender.map((faq, i) => <FAQItem key={i} q={faq.q} a={faq.a} index={i} />)
-              : <p className="text-gray-500 text-sm py-6 text-center">No results for "{faqSearch}". Try another keyword.</p>
-            }
-          </div>
-
-          {!isSearching && filtered.length > 5 && (
-            <div className="text-center mt-6">
-              <button
-                onClick={() => setShowAllFaqs(!showAllFaqs)}
-                className="bg-green-50 hover:bg-green-100 text-green-700 font-bold px-6 py-3 rounded-xl border border-green-100 transition-all text-sm inline-flex items-center gap-2"
-              >
-                {showAllFaqs ? (
-                  <>Show Less FAQs <ChevronUp className="w-4 h-4" /></>
-                ) : (
-                  <>View All 50+ FAQs <ChevronDown className="w-4 h-4" /></>
-                )}
-              </button>
-            </div>
-          )}
-
-          <div className="mt-8 bg-green-50 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-green-100">
-            <div>
-              <div className="font-black text-green-800 text-base">Have more questions about Agriculture Engineering at BEC?</div>
-              <div className="text-gray-500 text-sm">Our admissions team will answer all your questions.</div>
-            </div>
-            <a id="agri-faq-whatsapp-btn"
-              href="https://wa.me/919437088215?text=I have a question about Agriculture Engineering at BEC Bhubaneswar"
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-green-700 text-white font-black px-6 py-3 rounded-xl hover:bg-green-600 transition-all text-sm uppercase tracking-wider whitespace-nowrap">
-              <Phone className="w-4 h-4" /> WhatsApp Our Counsellors
-            </a>
-          </div>
-        </section>
 
         {/* ── FINAL CTA ─────────────────────────────────────────────────── */}
         <section id="agri-apply-section" aria-labelledby="agri-final-cta"
