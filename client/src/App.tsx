@@ -232,32 +232,144 @@ export const App = () => {
           "AICTE approved engineering colleges in Odisha"
         ]}
         schema={{
-          "@type": "CollegeOrUniversity",
-          "name": "Bhubaneswar Engineering College (BEC)",
-          "alternateName": "BEC Bhubaneswar",
-          "url": "https://becbbsr.ac.in",
-          "logo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png",
-          "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
-          "description": "Bhubaneswar Engineering College (BEC) is a premier AICTE-approved engineering and management institute in Bhubaneswar, Odisha, offering B.Tech, MBA, and Diploma courses with high placement packages.",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "At: Kaimatia, Post: Khudupur, Via: Madanpur",
-            "addressLocality": "Bhubaneswar",
-            "addressRegion": "Odisha",
-            "postalCode": "752054",
-            "addressCountry": "India"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": "20.1983",
-            "longitude": "85.7032"
-          },
-          "telephone": "+91-9437044218",
-          "sameAs": [
-            "https://www.facebook.com/share/1HfMc4PV1Z/",
-            "https://www.instagram.com/becbbsr_official/",
-            "https://twitter.com/becbbsr",
-            "https://youtube.com/@becbhubaneswar?si=DRtLAbVf19Koc6jQ"
+          "@graph": [
+            {
+              "@type": "CollegeOrUniversity",
+              "name": "Bhubaneswar Engineering College (BEC)",
+              "alternateName": "BEC Bhubaneswar",
+              "url": "https://becbbsr.ac.in",
+              "logo": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png",
+              "image": "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg",
+              "description": "Bhubaneswar Engineering College (BEC) is a premier AICTE-approved engineering and management institute in Bhubaneswar, Odisha, offering B.Tech, MBA, and Diploma courses with high placement packages.",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "At: Kaimatia, Post: Khudupur, Via: Madanpur",
+                "addressLocality": "Bhubaneswar",
+                "addressRegion": "Odisha",
+                "postalCode": "752054",
+                "addressCountry": "India"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "20.1983",
+                "longitude": "85.7032"
+              },
+              "telephone": "+91-9437044218",
+              "sameAs": [
+                "https://www.facebook.com/share/1HfMc4PV1Z/",
+                "https://www.instagram.com/becbbsr_official/",
+                "https://twitter.com/becbbsr",
+                "https://youtube.com/@becbhubaneswar?si=DRtLAbVf19Koc6jQ"
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Which is the best engineering college in Bhubaneswar?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Bhubaneswar Engineering College (BEC) is one of the best private engineering colleges in Bhubaneswar, Odisha. AICTE-approved and BPUT-affiliated, BEC is known for 100% placement support, the only aeronautical engineering program in Bhubaneswar, modern AI labs, and strong industry connections with TCS, Amazon, Wipro, and IndiGo Airlines."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is BEC Bhubaneswar good for placement?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. BEC Bhubaneswar achieves 90%+ campus placement annually. Top recruiters include TCS, Wipro, Infosys, Amazon, Tech Mahindra, Piramal Group, and IndiGo Airlines. The college runs a dedicated Placement Cell with mock interviews, soft skills training, and regular campus drives."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the fee structure at BEC Bhubaneswar?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "BEC Bhubaneswar offers one of the most affordable BTech fee structures among private engineering colleges in Odisha. Scholarships, merit-based fee waivers, SC/ST/OBC government concessions, and EMI options are available. Visit becbbsr.ac.in for the 2026 fee structure."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does BEC Bhubaneswar have a hostel?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, BEC Bhubaneswar has separate hostels for boys and girls within the campus. Facilities include Wi-Fi, 24/7 CCTV security, resident wardens, dining mess with nutritious meals, and common rooms."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What courses does BEC Bhubaneswar offer?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "BEC Bhubaneswar offers: B.Tech in CSE, AI & Data Science, Aeronautical Engineering, ECE, EEE, Mechanical Engineering, Civil Engineering, and AME. Also MBA (2-year full-time), MCA, M.Tech, and Diploma programs under SCTEVT."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How to get admission in BEC Bhubaneswar 2026?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "To get admission in BEC Bhubaneswar 2026: 1) Visit becbbsr.ac.in and fill the online application form. 2) Submit Class 12 or Diploma marksheets. 3) Appear for counselling or submit JEE/OJEE scores. 4) Pay the admission fee after seat allotment. 5) Complete document verification to confirm your seat."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is BEC Bhubaneswar AICTE approved?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Bhubaneswar Engineering College (BEC) is approved by AICTE (All India Council for Technical Education) and affiliated with BPUT (Biju Patnaik University of Technology), Odisha."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why choose BEC Bhubaneswar?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Choose BEC Bhubaneswar for: (1) Only aeronautical engineering college in Bhubaneswar, (2) 90%+ campus placement record, (3) AICTE approved and BPUT affiliated, (4) Affordable fees with scholarships, (5) AI and modern engineering labs, (6) Safe Wi-Fi campus with hostel, (7) Strong alumni network in MNCs, (8) MBA, MCA and Diploma programs, (9) Sports and cultural facilities, (10) Dedicated industry internship programs."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Does BEC Bhubaneswar offer AI and Data Science?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, BEC Bhubaneswar offers a dedicated B.Tech program in Artificial Intelligence and Data Science (AI & DS) with specialized AI labs, machine learning curriculum, data science projects, and strong campus placement support in top IT and tech companies."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the ranking of BEC Bhubaneswar in Odisha?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "BEC Bhubaneswar is consistently ranked among the top private engineering colleges in Odisha by major education portals. It is especially recognized for its aeronautical engineering program — the only one in Bhubaneswar — its placement record, modern infrastructure, and industry-aligned curriculum."
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "HowTo",
+              "name": "How to Get Admission in BEC Bhubaneswar 2026",
+              "description": "Step-by-step guide to apply for B.Tech, MBA or Diploma admission at Bhubaneswar Engineering College (BEC).",
+              "totalTime": "PT30M",
+              "step": [
+                { "@type": "HowToStep", "position": 1, "name": "Visit the Official Website", "text": "Go to becbbsr.ac.in and navigate to the Admissions section." },
+                { "@type": "HowToStep", "position": 2, "name": "Fill the Online Application Form", "text": "Complete the application form with your personal details, academic records, and preferred course (B.Tech / MBA / Diploma)." },
+                { "@type": "HowToStep", "position": 3, "name": "Submit Documents", "text": "Upload Class 12 or Diploma marksheets, ID proof, passport-size photo, and JEE/OJEE scorecard if applicable." },
+                { "@type": "HowToStep", "position": 4, "name": "Attend Counselling", "text": "Visit the campus for direct counselling or participate in OJEE counselling for seat allotment." },
+                { "@type": "HowToStep", "position": 5, "name": "Pay Admission Fee", "text": "Pay the admission fee online or at the college office to confirm your seat." },
+                { "@type": "HowToStep", "position": 6, "name": "Complete Document Verification", "text": "Submit original documents for verification to finalize your admission at BEC Bhubaneswar." }
+              ]
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://becbbsr.ac.in/" },
+                { "@type": "ListItem", "position": 2, "name": "Courses", "item": "https://becbbsr.ac.in/courses" },
+                { "@type": "ListItem", "position": 3, "name": "Admissions", "item": "https://becbbsr.ac.in/admissions" },
+                { "@type": "ListItem", "position": 4, "name": "Placements", "item": "https://becbbsr.ac.in/placements" }
+              ]
+            }
           ]
         }}
       />

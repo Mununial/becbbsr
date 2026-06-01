@@ -3,6 +3,52 @@ import { Monitor, Target, GraduationCap, Mail, Database, BrainCircuit, Globe } f
 import { useData } from '../context/DataContext';
 import { SEO } from '../components/SEO';
 
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://becbbsr.ac.in/cse-engg",
+      "url": "https://becbbsr.ac.in/cse-engg",
+      "name": "B.Tech Computer Science & Engineering in Odisha | BEC Bhubaneswar",
+      "description": "Study B.Tech Computer Science & Engineering (CSE) at Bhubaneswar Engineering College. Specializations in Data Science, Artificial Intelligence, Cybersecurity, and Web Development.",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://becbbsr.ac.in/" },
+          { "@type": "ListItem", "position": 2, "name": "Departments", "item": "https://becbbsr.ac.in/departments" },
+          { "@type": "ListItem", "position": 3, "name": "Computer Science Engineering", "item": "https://becbbsr.ac.in/cse-engg" }
+        ]
+      },
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "https://becbbsr.ac.in" }
+    },
+    {
+      "@type": "Course",
+      "name": "B.Tech in Computer Science Engineering (CSE)",
+      "description": "4-year undergraduate engineering program in Computer Science at BEC Bhubaneswar. Covers algorithms, AI/ML, cloud computing, cybersecurity, data science, and software engineering with 100% placement support.",
+      "provider": {
+        "@type": "CollegeOrUniversity",
+        "name": "Bhubaneswar Engineering College",
+        "sameAs": "https://becbbsr.ac.in"
+      },
+      "url": "https://becbbsr.ac.in/cse-engg",
+      "educationalLevel": "Bachelor's Degree",
+      "timeRequired": "P4Y",
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "onsite",
+        "inLanguage": "en",
+        "startDate": "2026-07-01",
+        "location": {
+          "@type": "Place",
+          "name": "BEC Campus, Patrapada, Bhubaneswar, Odisha 751019"
+        }
+      }
+    }
+  ]
+};
+
 export const CSEEngg = () => {
   const { faculties } = useData();
   return (
@@ -17,6 +63,7 @@ export const CSEEngg = () => {
           "data science engineering course Odisha",
           "cybersecurity artificial intelligence BEC"
         ]}
+        schema={pageSchema}
       />
       <div className="flex flex-col gap-16 mt-4">
         
