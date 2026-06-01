@@ -258,23 +258,6 @@ export const AeronauticalEngg = () => {
               </div>
             ))}
           </div>
-        </section>t=I'm interested in B.Tech Aeronautical Engineering admission 2026 at BEC Bhubaneswar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-green-500 text-white font-black px-8 py-4 rounded-2xl hover:bg-green-400 transition-all hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider"
-            >
-              <Phone className="w-4 h-4" />
-              WhatsApp Inquiry
-            </a>
-            <a
-              id="hero-call-btn"
-              href="tel:+919437088215"
-              className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white font-black px-6 py-4 rounded-2xl hover:bg-white/20 transition-all text-sm uppercase tracking-wider"
-            >
-              <Phone className="w-4 h-4" />
-              Call Admissions
-            </a>
-          </div>
         </section>
 
         {/* ── SECTION 2: What is Aeronautical Engineering ─────────────── */}
@@ -514,7 +497,7 @@ export const AeronauticalEngg = () => {
                 className="bg-accent text-primary font-black px-6 py-3 rounded-xl hover:bg-accent/90 transition-all text-sm uppercase tracking-wider focus:outline-none"
               >
                 Apply Now
-              </a>
+              </button>
               <a id="mid-page-whatsapp-btn" href="https://wa.me/919437088215?text=I'm interested in Aeronautical Engineering 2026 admission at BEC Bhubaneswar" target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white font-black px-6 py-3 rounded-xl hover:bg-green-400 transition-all text-sm uppercase tracking-wider">
                 WhatsApp Us
               </a>
@@ -1081,7 +1064,6 @@ export const AeronauticalEngg = () => {
         </div>
       )}
 
-      </div>
     </PageLayout>
   );
 };
