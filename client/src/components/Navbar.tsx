@@ -54,8 +54,8 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent"></div>
               <div className="flex flex-col">
-                 {item.dropdown.map((sub) => (
-                  sub.href.startsWith('http') || sub.href.endsWith('.pdf') ? (
+                  {item.dropdown.map((sub) => (
+                  sub.href.startsWith('http') || sub.href.includes('/facilities/') ? (
                     <a 
                       key={sub.name} 
                       href={sub.href}
@@ -154,7 +154,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
   const bputUrl = rawBputUrl.includes('?') ? rawBputUrl : `${rawBputUrl}?v=1.0.1`;
 
   const sctevtDoc = officialDocs?.find(d => d.id === 'sctevt-affiliation' || d.name.toLowerCase().includes('sctevt'));
-  const rawSctevtUrl = sctevtDoc?.url || "/facilities/SCTEVT_Affiliation.pdf";
+  const rawSctevtUrl = sctevtDoc?.url || "/facilities/SCTEVT_Affiliation.png";
   const sctevtUrl = rawSctevtUrl.includes('?') ? rawSctevtUrl : `${rawSctevtUrl}?v=1.0.1`;
 
   const navItems: NavItem[] = [
@@ -314,7 +314,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
               {[
                 { id: 'aicte', name: 'AICTE', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629482/becweb/org_logo3.png', href: aicteUrl },
                 { id: 'bput', name: 'BPUT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629347/becweb/bput.png', href: bputUrl },
-                { id: 'sctevt', name: 'SCTE & VT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629479/becweb/org_logo1.jpg', href: sctevtUrl }
+                { id: 'sctevt', name: 'SCTE & VT', src: '/sctevt.png', href: sctevtUrl }
               ].map((logo) => (
                 <a 
                   key={logo.id} 
@@ -500,7 +500,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                             className="overflow-hidden pl-4 border-l-2 border-slate-100 flex flex-col gap-3"
                           >
                             {item.dropdown.map((sub) => (
-                              sub.href.startsWith('http') || sub.href.endsWith('.pdf') ? (
+                              sub.href.startsWith('http') || sub.href.includes('/facilities/') ? (
                                 <a 
                                   key={sub.name} 
                                   href={sub.href}

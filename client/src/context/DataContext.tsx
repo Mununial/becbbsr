@@ -210,7 +210,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory.pdf?v=1.0.1', category: 'Disclosure' },
       { id: 'aicte-approval', name: 'AICTE Approval', url: '/facilities/AICTE_Approval.pdf?v=1.0.1', category: 'Approval' },
       { id: 'bput-affiliation', name: 'BPUT Affiliation', url: '/facilities/BPUT_Affiliation.pdf?v=1.0.1', category: 'Affiliation' },
-      { id: 'sctevt-affiliation', name: 'SCTE&VT Affiliation', url: '/facilities/SCTEVT_Affiliation.pdf?v=1.0.1', category: 'Affiliation' }
+      { id: 'sctevt-affiliation', name: 'SCTE&VT Affiliation', url: '/facilities/SCTEVT_Affiliation.png?v=1.0.1', category: 'Affiliation' }
     ]);
 
     // 13. Chatbot Inquiries (Real-time Firestore Collection Listener with local Express API backup)

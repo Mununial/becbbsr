@@ -1,5 +1,5 @@
 import { PageLayout } from '../components/PageLayout';
-import { Award, Layers, CheckSquare } from 'lucide-react';
+import { Award, Layers, CheckSquare, FileText, ExternalLink } from 'lucide-react';
 import { useAdmission } from '../hooks/useAdmission';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
@@ -70,6 +70,54 @@ export const Diploma = () => {
               </motion.div>
            ))}
         </div>
+
+        {/* SCTE & VT Affiliation & Approval Section */}
+        <section className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] p-8 md:p-12 border border-gray-100 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative overflow-hidden">
+           <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-sky-400 via-secondary to-sky-400" />
+           <div className="lg:col-span-7 space-y-6">
+              <span className="bg-sky-500/8 text-sky-600 border border-sky-200/50 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest inline-block">Official Accreditation</span>
+              <h2 className="text-2xl md:text-3xl font-black text-navy-950 uppercase tracking-tighter">
+                SCTE & VT Approval & Affiliation
+              </h2>
+              <p className="text-gray-500 font-medium text-sm md:text-base leading-relaxed">
+                Bhubaneswar Engineering College (BEC) is officially approved by the All India Council for Technical Education (AICTE) and affiliated with the State Council for Technical Education & Vocational Training (SCTE & VT), Odisha.
+              </p>
+              <p className="text-gray-500 font-medium text-sm md:text-base leading-relaxed">
+                Our Diploma programs adhere strictly to the curriculum, academic standards, and examination guidelines prescribed by the State Council, ensuring high-quality technical education and excellent career prospects.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-2">
+                 <a 
+                   href="/facilities/SCTEVT_Affiliation.png?v=1.0.1" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   className="px-6 py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-black rounded-xl uppercase text-xs tracking-widest transition-all duration-300 shadow-md flex items-center gap-2"
+                 >
+                   <FileText className="w-4 h-4" />
+                   Open Original Document
+                 </a>
+              </div>
+           </div>
+           <div className="lg:col-span-5 flex justify-center">
+              <div className="relative group max-w-sm rounded-2xl overflow-hidden border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-500 bg-slate-50">
+                 <img 
+                   src="/facilities/SCTEVT_Affiliation.png?v=1.0.1" 
+                   alt="SCTE & VT Approved" 
+                   className="w-full h-auto max-h-[350px] object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                 />
+                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <a 
+                      href="/facilities/SCTEVT_Affiliation.png?v=1.0.1" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="px-5 py-2.5 bg-white text-navy-950 font-black rounded-lg uppercase text-[10px] tracking-widest transition-transform duration-300 transform translate-y-4 group-hover:translate-y-0 shadow-lg flex items-center gap-1.5"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      View Full Image
+                    </a>
+                 </div>
+              </div>
+           </div>
+        </section>
 
         <div className="bg-navy-950 rounded-2xl p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-white/5 shadow-xl">
            <div className="flex items-center gap-5">
