@@ -24,11 +24,13 @@ interface AdminDashboardProps {
    onSaveNotices: (newNotices: Notice[]) => void;
    faculties: Faculty[];
    onSaveFaculties: (newFaculties: Faculty[]) => void;
+   officialDocs?: any[];
+   onSaveOfficialDocs?: (newDocs: any[]) => void;
 }
 
 
-export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, students, onSaveStudents, gallery, onSaveGallery, highlights, onSaveHighlights, leaders, onSaveLeaders, notices, onSaveNotices, faculties, onSaveFaculties }: AdminDashboardProps) => {
-   const [activeTab, setActiveTab] = useState<'hero' | 'tour' | 'students' | 'gallery' | 'highlights' | 'leadership' | 'notices' | 'faculty'>('hero');
+export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, students, onSaveStudents, gallery, onSaveGallery, highlights, onSaveHighlights, leaders, onSaveLeaders, notices, onSaveNotices, faculties, onSaveFaculties, officialDocs = [], onSaveOfficialDocs }: AdminDashboardProps) => {
+   const [activeTab, setActiveTab] = useState<'hero' | 'tour' | 'students' | 'gallery' | 'highlights' | 'leadership' | 'notices' | 'faculty' | 'docs'>('hero');
    const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
    const [editingScene, setEditingScene] = useState<Scene | null>(null);
    const [editingStudent, setEditingStudent] = useState<SelectedStudent | null>(null);
@@ -37,7 +39,28 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
    const [editingLeader, setEditingLeader] = useState<Leader | null>(null);
    const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
    const [editingFaculty, setEditingFaculty] = useState<Faculty | null>(null);
+   const [editingDoc, setEditingDoc] = useState<any | null>(null);
    const [uploading, setUploading] = useState(false);
+
+   const addOfficialDoc = () => {
+      const newDoc = {
+         id: Date.now().toString(),
+         name: "New Document Name",
+         url: "",
+         category: "Disclosure"
+      };
+      if (onSaveOfficialDocs) {
+         onSaveOfficialDocs([newDoc, ...officialDocs]);
+      }
+   };
+
+   const deleteOfficialDoc = (id: string) => {
+      if (confirm('Delete this document?')) {
+         if (onSaveOfficialDocs) {
+            onSaveOfficialDocs(officialDocs.filter(d => d.id !== id));
+         }
+      }
+   };
 
    // Universal upload handler
    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string, type: 'image' | 'video') => void) => {
@@ -267,6 +290,12 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
                   className={cn("flex items-center gap-4 px-6 py-4 rounded-xl font-black text-sm transition-all", activeTab === 'faculty' ? 'bg-primary text-white shadow-lg' : 'text-white/40 hover:bg-white/5 hover:text-white')}
                >
                   <Users className="w-5 h-5" /> FACULTY
+               </button>
+               <button
+                  onClick={() => setActiveTab('docs')}
+                  className={cn("flex items-center gap-4 px-6 py-4 rounded-xl font-black text-sm transition-all", activeTab === 'docs' ? 'bg-primary text-white shadow-lg' : 'text-white/40 hover:bg-white/5 hover:text-white')}
+               >
+                  <FileText className="w-5 h-5" /> OFFICIAL DOCUMENTS
                </button>
             </nav>
 
@@ -551,6 +580,44 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
                               <div className="flex gap-3 mt-auto">
                                  <button onClick={() => setEditingFaculty(f)} className="flex-1 bg-white/5 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">Edit Info</button>
                                  <button onClick={() => deleteFaculty(f.id)} className="p-4 bg-red-400/10 text-red-400 rounded-xl hover:bg-red-400 hover:text-white transition-all"><Trash2 className="w-5 h-5" /></button>
+                              </div>
+                           </div>
+                        ))}
+                     </div>
+                  </>
+               )}
+               {activeTab === 'docs' && (
+                  <>
+                     <div className="flex justify-between items-end mb-16">
+                        <div>
+                           <h2 className="text-5xl font-black text-white uppercase tracking-tighter mb-4">Official Documents</h2>
+                           <p className="text-white/30 text-lg font-medium">Manage institutional documents, certificates, AICTE approvals, and disclosures.</p>
+                        </div>
+                        <button onClick={addOfficialDoc} className="px-8 py-5 bg-secondary text-navy-900 font-black text-xs rounded-xl shadow-2xl hover:scale-105 transition-all flex items-center gap-3">
+                           <PlusCircle className="w-5 h-5" /> ADD NEW DOCUMENT
+                        </button>
+                     </div>
+
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {officialDocs.map((doc) => (
+                           <div key={doc.id} className="bg-navy-900 border border-white/5 rounded-3xl overflow-hidden group hover:border-primary/50 transition-all p-6 shadow-2xl relative flex flex-col justify-between">
+                              <div>
+                                 <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/20">
+                                       <FileText className="w-6 h-6" />
+                                    </div>
+                                    <div className="flex-1 overflow-hidden">
+                                       <span className="text-[10px] font-black uppercase tracking-widest text-white/40 block mb-1">{doc.category || 'Disclosure'}</span>
+                                       <span className="text-xs text-white/20 font-bold truncate block">{doc.url ? 'File Configured' : 'No File Uploaded'}</span>
+                                    </div>
+                                 </div>
+
+                                 <h3 className="font-bold text-lg mb-6 line-clamp-2 min-h-[3.5rem] leading-tight group-hover:text-primary transition-colors">{doc.name}</h3>
+                              </div>
+                              
+                              <div className="flex gap-3 mt-auto">
+                                 <button onClick={() => setEditingDoc(doc)} className="flex-1 bg-white/5 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">Edit Document</button>
+                                 <button onClick={() => deleteOfficialDoc(doc.id)} className="p-4 bg-red-400/10 text-red-400 rounded-xl hover:bg-red-400 hover:text-white transition-all"><Trash2 className="w-5 h-5" /></button>
                               </div>
                            </div>
                         ))}
@@ -1112,6 +1179,63 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
                   <div className="p-10 bg-white/5 border-t border-white/5 flex justify-end gap-6">
                       <button onClick={() => setEditingFaculty(null)} className="px-10 py-4 bg-white/5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Cancel</button>
                       <button onClick={() => { onSaveFaculties(faculties.map(f => f.id === editingFaculty.id ? editingFaculty : f)); setEditingFaculty(null); }} className="px-10 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">Save Faculty</button>
+                  </div>
+               </div>
+            </div>
+         )}
+
+         {editingDoc && (
+            <div className="fixed inset-0 z-[7000] bg-navy-950/95 flex items-center justify-center p-8">
+               <div className="bg-navy-900 rounded-[3rem] w-full max-w-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                  <div className="p-10 border-b border-white/5 flex justify-between items-center bg-white/5">
+                     <h2 className="text-3xl font-black uppercase tracking-tighter">Edit Document Info</h2>
+                     <button onClick={() => setEditingDoc(null)}><X className="w-8 h-8 opacity-40 hover:opacity-100" /></button>
+                  </div>
+                  <div className="p-10 overflow-y-auto space-y-10 custom-scrollbar">
+                     <div>
+                        <label className="block text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-4">PDF Document Source</label>
+                        <div className="bg-black/40 p-6 rounded-3xl border border-white/5">
+                           {editingDoc.url ? (
+                              <div className="relative rounded-2xl overflow-hidden min-h-[160px] bg-black/80 mb-6 group flex flex-col items-center justify-center p-6">
+                                 <FileText className="w-16 h-16 text-cyan-400 mb-3" />
+                                 <span className="text-xs font-mono text-white/50 truncate max-w-xs block mb-4">{editingDoc.url.split('/').pop()}</span>
+                                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                                    <label className="bg-primary text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest cursor-pointer shadow-2xl">
+                                       {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'CHANGE FILE'}
+                                       <input type="file" className="hidden" accept="application/pdf" onChange={(e) => handleFileUpload(e, (url) => setEditingDoc({ ...editingDoc, url }))} />
+                                    </label>
+                                 </div>
+                              </div>
+                           ) : (
+                              <label className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:border-primary transition-all">
+                                 <Upload className="w-10 h-10 text-white/20 mb-4" />
+                                 <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Click to Upload PDF From Device</span>
+                                 <input type="file" className="hidden" accept="application/pdf" onChange={(e) => handleFileUpload(e, (url) => setEditingDoc({ ...editingDoc, url }))} />
+                              </label>
+                           )}
+                           <input className="w-full bg-navy-950 p-4 border border-white/5 rounded-xl text-xs font-mono opacity-40 mt-2" value={editingDoc.url} onChange={(e) => setEditingDoc({ ...editingDoc, url: e.target.value })} placeholder="Direct PDF URL" />
+                        </div>
+                     </div>
+
+                     <div className="grid grid-cols-2 gap-6">
+                        <div className="col-span-2">
+                           <label className="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-3">Document Display Name</label>
+                           <input className="w-full bg-navy-950 p-5 border border-white/5 rounded-2xl outline-none focus:border-primary transition-all text-white font-semibold" value={editingDoc.name} onChange={(e) => setEditingDoc({ ...editingDoc, name: e.target.value })} />
+                        </div>
+                        <div className="col-span-2">
+                           <label className="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-3">Category</label>
+                           <select className="w-full bg-navy-950 p-5 border border-white/5 rounded-2xl outline-none focus:border-primary transition-all text-white font-semibold" value={editingDoc.category} onChange={(e) => setEditingDoc({ ...editingDoc, category: e.target.value })}>
+                              <option value="Disclosure">Mandatory Disclosure</option>
+                              <option value="Certificate">Certificate / Approval</option>
+                              <option value="Prospectus">Admissions Prospectus</option>
+                              <option value="Other">Other Document</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="p-10 bg-white/5 border-t border-white/5 flex justify-end gap-6">
+                     <button onClick={() => setEditingDoc(null)} className="px-10 py-5 bg-white/5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Cancel</button>
+                     <button onClick={() => { if (onSaveOfficialDocs) onSaveOfficialDocs(officialDocs.map(d => d.id === editingDoc.id ? editingDoc : d)); setEditingDoc(null); }} className="px-12 py-5 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">Save Document</button>
                   </div>
                </div>
             </div>

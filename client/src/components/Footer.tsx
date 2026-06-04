@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Send, MapPin, Phone, Mail, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useData } from '../context/DataContext';
 
 const usefulLinks = [
   { name: 'ICACBEC 2026 Conference', href: 'https://icacbec.in', target: '_blank' },
@@ -17,6 +18,16 @@ const usefulLinks = [
 export const Footer = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const { officialDocs } = useData();
+  const mandatoryDoc = officialDocs?.find(d => d.name.toLowerCase().includes('mandatory'));
+  const mandatoryUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
+
+  const links = usefulLinks.map(link => 
+    link.name === 'Mandatory Disclosure' 
+      ? { ...link, href: mandatoryUrl, target: '_blank' } 
+      : link
+  );
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +124,7 @@ export const Footer = () => {
           <div className="lg:col-span-2">
             <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] mb-8 font-poppins text-accent/80">Academic Portal</h4>
             <div className="flex flex-col gap-4">
-              {usefulLinks.map((link) => (
+              {links.map((link) => (
                 <a key={link.name} href={link.href} target={link.target} className="text-xs font-bold text-slate-500 hover:text-accent transition-all duration-300 font-inter flex items-center gap-2 group">
                    <div className="w-1 h-1 rounded-full bg-accent/20 group-hover:w-3 group-hover:bg-accent transition-all" /> {link.name}
                 </a>

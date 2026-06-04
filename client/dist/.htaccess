@@ -1,3 +1,9 @@
+# ============================================================
+# BEC Website — Apache Configuration
+# Includes: SPA routing, Favicon MIME types, Cache control
+# ============================================================
+
+# --- SPA Routing (React Router) ---
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
@@ -5,4 +11,41 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
+</IfModule>
+
+# --- Correct MIME Types for Favicon Assets ---
+<IfModule mod_mime.c>
+  AddType image/x-icon                  .ico
+  AddType image/png                     .png
+  AddType application/manifest+json     .webmanifest
+</IfModule>
+
+# --- Cache Control: Favicon Assets (cache-busted via ?v=2026) ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Favicon files — short cache so Google picks up updates fast
+  <FilesMatch "^(favicon\.ico|favicon-16x16\.png|favicon-32x32\.png|apple-touch-icon\.png|android-chrome-192x192\.png|android-chrome-512x512\.png|site\.webmanifest)$">
+    ExpiresDefault "access plus 1 week"
+    Header set Cache-Control "public, max-age=604800, must-revalidate"
+    Header set X-Favicon-Version "2026"
+  </FilesMatch>
+
+  # Static assets — long cache
+  <FilesMatch "\.(css|js|woff2|woff|ttf|svg|jpg|jpeg|webp|gif)$">
+    ExpiresDefault "access plus 1 year"
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# --- Security Headers ---
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Enable Compression ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json application/manifest+json image/svg+xml
 </IfModule>

@@ -155,7 +155,8 @@ export const App = () => {
     students, updateStudents,
     scenes, updateScenes,
     highlights, updateHighlights,
-    leaders, updateLeaders
+    leaders, updateLeaders,
+    officialDocs, updateOfficialDocs
   } = useData();
 
   const [loading, setLoading] = useState(true);
@@ -395,6 +396,8 @@ export const App = () => {
             onSaveNotices={updateNotices}
             faculties={faculties}
             onSaveFaculties={updateFaculties}
+            officialDocs={officialDocs}
+            onSaveOfficialDocs={updateOfficialDocs}
           />
         </LoginGate>
       )}

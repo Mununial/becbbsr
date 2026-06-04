@@ -1,6 +1,7 @@
 import { PageLayout } from '../components/PageLayout';
 import { Library, Microscope, Presentation, Wifi, CupSoda, Home, Bus, HeartPulse, Building2 } from 'lucide-react';
 import { SEO } from '../components/SEO';
+import { useData } from '../context/DataContext';
 
 const facilityList = [
   {
@@ -70,6 +71,8 @@ const facilityList = [
 ];
 
 export const Facilities = () => {
+  const { officialDocs } = useData();
+
   return (
     <PageLayout title="Campus Facilities">
       <SEO 
@@ -128,6 +131,53 @@ export const Facilities = () => {
               </div>
            ))}
         </div>
+
+        {/* Official Disclosures Section */}
+        {officialDocs && officialDocs.length > 0 && (
+          <section className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl p-10 lg:p-12">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100 pb-6 mb-8">
+              <div>
+                <h3 className="text-2xl font-black text-navy-950 uppercase tracking-tight flex items-center gap-3">
+                  <span className="text-secondary">Official</span> Disclosures & Certificates
+                </h3>
+                <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mt-1">
+                  Mandatory disclosures and approvals for transparency and compliance
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {officialDocs.map((doc) => (
+                <a 
+                  key={doc.id}
+                  href={doc.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-6 bg-slate-50 hover:bg-slate-100/80 border border-slate-100 rounded-2xl transition-all duration-300 group shadow-sm"
+                >
+                  <div className="flex items-center gap-4 overflow-hidden">
+                    <div className="w-12 h-12 rounded-xl bg-[#0F172A] flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform duration-300">
+                      <span className="text-xs font-black uppercase text-accent">PDF</span>
+                    </div>
+                    <div className="overflow-hidden">
+                      <h4 className="font-black text-[#0F172A] text-sm uppercase tracking-tight leading-snug group-hover:text-accent transition-colors truncate">
+                        {doc.name}
+                      </h4>
+                      <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mt-0.5">
+                        {doc.category || 'Disclosure'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 group-hover:bg-[#0F172A] group-hover:text-white transition-all duration-300 shadow-sm shrink-0">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Closing Note */}
         <div className="bg-[#0F172A] rounded-[2.5rem] p-12 text-center border border-white/5 shadow-2xl">

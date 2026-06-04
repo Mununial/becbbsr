@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, LayoutDashboard, Mail, Phone, ChevronDown, GraduationCap, Bell, Zap, Trophy, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { useData } from '../context/DataContext';
 
 interface NavItem {
   name: string;
@@ -10,89 +11,6 @@ interface NavItem {
   target?: string;
   dropdown?: { name: string; href: string; target?: string }[];
 }
-
-const navItems: NavItem[] = [
-  { name: 'Home', href: '/' },
-  { 
-    name: 'About', 
-    href: '#',
-    dropdown: [
-       { name: "About College", href: "/about-college" },
-       { name: "Chairman Message", href: "/chairman-ayush-msg" },
-       { name: "Trust Members", href: "/trusty" },
-       { name: "Director Profile", href: "/director-profile" },
-       { name: "Mandatory Disclosure", href: "/official_documents/Mandatory%20Disclosure.pdf", target: "_blank" }
-    ]
-  },
-  { 
-    name: 'Admissions', 
-    href: '#',
-    dropdown: [
-       { name: "Admission Procedure", href: "/admission/procedure" },
-       { name: "Doc Required For Admission", href: "/admission/documents" },
-       { name: "Bank Loan Procedures", href: "/admission/bank-loan" },
-       { name: "Scholarship", href: "/admission/scholarship" },
-       { name: "Apply Online", href: "/admission_query" },
-       { name: "Fees Payment", href: "/fees" },
-       { name: "Admission Contacts", href: "/admission/contacts" },
-       { name: "Download Prospectus", href: "/admission/prospectus" },
-       { name: "News & Events", href: "/admission/news" }
-    ]
-  },
-  { 
-    name: 'Programs', 
-    href: '#',
-    dropdown: [
-       { name: "B.Tech", href: "/btech" },
-       { name: "MBA", href: "/mba" },
-       { name: "Diploma", href: "/diploma" },
-       { name: "Syllabus", href: "/syllabus" }
-    ]
-  },
-  { name: 'Facilities', href: '/facilities' },
-  { 
-    name: 'Departments', 
-    href: '#',
-    dropdown: [
-        { name: "Aero & AME Engg.", href: "/aeronautical-engg" },
-        { name: "Agriculture Engineering", href: "/agriculture-engg" },
-        { name: "Civil & Environmental", href: "/civil-engg" },
-        { name: "CSE & Data Science", href: "/cse-engg" },
-        { name: "EE & Computer Science", href: "/ee-engg" },
-        { name: "Mech & Additive Mfg.", href: "/mechanical-engg" }
-    ]
-  },
-  { 
-    name: 'Placement', 
-    href: '#',
-    dropdown: [
-       { name: "About Placement", href: "/about_placement" },
-       { name: "Campus Updates", href: "/placement" }
-    ]
-  },
-  { 
-    name: 'Activities', 
-    href: '#',
-    dropdown: [
-       { name: "Achievements", href: "/achievements" },
-       { name: "Aero Club", href: "/areo-club" },
-       { name: "Seminars & Workshops", href: "/seminar-workshop" },
-       { name: "Sports & Games", href: "/sports-games" },
-       { name: "Photo Gallery", href: "/photo-gallery" }
-    ]
-  },
-  { 
-    name: 'Results', 
-    href: '#',
-    dropdown: [
-       { name: "B.Tech (BPUT)", href: "https://results.bput.ac.in/", target: "_blank" },
-       { name: "Diploma (SCTE&VT)", href: "https://sctevtexams.in/sn20Yz", target: "_blank" },
-       { name: "MBA (BPUT)", href: "https://results.bput.ac.in/", target: "_blank" }
-    ]
-  },
-  { name: 'Contact', href: '/contactus' },
-  { name: 'ICACBEC', href: 'https://icacbec.in/', target: '_blank' },
-];
 
 const DesktopMenuItem = ({ item }: { item: NavItem }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -172,6 +90,93 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+
+  const { officialDocs } = useData();
+  const mandatoryDoc = officialDocs?.find(d => d.name.toLowerCase().includes('mandatory'));
+  const mandatoryUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
+
+  const navItems: NavItem[] = [
+    { name: 'Home', href: '/' },
+    { 
+      name: 'About', 
+      href: '#',
+      dropdown: [
+         { name: "About College", href: "/about-college" },
+         { name: "Chairman Message", href: "/chairman-ayush-msg" },
+         { name: "Trust Members", href: "/trusty" },
+         { name: "Director Profile", href: "/director-profile" },
+         { name: "Mandatory Disclosure", href: mandatoryUrl, target: "_blank" }
+      ]
+    },
+    { 
+      name: 'Admissions', 
+      href: '#',
+      dropdown: [
+         { name: "Admission Procedure", href: "/admission/procedure" },
+         { name: "Doc Required For Admission", href: "/admission/documents" },
+         { name: "Bank Loan Procedures", href: "/admission/bank-loan" },
+         { name: "Scholarship", href: "/admission/scholarship" },
+         { name: "Apply Online", href: "/admission_query" },
+         { name: "Fees Payment", href: "/fees" },
+         { name: "Admission Contacts", href: "/admission/contacts" },
+         { name: "Download Prospectus", href: "/admission/prospectus" },
+         { name: "News & Events", href: "/admission/news" }
+      ]
+    },
+    { 
+      name: 'Programs', 
+      href: '#',
+      dropdown: [
+         { name: "B.Tech", href: "/btech" },
+         { name: "MBA", href: "/mba" },
+         { name: "Diploma", href: "/diploma" },
+         { name: "Syllabus", href: "/syllabus" }
+      ]
+    },
+    { name: 'Facilities', href: '/facilities' },
+    { 
+      name: 'Departments', 
+      href: '#',
+      dropdown: [
+          { name: "Aero & AME Engg.", href: "/aeronautical-engg" },
+          { name: "Agriculture Engineering", href: "/agriculture-engg" },
+          { name: "Civil & Environmental", href: "/civil-engg" },
+          { name: "CSE & Data Science", href: "/cse-engg" },
+          { name: "EE & Computer Science", href: "/ee-engg" },
+          { name: "Mech & Additive Mfg.", href: "/mechanical-engg" }
+      ]
+    },
+    { 
+      name: 'Placement', 
+      href: '#',
+      dropdown: [
+         { name: "About Placement", href: "/about_placement" },
+         { name: "Campus Updates", href: "/placement" }
+      ]
+    },
+    { 
+      name: 'Activities', 
+      href: '#',
+      dropdown: [
+         { name: "Achievements", href: "/achievements" },
+         { name: "Aero Club", href: "/areo-club" },
+         { name: "Seminars & Workshops", href: "/seminar-workshop" },
+         { name: "Sports & Games", href: "/sports-games" },
+         { name: "Photo Gallery", href: "/photo-gallery" }
+      ]
+    },
+    { 
+      name: 'Results', 
+      href: '#',
+      dropdown: [
+         { name: "B.Tech (BPUT)", href: "https://results.bput.ac.in/", target: "_blank" },
+         { name: "Diploma (SCTE&VT)", href: "https://sctevtexams.in/sn20Yz", target: "_blank" },
+         { name: "MBA (BPUT)", href: "https://results.bput.ac.in/", target: "_blank" }
+      ]
+    },
+    { name: 'Contact', href: '/contactus' },
+    { name: 'ICACBEC', href: 'https://icacbec.in/', target: '_blank' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {

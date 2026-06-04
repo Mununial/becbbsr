@@ -31,6 +31,8 @@ interface DataContextType {
   updateSports: (sports: any[]) => void;
   inquiries: any[];
   updateInquiries: (inquiries: any[]) => void;
+  officialDocs: any[];
+  updateOfficialDocs: (docs: any[]) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -50,6 +52,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [workshop, setWorkshop] = useState<any[]>([]);
   const [sports, setSports] = useState<any[]>([]);
   const [inquiries, setInquiries] = useState<any[]>([]);
+  const [officialDocs, setOfficialDocs] = useState<any[]>([]);
 
   useEffect(() => {
     // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
@@ -202,6 +205,11 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     // 12. Sports
     const unsubSports = setupListener('sports', setSports, []);
 
+    // 14. Official Documents
+    const unsubOfficialDocs = setupListener('official-docs', setOfficialDocs, [
+      { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory.pdf', category: 'Disclosure' }
+    ]);
+
     // 13. Chatbot Inquiries (Real-time Firestore Collection Listener with local Express API backup)
     let firestoreFailed = false;
     const inquiriesQuery = query(collection(db, "chatbot_inquiries"), orderBy("timestamp", "desc"));
@@ -252,6 +260,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       unsubAeroclub();
       unsubWorkshop();
       unsubSports();
+      unsubOfficialDocs();
       unsubInquiries();
       clearInterval(backupInterval);
     };
@@ -342,6 +351,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("sports", JSON.stringify(newSports));
   };
 
+  const updateOfficialDocs = (newDocs: any[]) => {
+    setOfficialDocs(newDocs);
+    setDoc(doc(db, "configs", "official-docs"), { items: newDocs }).catch(() => {});
+    axios.post('/api/config/official-docs', { items: newDocs }).catch(() => {});
+    localStorage.setItem("official-docs", JSON.stringify(newDocs));
+  };
+
   const updateInquiries = async (newInquiries: any[]) => {
     const latestInquiry = newInquiries[0];
     if (latestInquiry) {
@@ -382,7 +398,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       aeroclub, updateAeroClub,
       workshop, updateWorkshops,
       sports, updateSports,
-      inquiries, updateInquiries
+      inquiries, updateInquiries,
+      officialDocs, updateOfficialDocs
     }}>
       {children}
     </DataContext.Provider>

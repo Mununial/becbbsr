@@ -6,7 +6,7 @@ import {
   Monitor, Trophy, Zap, BellRing, Sparkles, Navigation as MapNavigation, 
   ArrowUp, ArrowDown, Upload, FileVideo, FileImage, Loader2, X, PlusCircle, 
   GraduationCap, ArrowUpRight, HelpCircle, Menu, MessageSquare, Download,
-  FileSpreadsheet
+  FileSpreadsheet, FileText
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
@@ -33,6 +33,7 @@ const sidebarItems = [
   { name: 'Workshops', icon: Monitor },
   { name: 'Sports', icon: Trophy },
   { name: 'Chatbot Inquiries', icon: MessageSquare },
+  { name: 'Official Documents', icon: FileText },
 ];
 
 export const AdminDashboard = () => {
@@ -59,7 +60,8 @@ export const AdminDashboard = () => {
     aeroclub: aeroClubItems, updateAeroClub,
     workshop: workshopItems, updateWorkshops,
     sports: sportsItems, updateSports,
-    inquiries
+    inquiries,
+    officialDocs, updateOfficialDocs
   } = useData();
 
   const handleDeleteInquiry = async (id: string) => {
@@ -159,6 +161,7 @@ export const AdminDashboard = () => {
   const [editingAeroClub, setEditingAeroClub] = useState<any | null>(null);
   const [editingWorkshop, setEditingWorkshop] = useState<any | null>(null);
   const [editingSports, setEditingSports] = useState<any | null>(null);
+  const [editingDoc, setEditingDoc] = useState<any | null>(null);
 
   // Status indicators
   const [uploading, setUploading] = useState(false);
@@ -344,6 +347,13 @@ export const AdminDashboard = () => {
       await updateSports(updated);
       setEditingSports(null);
     }
+    else if (type === 'official-docs') {
+      const updated = payload.id 
+        ? officialDocs.map((d: any) => d.id === payload.id ? payload : d)
+        : [{ ...payload, id: Date.now().toString() }, ...officialDocs];
+      await updateOfficialDocs(updated);
+      setEditingDoc(null);
+    }
   };
 
   const handleDeleteItem = async (type: string, id: string) => {
@@ -392,6 +402,10 @@ export const AdminDashboard = () => {
     else if (type === 'sports') {
       const updated = sportsItems.filter(s => s.id !== id);
       await updateSports(updated);
+    }
+    else if (type === 'official-docs') {
+      const updated = officialDocs.filter((d: any) => d.id !== id);
+      await updateOfficialDocs(updated);
     }
   };
 
@@ -1187,6 +1201,47 @@ export const AdminDashboard = () => {
             </div>
           )}
 
+          {/* TAB: OFFICIAL DOCUMENTS */}
+          {activeTab === 'Official Documents' && (
+            <div className="space-y-12 animate-fade-in">
+              <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Official Documents & Disclosures</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage institutional documents, certificates, AICTE approvals, and disclosures.</p>
+                </div>
+                <button 
+                  onClick={() => setEditingDoc({ id: '', name: 'New Document Name', url: '', category: 'Disclosure' })}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Document
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {officialDocs.map((doc: any) => (
+                  <div key={doc.id} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                    <div>
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/20">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 block mb-1">{doc.category || 'Disclosure'}</span>
+                          <span className="text-xs text-slate-400 font-bold truncate block">{doc.url ? 'File Configured' : 'No File Uploaded'}</span>
+                        </div>
+                      </div>
+                      <h4 className="font-bold text-lg text-white mb-6 line-clamp-2 min-h-[3.5rem] leading-snug group-hover:text-cyan-400 transition-colors">{doc.name}</h4>
+                    </div>
+                    <div className="flex gap-3">
+                      <button onClick={() => setEditingDoc(doc)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit</button>
+                      <button onClick={() => handleDeleteItem('official-docs', doc.id)} className="p-3 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4.5 h-4.5" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
         </main>
 
         {/* MODAL 1: EDIT SLIDE */}
@@ -1940,6 +1995,64 @@ export const AdminDashboard = () => {
               <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
                 <button onClick={() => setEditingSports(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
                 <button onClick={() => handleSaveItem('sports', editingSports)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL: EDIT OFFICIAL DOCUMENT */}
+        {editingDoc && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Document Info</h3>
+                <button onClick={() => setEditingDoc(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">PDF Document Source</label>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                    {editingDoc.url ? (
+                      <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex flex-col items-center justify-center p-4 group">
+                        <FileText className="w-12 h-12 text-cyan-400 mb-2" />
+                        <span className="text-[10px] font-mono text-white/50 truncate max-w-xs block mb-3">{editingDoc.url.split('/').pop()}</span>
+                        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                          <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer shadow-2xl">
+                            {uploading ? 'UPLOADING...' : 'CHANGE FILE'}
+                            <input type="file" className="hidden" accept="application/pdf" onChange={(e) => handleMediaUpload(e, (url) => setEditingDoc({ ...editingDoc, url }))} />
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                        <Upload className="w-8 h-8 text-white/20 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Upload PDF From Device</span>
+                        <input type="file" className="hidden" accept="application/pdf" onChange={(e) => handleMediaUpload(e, (url) => setEditingDoc({ ...editingDoc, url }))} />
+                      </label>
+                    )}
+                    <input className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60 text-center" value={editingDoc.url} onChange={(e) => setEditingDoc({ ...editingDoc, url: e.target.value })} placeholder="Direct PDF URL" />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Document Display Name</span>
+                    <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingDoc.name} onChange={(e) => setEditingDoc({ ...editingDoc, name: e.target.value })} />
+                  </label>
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Category</span>
+                    <select className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none" value={editingDoc.category} onChange={(e) => setEditingDoc({ ...editingDoc, category: e.target.value })}>
+                      <option value="Disclosure">Mandatory Disclosure</option>
+                      <option value="Certificate">Certificate / Approval</option>
+                      <option value="Prospectus">Admissions Prospectus</option>
+                      <option value="Other">Other Document</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button onClick={() => setEditingDoc(null)} className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button onClick={() => handleSaveItem('official-docs', editingDoc)} className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Publish</button>
               </div>
             </div>
           </div>
