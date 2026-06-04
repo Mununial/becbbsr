@@ -96,6 +96,18 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
   const rawUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
   const mandatoryUrl = rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=1.0.1`;
 
+  const aicteDoc = officialDocs?.find(d => d.id === 'aicte-approval' || d.name.toLowerCase().includes('aicte'));
+  const rawAicteUrl = aicteDoc?.url || "/facilities/AICTE_Approval.pdf";
+  const aicteUrl = rawAicteUrl.includes('?') ? rawAicteUrl : `${rawAicteUrl}?v=1.0.1`;
+
+  const bputDoc = officialDocs?.find(d => d.id === 'bput-affiliation' || d.name.toLowerCase().includes('bput'));
+  const rawBputUrl = bputDoc?.url || "/facilities/BPUT_Affiliation.pdf";
+  const bputUrl = rawBputUrl.includes('?') ? rawBputUrl : `${rawBputUrl}?v=1.0.1`;
+
+  const sctevtDoc = officialDocs?.find(d => d.id === 'sctevt-affiliation' || d.name.toLowerCase().includes('sctevt'));
+  const rawSctevtUrl = sctevtDoc?.url || "/facilities/SCTEVT_Affiliation.pdf";
+  const sctevtUrl = rawSctevtUrl.includes('?') ? rawSctevtUrl : `${rawSctevtUrl}?v=1.0.1`;
+
   const navItems: NavItem[] = [
     { name: 'Home', href: '/' },
     { 
@@ -107,6 +119,15 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
          { name: "Trust Members", href: "/trusty" },
          { name: "Director Profile", href: "/director-profile" },
          { name: "Mandatory Disclosure", href: mandatoryUrl, target: "_blank" }
+      ]
+    },
+    {
+      name: 'Approvals & Affiliations',
+      href: '#',
+      dropdown: [
+         { name: "Approved by AICTE", href: aicteUrl, target: "_blank" },
+         { name: "Affiliated with BPUT", href: bputUrl, target: "_blank" },
+         { name: "Affiliated with SCTE&VT", href: sctevtUrl, target: "_blank" }
       ]
     },
     { 
