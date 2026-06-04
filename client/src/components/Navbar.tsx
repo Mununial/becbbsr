@@ -262,17 +262,24 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
           {/* Institutional Partners */}
           <div className="hidden xl:flex items-center gap-10 border-l border-slate-100 pl-10">
             {[
-              { id: 'aicte', name: 'AICTE', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629482/becweb/org_logo3.png' },
-              { id: 'bput', name: 'BPUT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629347/becweb/bput.png' },
-              { id: 'sctevt', name: 'SCTE & VT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629479/becweb/org_logo1.jpg' }
+              { id: 'aicte', name: 'AICTE', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629482/becweb/org_logo3.png', href: aicteUrl },
+              { id: 'bput', name: 'BPUT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629347/becweb/bput.png', href: bputUrl },
+              { id: 'sctevt', name: 'SCTE & VT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629479/becweb/org_logo1.jpg', href: sctevtUrl }
             ].map((logo) => (
-              <img 
-                key={logo.id}
-                src={logo.src} 
-                alt={logo.name} 
-                className="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-all duration-500 cursor-pointer" 
-                title={logo.name}
-              />
+              <a 
+                key={logo.id} 
+                href={logo.href} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:scale-105 transition-all duration-300 flex items-center"
+                title={`Click to view ${logo.name} Document`}
+              >
+                <img 
+                  src={logo.src} 
+                  alt={logo.name} 
+                  className="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-all duration-500 cursor-pointer" 
+                />
+              </a>
             ))}
           </div>
         </div>
