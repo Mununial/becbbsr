@@ -38,10 +38,14 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Create uploads directory if it doesn't exist (temporary storage)
+// Create uploads and facilities directories if they don't exist (temporary/public storage)
 const uploadDir = 'uploads';
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
+}
+const facilitiesDir = 'facilities';
+if (!fs.existsSync(facilitiesDir)) {
+  fs.mkdirSync(facilitiesDir);
 }
 
 // Middleware
@@ -56,6 +60,7 @@ app.use(express.json());
 
 // Serve static files AND allow directory listing for /uploads (keeping for existing files)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')), serveIndex(path.join(__dirname, 'uploads'), { 'icons': true }));
+app.use('/facilities', express.static(path.join(__dirname, 'facilities')), serveIndex(path.join(__dirname, 'facilities'), { 'icons': true }));
 
 // Storage Config (Multer)
 const storage = multer.diskStorage({

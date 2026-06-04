@@ -54,8 +54,8 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent"></div>
               <div className="flex flex-col">
-                {item.dropdown.map((sub) => (
-                  sub.href.startsWith('http') ? (
+                 {item.dropdown.map((sub) => (
+                  sub.href.startsWith('http') || sub.href.endsWith('.pdf') ? (
                     <a 
                       key={sub.name} 
                       href={sub.href}
@@ -93,7 +93,8 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
 
   const { officialDocs } = useData();
   const mandatoryDoc = officialDocs?.find(d => d.name.toLowerCase().includes('mandatory'));
-  const mandatoryUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
+  const rawUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
+  const mandatoryUrl = rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=1.0.1`;
 
   const navItems: NavItem[] = [
     { name: 'Home', href: '/' },
@@ -418,7 +419,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
                             className="overflow-hidden pl-4 border-l-2 border-slate-100 flex flex-col gap-3"
                           >
                             {item.dropdown.map((sub) => (
-                              sub.href.startsWith('http') ? (
+                              sub.href.startsWith('http') || sub.href.endsWith('.pdf') ? (
                                 <a 
                                   key={sub.name} 
                                   href={sub.href}

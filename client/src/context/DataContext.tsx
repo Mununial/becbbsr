@@ -207,7 +207,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 14. Official Documents
     const unsubOfficialDocs = setupListener('official-docs', setOfficialDocs, [
-      { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory.pdf', category: 'Disclosure' }
+      { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory.pdf?v=1.0.1', category: 'Disclosure' }
     ]);
 
     // 13. Chatbot Inquiries (Real-time Firestore Collection Listener with local Express API backup)

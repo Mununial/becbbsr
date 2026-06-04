@@ -21,7 +21,8 @@ export const Footer = () => {
 
   const { officialDocs } = useData();
   const mandatoryDoc = officialDocs?.find(d => d.name.toLowerCase().includes('mandatory'));
-  const mandatoryUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
+  const rawUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
+  const mandatoryUrl = rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=1.0.1`;
 
   const links = usefulLinks.map(link => 
     link.name === 'Mandatory Disclosure' 

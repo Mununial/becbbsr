@@ -1,4 +1,4 @@
-[
+ [
   {
     "id": "1",
     "title": "BEC Aero Club Activities",
@@ -48,7 +48,7 @@
     "category": "Workshop"
   },
   {
-    "id": "7",
+    "id": "7",         
     "title": "Campus Aero Exhibition",
     "desc": "Showcasing student projects to visiting industry experts and researchers.",
     "photo": "/photogallery/bec-aero-club.jpg",
