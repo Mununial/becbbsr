@@ -86,6 +86,55 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
   );
 };
 
+const HeaderApprovalsDropdown = ({ aicteUrl, bputUrl, sctevtUrl }: { aicteUrl: string, bputUrl: string, sctevtUrl: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className="relative flex items-center h-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <button className="px-4 py-2.5 bg-slate-50 border border-slate-100 hover:border-slate-200 text-primary rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-all duration-300">
+        <span>Approvals & Affiliations</span>
+        <ChevronDown className={cn("w-3.5 h-3.5 text-primary/60 transition-transform duration-300", isHovered && "rotate-180")} />
+      </button>
+
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute top-full right-0 min-w-[240px] bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden py-2 z-[300] mt-2"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent"></div>
+            <div className="flex flex-col">
+              {[
+                { name: "Approved by AICTE", href: aicteUrl },
+                { name: "Affiliated with BPUT", href: bputUrl },
+                { name: "Affiliated with SCTE&VT", href: sctevtUrl }
+              ].map((sub) => (
+                <a 
+                  key={sub.name} 
+                  href={sub.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/sub px-5 py-2.5 text-[11px] font-bold text-gray-600 hover:text-white hover:bg-primary flex items-center justify-between transition-all duration-300"
+                >
+                  <span>{sub.name}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/sub:opacity-100 transition-opacity" />
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -260,27 +309,31 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
           </Link>
 
           {/* Institutional Partners */}
-          <div className="hidden xl:flex items-center gap-10 border-l border-slate-100 pl-10">
-            {[
-              { id: 'aicte', name: 'AICTE', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629482/becweb/org_logo3.png', href: aicteUrl },
-              { id: 'bput', name: 'BPUT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629347/becweb/bput.png', href: bputUrl },
-              { id: 'sctevt', name: 'SCTE & VT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629479/becweb/org_logo1.jpg', href: sctevtUrl }
-            ].map((logo) => (
-              <a 
-                key={logo.id} 
-                href={logo.href} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:scale-105 transition-all duration-300 flex items-center"
-                title={`Click to view ${logo.name} Document`}
-              >
-                <img 
-                  src={logo.src} 
-                  alt={logo.name} 
-                  className="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-all duration-500 cursor-pointer" 
-                />
-              </a>
-            ))}
+          <div className="hidden xl:flex items-center gap-8 border-l border-slate-100 pl-10 relative">
+            <div className="flex items-center gap-6">
+              {[
+                { id: 'aicte', name: 'AICTE', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629482/becweb/org_logo3.png', href: aicteUrl },
+                { id: 'bput', name: 'BPUT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629347/becweb/bput.png', href: bputUrl },
+                { id: 'sctevt', name: 'SCTE & VT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629479/becweb/org_logo1.jpg', href: sctevtUrl }
+              ].map((logo) => (
+                <a 
+                  key={logo.id} 
+                  href={logo.href} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:scale-105 transition-all duration-300 flex items-center"
+                  title={`Click to view ${logo.name} Document`}
+                >
+                  <img 
+                    src={logo.src} 
+                    alt={logo.name} 
+                    className="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-all duration-500 cursor-pointer" 
+                  />
+                </a>
+              ))}
+            </div>
+
+            <HeaderApprovalsDropdown aicteUrl={aicteUrl} bputUrl={bputUrl} sctevtUrl={sctevtUrl} />
           </div>
         </div>
       </div>
@@ -293,7 +346,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="hidden xl:flex items-center h-14 pl-6">
             <div className="flex items-center h-full gap-0.5 ml-2">
-              {navItems.map((item) => (
+              {navItems.filter(item => item.name !== 'Approvals & Affiliations').map((item) => (
                 <div key={item.name} className="h-full group/nav relative">
                   <DesktopMenuItem item={item} />
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all duration-500 group-hover/nav:w-full" />
