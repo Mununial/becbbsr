@@ -10,49 +10,59 @@ axios.defaults.baseURL = window.location.hostname === 'localhost' || window.loca
   : `${window.location.protocol}//${window.location.hostname}`;
 import App from './App'
 
+// Static page imports for instant transitions
+import { AboutCollege } from './pages/AboutCollege'
+import { ChairmanAyushGroup } from './pages/ChairmanAyushGroup'
+import { ChairmanBEC } from './pages/ChairmanBEC'
+import { DirectorProfile } from './pages/DirectorProfile'
+import { TrustMembers } from './pages/TrustMembers'
+import { BTech } from './pages/BTech'
+import { MBA } from './pages/MBA'
+import { Diploma } from './pages/Diploma'
+import { AeronauticalEngg } from './pages/AeronauticalEngg'
+import { AgricultureEngg } from './pages/AgricultureEngg'
+import { CivilEngg } from './pages/CivilEngg'
+import { CSEEngg } from './pages/CSEEngg'
+import { EEEngg } from './pages/EEEngg'
+import { MechanicalEngg } from './pages/MechanicalEngg'
+import { AME } from './pages/AME'
+import { BasicScienceHumanities } from './pages/BasicScienceHumanities'
+import { Faculties } from './pages/Faculties'
+import { AboutPlacement } from './pages/AboutPlacement'
+import { Placement } from './pages/Placement'
+import { Facilities } from './pages/Facilities'
+import { ContactUs } from './pages/ContactUs'
+import { Career } from './pages/Career'
+import { PhotoGallery } from './pages/PhotoGallery'
+import { Achievements } from './pages/Achievements'
+import { AeroClub } from './pages/AeroClub'
+import { SeminarWorkshop } from './pages/SeminarWorkshop'
+import { SportsGames } from './pages/SportsGames'
+import { Activities } from './pages/Activities'
+import { Syllabus } from './pages/Syllabus'
+import { AdmissionQuery } from './pages/AdmissionQuery'
+import { Fees } from './pages/Fees'
+import { Committees } from './pages/Committees'
+import { ELearning } from './pages/ELearning'
+import { NewsAndEvents } from './pages/NewsAndEvents'
+import { PrivacyPolicy } from './pages/PrivacyPolicy'
+
+// Lazy load large/administrative pages
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })))
-const ChairmanAyushGroup = React.lazy(() => import('./pages/ChairmanAyushGroup').then(m => ({ default: m.ChairmanAyushGroup })))
-const ChairmanBEC = React.lazy(() => import('./pages/ChairmanBEC').then(m => ({ default: m.ChairmanBEC })))
-const DirectorProfile = React.lazy(() => import('./pages/DirectorProfile').then(m => ({ default: m.DirectorProfile })))
-const AboutCollege = React.lazy(() => import('./pages/AboutCollege').then(m => ({ default: m.AboutCollege })))
-const TrustMembers = React.lazy(() => import('./pages/TrustMembers').then(m => ({ default: m.TrustMembers })))
-const BTech = React.lazy(() => import('./pages/BTech').then(m => ({ default: m.BTech })))
-const MBA = React.lazy(() => import('./pages/MBA').then(m => ({ default: m.MBA })))
-const Diploma = React.lazy(() => import('./pages/Diploma').then(m => ({ default: m.Diploma })))
-const AeronauticalEngg = React.lazy(() => import('./pages/AeronauticalEngg').then(m => ({ default: m.AeronauticalEngg })))
-const AgricultureEngg = React.lazy(() => import('./pages/AgricultureEngg').then(m => ({ default: m.AgricultureEngg })))
-const CivilEngg = React.lazy(() => import('./pages/CivilEngg').then(m => ({ default: m.CivilEngg })))
-const CSEEngg = React.lazy(() => import('./pages/CSEEngg').then(m => ({ default: m.CSEEngg })))
-const EEEngg = React.lazy(() => import('./pages/EEEngg').then(m => ({ default: m.EEEngg })))
-const MechanicalEngg = React.lazy(() => import('./pages/MechanicalEngg').then(m => ({ default: m.MechanicalEngg })))
-const AME = React.lazy(() => import('./pages/AME').then(m => ({ default: m.AME })))
-const AboutPlacement = React.lazy(() => import('./pages/AboutPlacement').then(m => ({ default: m.AboutPlacement })))
-const Facilities = React.lazy(() => import('./pages/Facilities').then(m => ({ default: m.Facilities })))
-const ContactUs = React.lazy(() => import('./pages/ContactUs').then(m => ({ default: m.ContactUs })))
-const Career = React.lazy(() => import('./pages/Career').then(m => ({ default: m.Career })))
-const PhotoGallery = React.lazy(() => import('./pages/PhotoGallery').then(m => ({ default: m.PhotoGallery })))
-const Achievements = React.lazy(() => import('./pages/Achievements').then(m => ({ default: m.Achievements })))
-const AeroClub = React.lazy(() => import('./pages/AeroClub').then(m => ({ default: m.AeroClub })))
-const SeminarWorkshop = React.lazy(() => import('./pages/SeminarWorkshop').then(m => ({ default: m.SeminarWorkshop })))
-const SportsGames = React.lazy(() => import('./pages/SportsGames').then(m => ({ default: m.SportsGames })))
-const Activities = React.lazy(() => import('./pages/Activities').then(m => ({ default: m.Activities })))
-const Syllabus = React.lazy(() => import('./pages/Syllabus').then(m => ({ default: m.Syllabus })))
-const AdmissionQuery = React.lazy(() => import('./pages/AdmissionQuery').then(m => ({ default: m.AdmissionQuery })))
-const Fees = React.lazy(() => import('./pages/Fees').then(m => ({ default: m.Fees })))
+const AdmissionsMaster = React.lazy(() => import('./pages/AdmissionsMaster').then(m => ({ default: m.AdmissionsMaster })))
 const CatchAllPage = React.lazy(() => import('./pages/CatchAllPage').then(m => ({ default: m.CatchAllPage })))
+
 import { AdmissionBot } from './components/AdmissionBot'
 import { AdmissionProvider } from './components/AdmissionContext'
 import { DataProvider } from './context/DataContext'
-const NewsAndEvents = React.lazy(() => import('./pages/NewsAndEvents').then(m => ({ default: m.NewsAndEvents })))
-const Placement = React.lazy(() => import('./pages/Placement').then(m => ({ default: m.Placement })))
-const AdmissionsMaster = React.lazy(() => import('./pages/AdmissionsMaster').then(m => ({ default: m.AdmissionsMaster })))
-const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })))
+import ScrollToTop from './components/ScrollToTop'
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <DataProvider>
     <AdmissionProvider>
     <Router>
+      <ScrollToTop />
       <Suspense fallback={<div className="min-h-screen bg-navy-950 flex items-center justify-center"><div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin"></div></div>}>
         <Routes>
           <Route path="/" element={<App />} />
@@ -64,6 +74,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/chairman-bec" element={<ChairmanBEC />} />
           <Route path="/trusty" element={<TrustMembers />} />
           <Route path="/director-profile" element={<DirectorProfile />} />
+          <Route path="/faculties" element={<Faculties />} />
+          <Route path="/committees" element={<Committees />} />
+          <Route path="/e-learning" element={<ELearning />} />
           
           {/* Programs */}
           <Route path="/btech" element={<BTech />} />
@@ -78,6 +91,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/ee-engg" element={<EEEngg />} />
           <Route path="/mechanical-engg" element={<MechanicalEngg />} />
           <Route path="/ame" element={<AME />} />
+          <Route path="/basic-science-humanities" element={<BasicScienceHumanities />} />
           
           {/* Placement */}
           <Route path="/about_placement" element={<AboutPlacement />} />

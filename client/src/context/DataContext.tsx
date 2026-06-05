@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader } from '../types';
+import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader, type BranchData } from '../types';
 import { db, auth } from '../lib/firebase';
 import { doc, onSnapshot, setDoc, collection, query, orderBy } from 'firebase/firestore';
 import axios from 'axios';
@@ -33,6 +33,8 @@ interface DataContextType {
   updateInquiries: (inquiries: any[]) => void;
   officialDocs: any[];
   updateOfficialDocs: (docs: any[]) => void;
+  lectureNotes: BranchData[];
+  updateLectureNotes: (notes: BranchData[]) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -53,6 +55,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [sports, setSports] = useState<any[]>([]);
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [officialDocs, setOfficialDocs] = useState<any[]>([]);
+  const [lectureNotes, setLectureNotes] = useState<BranchData[]>([]);
 
   useEffect(() => {
     // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
@@ -149,11 +152,17 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 4. Faculty Directory
     const unsubFaculties = setupListener('university-faculties', setFaculties, [
-      { id: '1', name: "Er. Anita Behera", role: "Professor & Head", email: "cse@becbbsr.ac.in", department: "CSE Engg" },
+      { id: '1', name: "Er. Anita Behera", role: "Associate Professor & Head", email: "cse@becbbsr.ac.in", department: "CSE Engg", image: "/facilities/hod files/anita_behera.jpg" },
       { id: '2', name: "Dr. Shipra Kumari", role: "Professor", email: "cse@becbbsr.ac.in", department: "CSE Engg" },
       { id: '3', name: "Er. S Hota", role: "Asst. Professor", email: "cse@becbbsr.ac.in", department: "CSE Engg" },
-      { id: '4', name: "Dr. Sangram Samal", role: "Professor & Head", email: "aero@becbbsr.ac.in", department: "Aeronautical Engg" },
-      { id: '5', name: "Er. A. Panigrahy", role: "Asst. Professor", email: "aero@becbbsr.ac.in", department: "Aeronautical Engg" }
+      { id: '4', name: "Dr. Sangram Keshari Samal", role: "Professor & Head", email: "aero@becbbsr.ac.in", department: "Aeronautical Engg", image: "/facilities/hod files/sangram_keshari_samal.jpg" },
+      { id: '5', name: "Er. A. Panigrahy", role: "Asst. Professor", email: "aero@becbbsr.ac.in", department: "Aeronautical Engg" },
+      { id: '6', name: "Er. Ananyaa Mohanty", role: "Assistant Professor & Head", email: "agr@becbbsr.ac.in", department: "Agriculture Engg", image: "/facilities/hod files/ananyaa_mohanty.jpg" },
+      { id: '7', name: "Er. Saswat Mohanty", role: "Assistant Professor & Head", email: "civil@becbbsr.ac.in", department: "Civil Engg", image: "/facilities/hod files/saswat_mohanty.png" },
+      { id: '8', name: "Er. Pabitra Mohan Dash", role: "Assistant Professor & Head", email: "electrical@becbbsr.ac.in", department: "Electrical Engg" },
+      { id: '9', name: "Dr. Bishnu Prasad Mishra", role: "Professor & Head", email: "mech@becbbsr.ac.in", department: "Mechanical Engg", image: "/facilities/hod files/bishnu_prasad_mishra.jpg" },
+      { id: '10', name: "Mr. Ashis Kumar Behera", role: "Asst. Professor & Head", email: "mba@gmail.com", department: "MBA & Basic Sciences", image: "/facilities/hod files/ashis_kumar_behera.jpg" },
+      { id: '11', name: "Er. S Jena", role: "Assistant Professor & Head", email: "ame@becbbsr.ac.in", department: "Aircraft Maintenance Engineering" }
     ]);
 
     // 5. Placed Alumni
@@ -207,11 +216,14 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     // 14. Official Documents
     const unsubOfficialDocs = setupListener('official-docs', setOfficialDocs, [
-      { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory.pdf?v=1.0.1', category: 'Disclosure' },
+      { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory final.pdf?v=1.0.2', category: 'Disclosure' },
       { id: 'aicte-approval', name: 'AICTE Approval', url: '/facilities/AICTE_Approval.pdf?v=1.0.1', category: 'Approval' },
       { id: 'bput-affiliation', name: 'BPUT Affiliation', url: '/facilities/BPUT_Affiliation.pdf?v=1.0.1', category: 'Affiliation' },
       { id: 'sctevt-affiliation', name: 'SCTE&VT Affiliation', url: '/facilities/SCTEVT_Affiliation.png?v=1.0.1', category: 'Affiliation' }
     ]);
+
+    // 15. Lecture Notes
+    const unsubLectureNotes = setupListener('lecture-notes', setLectureNotes, []);
 
     // 13. Chatbot Inquiries (Real-time Firestore Collection Listener with local Express API backup)
     let firestoreFailed = false;
@@ -264,6 +276,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       unsubWorkshop();
       unsubSports();
       unsubOfficialDocs();
+      unsubLectureNotes();
       unsubInquiries();
       clearInterval(backupInterval);
     };
@@ -361,6 +374,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("official-docs", JSON.stringify(newDocs));
   };
 
+  const updateLectureNotes = (newNotes: BranchData[]) => {
+    setLectureNotes(newNotes);
+    setDoc(doc(db, "configs", "lecture-notes"), { items: newNotes }).catch(() => {});
+    axios.post('/api/config/lecture-notes', { items: newNotes }).catch(() => {});
+    localStorage.setItem("lecture-notes", JSON.stringify(newNotes));
+  };
+
   const updateInquiries = async (newInquiries: any[]) => {
     const latestInquiry = newInquiries[0];
     if (latestInquiry) {
@@ -402,7 +422,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       workshop, updateWorkshops,
       sports, updateSports,
       inquiries, updateInquiries,
-      officialDocs, updateOfficialDocs
+      officialDocs, updateOfficialDocs,
+      lectureNotes, updateLectureNotes
     }}>
       {children}
     </DataContext.Provider>

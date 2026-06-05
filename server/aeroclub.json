@@ -46,53 +46,5 @@
     "photo": "/photogallery/bec-aero-club3-3.jpg",
     "date": "2024-05-08",
     "category": "Workshop"
-  },
-  {
-    "id": "7",         
-    "title": "Campus Aero Exhibition",
-    "desc": "Showcasing student projects to visiting industry experts and researchers.",
-    "photo": "/photogallery/bec-aero-club.jpg",
-    "date": "2024-05-05",
-    "category": "Event"
-  },
-  {
-    "id": "8",
-    "title": "Drone Mapping Session",
-    "desc": "Using autonomous flight systems for campus mapping and surveillance training.",
-    "photo": "/photogallery/bec-aero-club2.jpg",
-    "date": "2024-05-02",
-    "category": "Training"
-  },
-  {
-    "id": "9",
-    "title": "Propulsion System Lab",
-    "desc": "Deep dive into aircraft engine mechanics and propulsion technology.",
-    "photo": "/photogallery/bec-aero-club1.jpg",
-    "date": "2024-04-28",
-    "category": "Training"
-  },
-  {
-    "id": "10",
-    "title": "Aviation Research Forum",
-    "desc": "Biannual forum discussing future trends in sustainable aviation and drone swarm tech.",
-    "photo": "/photogallery/bec-aero-club3.jpg",
-    "date": "2024-04-25",
-    "category": "Event"
-  },
-  {
-    "id": "11",
-    "title": "Hangar Facility Overview",
-    "desc": "Comprehensive walkthrough of our on-campus aeronautical hangar and labs.",
-    "photo": "/photogallery/bec-aero-club1-1.jpg",
-    "date": "2024-04-22",
-    "category": "Event"
-  },
-  {
-    "id": "12",
-    "title": "Aeronautical Team Session",
-    "desc": "Collaborative project session for our university's aeronautical engineering teams.",
-    "photo": "/photogallery/bec-aero-club3-3.jpg",
-    "date": "2024-04-20",
-    "category": "Event"
   }
 ]

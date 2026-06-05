@@ -170,7 +170,9 @@ const configsToPush = [
   { file: 'sports.json', docId: 'sports' },
   { file: 'tour-scenes-v2.json', docId: 'tour-scenes-v2' },
   { file: 'events-highlights.json', docId: 'events-highlights' },
-  { file: 'selected-students-v2.json', docId: 'selected-students-v2' }
+  { file: 'selected-students-v2.json', docId: 'selected-students-v2' },
+  { file: 'lecture-notes.json', docId: 'lecture-notes' },
+  { file: 'official-docs.json', docId: 'official-docs' }
 ];
 
 async function main() {

@@ -2,9 +2,10 @@
   {
     "id": "1",
     "name": "Er. Anita Behera",
-    "role": "Professor & Head",
+    "role": "Associate Professor & Head",
     "email": "cse@becbbsr.ac.in",
-    "department": "CSE Engg"
+    "department": "CSE Engg",
+    "image": "/facilities/hod files/anita_behera.jpg"
   },
   {
     "id": "2",
@@ -22,10 +23,11 @@
   },
   {
     "id": "4",
-    "name": "Dr. Sangram Samal",
+    "name": "Dr. Sangram Keshari Samal",
     "role": "Professor & Head",
     "email": "aero@becbbsr.ac.in",
-    "department": "Aeronautical Engg"
+    "department": "Aeronautical Engg",
+    "image": "/facilities/hod files/sangram_keshari_samal.jpg"
   },
   {
     "id": "5",
@@ -33,5 +35,51 @@
     "role": "Asst. Professor",
     "email": "aero@becbbsr.ac.in",
     "department": "Aeronautical Engg"
+  },
+  {
+    "id": "6",
+    "name": "Er. Ananyaa Mohanty",
+    "role": "Assistant Professor & Head",
+    "email": "agr@becbbsr.ac.in",
+    "department": "Agriculture Engg",
+    "image": "/facilities/hod files/ananyaa_mohanty.jpg"
+  },
+  {
+    "id": "7",
+    "name": "Er. Saswat Mohanty",
+    "role": "Assistant Professor & Head",
+    "email": "civil@becbbsr.ac.in",
+    "department": "Civil Engg",
+    "image": "/facilities/hod files/saswat_mohanty.png"
+  },
+  {
+    "id": "8",
+    "name": "Er. Pabitra Mohan Dash",
+    "role": "Assistant Professor & Head",
+    "email": "electrical@becbbsr.ac.in",
+    "department": "Electrical Engg"
+  },
+  {
+    "id": "9",
+    "name": "Dr. Bishnu Prasad Mishra",
+    "role": "Professor & Head",
+    "email": "mech@becbbsr.ac.in",
+    "department": "Mechanical Engg",
+    "image": "/facilities/hod files/bishnu_prasad_mishra.jpg"
+  },
+  {
+    "id": "10",
+    "name": "Mr. Ashis Kumar Behera",
+    "role": "Asst. Professor & Head",
+    "email": "mba@gmail.com",
+    "department": "MBA & Basic Sciences",
+    "image": "/facilities/hod files/ashis_kumar_behera.jpg"
+  },
+  {
+    "id": "11",
+    "name": "Er. S Jena",
+    "role": "Assistant Professor & Head",
+    "email": "ame@becbbsr.ac.in",
+    "department": "Aircraft Maintenance Engineering"
   }
 ]

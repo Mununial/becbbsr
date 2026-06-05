@@ -6,7 +6,7 @@ import {
   Monitor, Trophy, Zap, BellRing, Sparkles, Navigation as MapNavigation, 
   ArrowUp, ArrowDown, Upload, FileVideo, FileImage, Loader2, X, PlusCircle, 
   GraduationCap, ArrowUpRight, HelpCircle, Menu, MessageSquare, Download,
-  FileSpreadsheet, FileText
+  FileSpreadsheet, FileText, BookOpen
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
@@ -34,6 +34,7 @@ const sidebarItems = [
   { name: 'Sports', icon: Trophy },
   { name: 'Chatbot Inquiries', icon: MessageSquare },
   { name: 'Official Documents', icon: FileText },
+  { name: 'Lecture Notes', icon: BookOpen },
 ];
 
 export const AdminDashboard = () => {
@@ -61,7 +62,8 @@ export const AdminDashboard = () => {
     workshop: workshopItems, updateWorkshops,
     sports: sportsItems, updateSports,
     inquiries,
-    officialDocs, updateOfficialDocs
+    officialDocs, updateOfficialDocs,
+    lectureNotes, updateLectureNotes
   } = useData();
 
   const handleDeleteInquiry = async (id: string) => {
@@ -166,6 +168,59 @@ export const AdminDashboard = () => {
   // Status indicators
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Lecture notes state
+  const [activeNotesBranch, setActiveNotesBranch] = useState('cse');
+  const [activeNotesSem, setActiveNotesSem] = useState(1);
+  const [editingNote, setEditingNote] = useState<any | null>(null);
+  const [editingNoteIndex, setEditingNoteIndex] = useState<number | null>(null);
+
+  const handleSaveNote = async (payload: any) => {
+    if (!payload.subject || !payload.code) {
+      alert("Subject name and code are required.");
+      return;
+    }
+    const updatedBranches = lectureNotes.map(branch => {
+      if (branch.id !== activeNotesBranch) return branch;
+      
+      const updatedSemesters = branch.semesters.map(semData => {
+        if (semData.sem !== activeNotesSem) return semData;
+        
+        let updatedNotes = [...semData.notes];
+        if (editingNoteIndex !== null && editingNoteIndex !== -1) {
+          updatedNotes[editingNoteIndex] = payload;
+        } else {
+          updatedNotes.push(payload);
+        }
+        return { ...semData, notes: updatedNotes };
+      });
+      
+      return { ...branch, semesters: updatedSemesters };
+    });
+    
+    await updateLectureNotes(updatedBranches);
+    setEditingNote(null);
+    setEditingNoteIndex(null);
+  };
+
+  const handleDeleteNote = async (noteIndex: number) => {
+    if (!window.confirm("Are you sure you want to delete this study material?")) return;
+    
+    const updatedBranches = lectureNotes.map(branch => {
+      if (branch.id !== activeNotesBranch) return branch;
+      
+      const updatedSemesters = branch.semesters.map(semData => {
+        if (semData.sem !== activeNotesSem) return semData;
+        
+        const updatedNotes = semData.notes.filter((_, idx) => idx !== noteIndex);
+        return { ...semData, notes: updatedNotes };
+      });
+      
+      return { ...branch, semesters: updatedSemesters };
+    });
+    
+    await updateLectureNotes(updatedBranches);
+  };
 
   // Triple-Failsafe Media Upload (Express Proxy -> Direct Client-Side Signed Cloudinary -> Client-Side Firebase Storage)
   const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
@@ -1242,7 +1297,250 @@ export const AdminDashboard = () => {
             </div>
           )}
 
+          {/* TAB: LECTURE NOTES */}
+          {activeTab === 'Lecture Notes' && (
+            <div className="space-y-12 animate-fade-in text-slate-300">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/5 pb-8 gap-4">
+                <div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">E-Learning & Lecture Notes</h3>
+                  <p className="text-slate-400 text-sm font-semibold mt-1">Manage study materials, syllabus files, and lab manuals for all branches.</p>
+                </div>
+                <button 
+                  onClick={() => {
+                    setEditingNote({ subject: '', code: '', type: 'Notes', link: '', size: '2.0 MB' });
+                    setEditingNoteIndex(-1);
+                  }}
+                  className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105 shrink-0"
+                >
+                  <PlusCircle className="w-5 h-5" /> Add Study Material
+                </button>
+              </div>
+
+              {/* Branch Selector */}
+              <div className="space-y-3">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block font-bold">Select Branch</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+                  {lectureNotes.map(b => (
+                    <button
+                      key={b.id}
+                      onClick={() => {
+                        setActiveNotesBranch(b.id);
+                        setActiveNotesSem(1);
+                      }}
+                      className={cn(
+                        "p-3 rounded-2xl border text-center transition-all duration-300",
+                        activeNotesBranch === b.id
+                          ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400 font-bold scale-[1.02] shadow-lg shadow-cyan-500/5"
+                          : "bg-slate-950 border-white/5 text-slate-400 hover:border-white/10 hover:text-white"
+                      )}
+                    >
+                      <span className="text-xs font-black uppercase tracking-wider block">{b.shortName}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Semester Selector */}
+              {lectureNotes.find(b => b.id === activeNotesBranch) && (
+                <div className="space-y-3">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block font-bold">Select Semester</span>
+                  <div className="flex gap-2 flex-wrap bg-slate-950 p-2 rounded-2xl border border-white/5 w-fit">
+                    {lectureNotes.find(b => b.id === activeNotesBranch)?.semesters.map(semData => (
+                      <button
+                        key={semData.sem}
+                        onClick={() => setActiveNotesSem(semData.sem)}
+                        className={cn(
+                          "px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all",
+                          activeNotesSem === semData.sem
+                            ? "bg-gradient-to-r from-cyan-600 to-blue-700 text-white shadow-xl"
+                            : "text-slate-400 hover:text-white hover:bg-white/5"
+                        )}
+                      >
+                        Sem {semData.sem}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Notes Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {(lectureNotes.find(b => b.id === activeNotesBranch)?.semesters.find(s => s.sem === activeNotesSem)?.notes.length || 0) === 0 ? (
+                  <div className="col-span-full bg-slate-950 border border-white/5 rounded-[32px] p-12 text-center text-slate-500">
+                    <FileText className="w-12 h-12 text-slate-700 mx-auto mb-4" />
+                    <h5 className="font-bold text-sm text-white mb-1 uppercase tracking-wider">No materials found</h5>
+                    <p className="text-xs text-slate-500 font-bold">Add a new document/PDF file using the button above.</p>
+                  </div>
+                ) : (
+                  lectureNotes.find(b => b.id === activeNotesBranch)?.semesters.find(s => s.sem === activeNotesSem)?.notes.map((note, idx) => (
+                    <div key={idx} className="bg-slate-950 p-6 rounded-[32px] border border-white/5 shadow-2xl relative flex flex-col justify-between group">
+                      <div>
+                        <div className="flex items-center justify-between mb-6">
+                          <span className="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-[8px] font-black uppercase tracking-widest rounded-full">{note.type}</span>
+                          <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{note.code}</span>
+                        </div>
+                        <h4 className="font-bold text-base text-white mb-1.5 line-clamp-2 min-h-[3rem] leading-snug group-hover:text-cyan-400 transition-colors uppercase">{note.subject}</h4>
+                        <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-6">{note.size || 'N/A'}</p>
+                      </div>
+                      <div className="flex gap-3">
+                        <button 
+                          onClick={() => {
+                            setEditingNote({ ...note });
+                            setEditingNoteIndex(idx);
+                          }} 
+                          className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteNote(idx)} 
+                          className="p-3 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"
+                        >
+                          <Trash2 className="w-4.5 h-4.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
         </main>
+
+        {/* MODAL: EDIT LECTURE NOTE */}
+        {editingNote && (
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">
+                  {editingNoteIndex === -1 ? 'Add Study Material' : 'Configure Study Material'}
+                </h3>
+                <button onClick={() => { setEditingNote(null); setEditingNoteIndex(null); }}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
+              </div>
+              
+              <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
+                <div className="space-y-2">
+                  <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest font-bold">PDF Document File</label>
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/5 text-center">
+                    {editingNote.link && !editingNote.link.includes('example') ? (
+                      <div className="relative rounded-lg overflow-hidden min-h-[140px] bg-black mb-4 flex flex-col items-center justify-center p-4 group">
+                        <FileText className="w-12 h-12 text-cyan-400 mb-2" />
+                        <span className="text-[10px] font-mono text-white/50 truncate max-w-xs block mb-3">
+                          {editingNote.link.split('/').pop()?.substring(0, 30) || 'document.pdf'}
+                        </span>
+                        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                          <label className="bg-cyan-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase cursor-pointer shadow-2xl">
+                            {uploading ? 'UPLOADING...' : 'CHANGE FILE'}
+                            <input 
+                              type="file" 
+                              className="hidden" 
+                              accept="application/pdf" 
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                const sizeStr = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                                handleMediaUpload(e, (url) => setEditingNote({ ...editingNote, link: url, size: sizeStr }));
+                              }} 
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border border-dashed border-white/10 rounded-lg cursor-pointer hover:border-cyan-500 transition-all">
+                        <Upload className="w-8 h-8 text-white/20 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">
+                          {uploading ? 'Uploading PDF...' : 'Upload PDF File from Device'}
+                        </span>
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          accept="application/pdf" 
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const sizeStr = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                            handleMediaUpload(e, (url) => setEditingNote({ ...editingNote, link: url, size: sizeStr }));
+                          }} 
+                        />
+                      </label>
+                    )}
+                    <input 
+                      className="w-full bg-slate-900 p-3 border border-white/5 rounded-lg text-xs font-mono text-white/60 text-center focus:outline-none focus:border-cyan-500" 
+                      value={editingNote.link} 
+                      onChange={(e) => setEditingNote({ ...editingNote, link: e.target.value })} 
+                      placeholder="Or enter direct Google Drive / PDF URL" 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest font-bold">Subject Name</span>
+                    <input 
+                      className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-cyan-500" 
+                      value={editingNote.subject} 
+                      onChange={(e) => setEditingNote({ ...editingNote, subject: e.target.value })} 
+                      placeholder="e.g. Engineering Mathematics - I" 
+                    />
+                  </label>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <label className="block space-y-2">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest font-bold">Subject Code</span>
+                      <input 
+                        className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-cyan-500" 
+                        value={editingNote.code} 
+                        onChange={(e) => setEditingNote({ ...editingNote, code: e.target.value })} 
+                        placeholder="e.g. BSC101" 
+                      />
+                    </label>
+
+                    <label className="block space-y-2">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest font-bold">File Size</span>
+                      <input 
+                        className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-cyan-500" 
+                        value={editingNote.size || ''} 
+                        onChange={(e) => setEditingNote({ ...editingNote, size: e.target.value })} 
+                        placeholder="e.g. 2.4 MB" 
+                      />
+                    </label>
+                  </div>
+
+                  <label className="block space-y-2">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest font-bold">Material Type</span>
+                    <select 
+                      className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-cyan-500" 
+                      value={editingNote.type} 
+                      onChange={(e) => setEditingNote({ ...editingNote, type: e.target.value as any })}
+                    >
+                      <option value="Notes">Notes (Lecture Notes)</option>
+                      <option value="Question Bank">Question Bank</option>
+                      <option value="Syllabus">Syllabus</option>
+                      <option value="Lab Manual">Lab Manual</option>
+                      <option value="Reference Book">Reference Book</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              
+              <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">
+                <button 
+                  onClick={() => { setEditingNote(null); setEditingNoteIndex(null); }} 
+                  className="px-6 py-3 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => handleSaveNote(editingNote)} 
+                  className="px-8 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest"
+                >
+                  Publish
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* MODAL 1: EDIT SLIDE */}
         {editingSlide && (

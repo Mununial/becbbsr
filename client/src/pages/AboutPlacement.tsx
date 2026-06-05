@@ -77,6 +77,62 @@ export const AboutPlacement = () => {
            </div>
         </section>
 
+        {/* Placement Head Desk */}
+        <section className="bg-gradient-to-br from-slate-900 via-navy-950 to-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 border border-white/5 relative overflow-hidden shadow-2xl">
+           <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+             style={{
+               backgroundImage: 'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)',
+               backgroundSize: '30px 30px'
+             }}
+           />
+           <div className="absolute top-0 right-1/4 w-72 h-72 bg-accent/10 rounded-full blur-[80px] -translate-y-1/2 pointer-events-none" />
+           <div className="absolute bottom-0 left-1/4 w-56 h-56 bg-primary/20 rounded-full blur-[70px] translate-y-1/2 pointer-events-none" />
+
+           <div className="relative z-10 flex flex-col lg:flex-row gap-10 items-center">
+             {/* Head Image */}
+             <div className="w-44 h-44 md:w-52 md:h-52 rounded-3xl overflow-hidden border-4 border-white/10 shrink-0 bg-slate-800 shadow-2xl relative group">
+               <img 
+                 src="/facilities/image.png" 
+                 alt="Subrat Kumar Sahoo" 
+                 className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" 
+               />
+             </div>
+             
+             {/* Head Details */}
+             <div className="flex-1 space-y-5 text-center lg:text-left">
+               <div className="space-y-2">
+                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-accent/15 border border-accent/30 text-accent rounded-full text-[9px] font-black uppercase tracking-widest">
+                   <Award className="w-3.5 h-3.5" /> Department Leadership
+                 </span>
+                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white font-poppins">
+                   Subrat Kumar Sahoo
+                 </h3>
+                 <p className="text-xs text-accent font-bold uppercase tracking-widest font-inter">
+                   Head - Training & Placement Department
+                 </p>
+               </div>
+
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left font-inter text-xs">
+                 <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
+                   <span className="text-[9px] font-black text-white/40 uppercase tracking-widest block">Education</span>
+                   <p className="font-bold text-white uppercase">MBA, PGDEMA</p>
+                 </div>
+                 <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
+                   <span className="text-[9px] font-black text-white/40 uppercase tracking-widest block">Experience</span>
+                   <p className="font-bold text-white uppercase">19+ Years</p>
+                 </div>
+               </div>
+
+               <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-2 text-left font-inter">
+                 <span className="text-[9px] font-black text-accent uppercase tracking-widest block">Area of Specialization</span>
+                 <p className="text-xs text-white/80 leading-relaxed font-semibold">
+                   Training & Placement, Campus Recruitment, Industry Relations, Career Development, and Employability Enhancement.
+                 </p>
+               </div>
+             </div>
+           </div>
+        </section>
+
         {/* Training Modules */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-12">
            <div className="flex flex-col gap-8">

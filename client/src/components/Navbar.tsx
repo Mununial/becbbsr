@@ -135,6 +135,55 @@ const HeaderApprovalsDropdown = ({ aicteUrl, bputUrl, sctevtUrl }: { aicteUrl: s
   );
 };
 
+const HeaderCommitteesDropdown = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className="relative flex items-center h-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <button className="px-4 py-2.5 bg-slate-50 border border-slate-100 hover:border-slate-200 text-primary rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-all duration-300">
+        <span>Committees</span>
+        <ChevronDown className={cn("w-3.5 h-3.5 text-primary/60 transition-transform duration-300", isHovered && "rotate-180")} />
+      </button>
+
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute top-full right-0 min-w-[220px] bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden py-2 z-[300] mt-2 font-poppins"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent"></div>
+            <div className="flex flex-col">
+              {[
+                { name: "Anti-Ragging Committee", href: "/committees#anti-ragging" },
+                { name: "Women Grievance Cell", href: "/committees#women-cell" },
+                { name: "Discipline Committee", href: "/committees#discipline" },
+                { name: "Grievance Redressal Cell", href: "/committees#grievance" },
+                { name: "SC/ST Committee", href: "/committees#sc-st" }
+              ].map((sub) => (
+                <Link 
+                  key={sub.name} 
+                  to={sub.href}
+                  className="group/sub px-5 py-2.5 text-[11px] font-bold text-gray-600 hover:text-white hover:bg-primary flex items-center justify-between transition-all duration-300"
+                >
+                  <span>{sub.name}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/sub:opacity-100 transition-opacity" />
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -142,8 +191,8 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
 
   const { officialDocs } = useData();
   const mandatoryDoc = officialDocs?.find(d => d.name.toLowerCase().includes('mandatory'));
-  const rawUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory.pdf";
-  const mandatoryUrl = rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=1.0.1`;
+  const rawUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory final.pdf";
+  const mandatoryUrl = rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=1.0.2`;
 
   const aicteDoc = officialDocs?.find(d => d.id === 'aicte-approval' || d.name.toLowerCase().includes('aicte'));
   const rawAicteUrl = aicteDoc?.url || "/facilities/AICTE_Approval.pdf";
@@ -167,9 +216,11 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
          { name: "Chairman Message", href: "/chairman-ayush-msg" },
          { name: "Trust Members", href: "/trusty" },
          { name: "Director Profile", href: "/director-profile" },
+         { name: "Our Faculty", href: "/faculties" },
          { name: "Mandatory Disclosure", href: mandatoryUrl, target: "_blank" }
       ]
     },
+    { name: 'Faculty', href: '/faculties' },
     {
       name: 'Approvals & Affiliations',
       href: '#',
@@ -205,6 +256,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
       ]
     },
     { name: 'Facilities', href: '/facilities' },
+    { name: 'E-Learning', href: '/e-learning' },
     { 
       name: 'Departments', 
       href: '#',
@@ -214,7 +266,8 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
           { name: "Civil & Environmental", href: "/civil-engg" },
           { name: "CSE & Data Science", href: "/cse-engg" },
           { name: "EE & Computer Science", href: "/ee-engg" },
-          { name: "Mech & Additive Mfg.", href: "/mechanical-engg" }
+          { name: "Mech & Additive Mfg.", href: "/mechanical-engg" },
+          { name: "Basic Science & Humanities", href: "/basic-science-humanities" }
       ]
     },
     { 
@@ -334,6 +387,7 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
             </div>
 
             <HeaderApprovalsDropdown aicteUrl={aicteUrl} bputUrl={bputUrl} sctevtUrl={sctevtUrl} />
+            <HeaderCommitteesDropdown />
           </div>
         </div>
       </div>

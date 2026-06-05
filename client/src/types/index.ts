@@ -83,3 +83,28 @@ export type Faculty = {
   department: string;
   image?: string;
 }
+
+export interface Note {
+  subject: string;
+  code: string;
+  unit?: string;
+  type: 'Notes' | 'Question Bank' | 'Syllabus' | 'Lab Manual' | 'Reference Book';
+  link: string;
+  size?: string;
+}
+
+export interface SemesterData {
+  sem: number;
+  notes: Note[];
+}
+
+export interface BranchData {
+  id: string;
+  name: string;
+  shortName: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  semesters: SemesterData[];
+}
+

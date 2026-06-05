@@ -1,5 +1,5 @@
 import { PageLayout } from '../components/PageLayout';
-import { ShieldCheck, Award, Linkedin, Facebook, Star, Building2, Quote } from 'lucide-react';
+import { ShieldCheck, Award, Linkedin, Facebook, Star, Building2, Quote, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
 
@@ -22,7 +22,7 @@ const trustees = [
     tag: "Management",
     organization: "Ayush Group of Institutions",
     description: "A dynamic leader ensuring operational excellence and a student-centric environment across all institutions, focusing on innovation and global standards.",
-    image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg", // Placeholder for now
+    image: "", 
     gradient: "from-primary to-blue-700",
     accent: "#1e40af",
     linkedin: "#",
@@ -127,11 +127,17 @@ export const TrustMembers = () => {
               <div className="relative aspect-[4/5] overflow-hidden bg-navy-950">
                 {/* Gradient overlay with member color */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${member.gradient} opacity-60 group-hover:opacity-80 transition-opacity duration-500 mix-blend-multiply`} />
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-700"
-                />
+                {member.image ? (
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white/30 relative z-20">
+                    <User className="w-24 h-24 stroke-[1]" />
+                  </div>
+                )}
                 {/* Bottom fade */}
                 <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-navy-950/90 to-transparent z-10" />
 

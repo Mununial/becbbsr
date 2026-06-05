@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { PageLayout } from '../components/PageLayout';
-import { Monitor, Target, GraduationCap, Mail, Database, BrainCircuit, Globe } from 'lucide-react';
-import { useData } from '../context/DataContext';
+import { DepartmentSidebar, type HODData } from '../components/DepartmentSidebar';
+import { X } from 'lucide-react';
 import { SEO } from '../components/SEO';
+import { motion } from 'framer-motion';
 
 const pageSchema = {
   "@context": "https://schema.org",
@@ -11,7 +13,7 @@ const pageSchema = {
       "@id": "https://becbbsr.ac.in/cse-engg",
       "url": "https://becbbsr.ac.in/cse-engg",
       "name": "B.Tech Computer Science & Engineering in Odisha | BEC Bhubaneswar",
-      "description": "Study B.Tech Computer Science & Engineering (CSE) at Bhubaneswar Engineering College. Specializations in Data Science, Artificial Intelligence, Cybersecurity, and Web Development.",
+      "description": "Study B.Tech Computer Science & Engineering (CSE) at Bhubaneswar Engineering College.",
       "breadcrumb": {
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -22,137 +24,254 @@ const pageSchema = {
       },
       "inLanguage": "en-IN",
       "isPartOf": { "@id": "https://becbbsr.ac.in" }
-    },
-    {
-      "@type": "Course",
-      "name": "B.Tech in Computer Science Engineering (CSE)",
-      "description": "4-year undergraduate engineering program in Computer Science at BEC Bhubaneswar. Covers algorithms, AI/ML, cloud computing, cybersecurity, data science, and software engineering with 100% placement support.",
-      "provider": {
-        "@type": "CollegeOrUniversity",
-        "name": "Bhubaneswar Engineering College",
-        "sameAs": "https://becbbsr.ac.in"
-      },
-      "url": "https://becbbsr.ac.in/cse-engg",
-      "educationalLevel": "Bachelor's Degree",
-      "timeRequired": "P4Y",
-      "hasCourseInstance": {
-        "@type": "CourseInstance",
-        "courseMode": "onsite",
-        "inLanguage": "en",
-        "startDate": "2026-07-01",
-        "location": {
-          "@type": "Place",
-          "name": "BEC Campus, Patrapada, Bhubaneswar, Odisha 751019"
-        }
-      }
     }
   ]
 };
 
+const hodData: HODData = {
+  name: "Er. Anita Behera",
+  designation: "Associate Professor & Head",
+  qualification: "M.Tech (CSE), Ph.D (Cont.)",
+  email: "cse@becbbsr.ac.in",
+  image: "/facilities/hod files/anita_behera.jpg",
+  specialization: "Computer Science and Engineering",
+  researchInterest: "Artificial Intelligence, Data Mining, Pattern Recognition",
+  experience: "15+ Years",
+  teachingExp: "15 Years",
+  researchExp: "3 Years",
+  industryExp: "6 Months",
+  coursesTaught: [
+    "Data Structures",
+    "Machine Learning",
+    "Data Engineering",
+    "C",
+    "Java",
+    "Python",
+    "IOT",
+    "Software Engineering"
+  ],
+  researchOutput: {
+    papers: 1,
+    phdGuided: 0,
+    books: 0,
+    patents: 1,
+    projects: 0
+  }
+};
+
+const galleryImages = [
+  "/images/cse-img.jpg",
+  "/facilities/CSE/cse_1.jpeg",
+  "/facilities/CSE/cse_2.jpeg",
+  "/facilities/CSE/cse_3.jpeg",
+  "/facilities/CSE/cse_4.jpeg",
+  "/facilities/CSE/cse_5.jpeg",
+  "/facilities/CSE/cse_6.jpeg",
+  "/facilities/CSE/cse_7.jpeg",
+  "/facilities/CSE/cse_8.jpeg",
+  "/facilities/CSE/cse_9.jpeg",
+  "/facilities/CSE/cse_10.jpeg",
+  "/facilities/CSE/cse_11.jpeg",
+  "/facilities/CSE/cse_12.jpeg",
+  "/facilities/CSE/cse_13.jpeg",
+  "/facilities/CSE/cse_14.jpeg",
+  "/facilities/CSE/cse_15.jpeg",
+  "/facilities/CSE/cse_16.jpeg",
+  "/facilities/CSE/cse_17.jpeg",
+  "/facilities/CSE/cse_18.jpeg",
+  "/facilities/CSE/cse_19.jpeg"
+];
+
 export const CSEEngg = () => {
-  const { faculties } = useData();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   return (
     <PageLayout title="Computer Science & Engineering">
       <SEO 
         title="B.Tech Computer Science &amp; Engineering | CSE Department | BEC"
-        description="Study B.Tech Computer Science &amp; Engineering (CSE) at Bhubaneswar Engineering College. Specializations in Data Science, Artificial Intelligence, Cybersecurity, and Web Development."
-        keywords={[
-          "computer science engineering college Bhubaneswar",
-          "BTech CSE in Odisha",
-          "best CSE colleges in Bhubaneswar",
-          "data science engineering course Odisha",
-          "cybersecurity artificial intelligence BEC"
-        ]}
+        description="Study B.Tech Computer Science &amp; Engineering (CSE) at Bhubaneswar Engineering College."
+        keywords={["computer science engineering", "BTech CSE", "BEC Bhubaneswar"]}
         schema={pageSchema}
       />
-      <div className="flex flex-col gap-16 mt-4">
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-4" id="labs">
         
-        {/* Header Section */}
-        <section className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-8 md:p-16 border border-gray-100 flex flex-col md:flex-row gap-12 relative overflow-hidden">
-           <Monitor className="absolute top-8 right-12 w-48 h-48 text-primary/5 -rotate-12 pointer-events-none" />
-           <div className="w-full md:w-2/3 flex flex-col justify-center relative z-10">
-              <div className="flex items-center gap-4 mb-8">
-                 <div className="p-3 rounded-2xl bg-primary/10 text-primary">
-                    <BrainCircuit className="w-8 h-8" />
-                 </div>
-                 <h2 className="text-3xl lg:text-4xl font-black text-primary uppercase tracking-tight">
-                   The Digital Frontier
-                 </h2>
+        {/* ─── Left Column (Main Content) ─── */}
+        <div className="lg:col-span-8 flex flex-col gap-10">
+          
+          {/* Title and Main Image */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col gap-6 bg-white rounded-3xl p-8 border border-slate-100 shadow-xl"
+          >
+            <h1 className="text-2xl md:text-3xl font-black text-primary uppercase relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-accent after:rounded-full tracking-tight">
+              Computer Science & Engineering
+            </h1>
+            
+            <div 
+              className="w-full h-80 rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group cursor-pointer"
+              onClick={() => setSelectedImage("/images/cse-img.jpg")}
+            >
+              <img 
+                src="/images/cse-img.jpg" 
+                alt="Computer Science Department AI & Logic Lab" 
+                className="w-full h-full object-cover hover:scale-102 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              <div className="absolute bottom-4 left-4 bg-primary/95 backdrop-blur-sm text-accent text-xs font-black px-3.5 py-1.5 rounded-lg uppercase tracking-wider border border-accent/20">
+                AI & Logic Lab Showcase
               </div>
-              <div className="text-gray-600 leading-[1.8] text-[16px] space-y-6 text-justify">
-                <p>
-                  Computer Science and Engineering encourages students to utilize their problem-solving skills and creativity as they become familiar with the principles of both scientific engineering and computer programming.
-                </p>
-                <p>
-                  This branch encompasses a variety of topics that relates to computation, like analysis of algorithms, programming languages, program design, software.
-                </p>
-                <p>
-                  Data Science is a buzzword in the technology world right now and for good reason, it represents a major step forward in how computers can learn.
-                </p>
-              </div>
-           </div>
-           
-           <div className="w-full md:w-1/3 shrink-0">
-              <div className="bg-primary rounded-3xl p-10 text-white h-full border border-white/5 relative overflow-hidden group shadow-2xl">
-                 <Target className="w-12 h-12 text-accent mb-8 group-hover:scale-110 transition-transform" />
-                 <h4 className="text-2xl font-black uppercase tracking-widest mb-6">Future Paths</h4>
-                 <div className="space-y-4 text-sm font-medium text-white/70">
-                    <p>• Artificial Intelligence</p>
-                    <p>• Data Science & Big Data</p>
-                    <p>• Ethical Hacking</p>
-                    <p>• Mobile App Development</p>
-                    <p>• Cybersecurity</p>
-                 </div>
-              </div>
-           </div>
-        </section>
+            </div>
 
-        {/* Areas Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-           <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl flex flex-col gap-4 group hover:border-primary/20 transition-all">
-              <Database className="w-10 h-10 text-primary" />
-              <h4 className="text-lg font-black text-primary uppercase tracking-tight">Big Data</h4>
-              <p className="text-gray-500 text-sm leading-relaxed">Management of evolving technology and huge datasets.</p>
-           </div>
-           <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl flex flex-col gap-4 group hover:border-primary/20 transition-all">
-              <BrainCircuit className="w-10 h-10 text-accent" />
-              <h4 className="text-lg font-black text-primary uppercase tracking-tight">Data Science</h4>
-              <p className="text-gray-500 text-sm leading-relaxed">High demand surge for professional data architects.</p>
-           </div>
-           <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl flex flex-col gap-4 group hover:border-primary/20 transition-all">
-              <Globe className="w-10 h-10 text-primary" />
-              <h4 className="text-lg font-black text-primary uppercase tracking-tight">Web Apps</h4>
-              <p className="text-gray-500 text-sm leading-relaxed">Modern web technology and animation domains.</p>
-           </div>
-           <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl flex flex-col gap-4 group hover:border-primary/20 transition-all">
-              <Monitor className="w-10 h-10 text-accent" />
-              <h4 className="text-lg font-black text-primary uppercase tracking-tight">Game Dev</h4>
-              <p className="text-gray-500 text-sm leading-relaxed">Scientific modeling and mobile game production.</p>
-           </div>
-        </section>
+            {/* Human Written Description */}
+            <div className="text-slate-600 leading-[1.8] text-sm md:text-base space-y-5 text-justify">
+              <p>
+                Computer Science and Engineering is all about using your creativity and logic to build software and solve real-world problems. Today, computers are everywhere, and studying CSE helps you understand how things work under the hood. In our department, we teach students how to code, how algorithms solve complex tasks, and how software is designed to make human life easier and more productive.
+              </p>
+              <p>
+                At Bhubaneswar Engineering College (BEC), our Computer Science department focuses on practical learning. We don't just ask you to memorize theories from textbooks. Instead, you get to sit in our computer labs, write code, build databases, and see your programs run live. We also teach modern topics like Data Science, Artificial Intelligence, and Cybersecurity because these are the skills companies are looking for right now.
+              </p>
+              <p>
+                Our students get plenty of hands-on practice, and our teachers are always ready to guide them. Whether you want to build a mobile app, design a website, or learn how to secure data from hackers, we have the labs and the mentors to help you reach your goals. By the time you graduate, you will have the confidence and skills needed to start a successful career in the IT industry.
+              </p>
+            </div>
+          </motion.div>
 
-        {/* Faculty Grid */}
-        <section className="flex flex-col gap-10">
-           <h3 className="text-2xl font-black text-primary uppercase tracking-tighter">
-              Faculty Members
-           </h3>
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {faculties.filter(f => f.department === "CSE Engg").map((f, i) => (
-                 <div key={i} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-lg hover:shadow-2xl transition-all group hover:-translate-y-1">
-                    <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-50 flex items-center justify-center text-gray-400 mb-6 group-hover:border group-hover:border-primary transition-all">
-                       {f.image ? <img src={f.image} className="w-full h-full object-cover" /> : <GraduationCap className="w-8 h-8 opacity-50" />}
-                    </div>
-                    <h4 className="font-black text-primary uppercase text-sm mb-1 line-clamp-1">{f.name}</h4>
-                    <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest mb-4 line-clamp-1">{f.role}</p>
-                    <a href={`mailto:${f.email}`} className="flex items-center gap-2 text-[10px] font-black text-primary hover:text-accent transition-colors uppercase tracking-widest truncate">
-                       <Mail className="w-3.5 h-3.5 shrink-0" /> {f.email}
-                    </a>
-                 </div>
+          {/* Vision & Mission Side-by-Side (Classic GCEK Style) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Vision */}
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-gradient-to-br from-slate-900 via-navy-950 to-slate-900 text-white rounded-3xl p-8 shadow-xl border-l-4 border-accent relative flex flex-col gap-4 overflow-hidden group"
+            >
+              <h4 className="text-lg font-black uppercase tracking-wider border-b border-white/10 pb-2 text-accent">Vision</h4>
+              <p className="text-xs md:text-sm leading-relaxed text-slate-200">
+                The department aims to be recognized for its eminence in the field of Computer Science & Engineering to achieve excellence in education & research to meet the industrial and societal needs.
+              </p>
+            </motion.div>
+
+            {/* Mission */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-gradient-to-br from-slate-900 via-navy-950 to-slate-900 text-white rounded-3xl p-8 shadow-xl border-l-4 border-emerald-500 relative flex flex-col gap-4 overflow-hidden group"
+            >
+              <h4 className="text-lg font-black uppercase tracking-wider border-b border-white/10 pb-2 text-emerald-400">Mission</h4>
+              <ul className="text-xs leading-relaxed space-y-2.5 list-disc pl-4 text-slate-200">
+                <li>To produce competent Computer Engineers by imparting quality education and technological advancements.</li>
+                <li>To conduct research in the field of Computer Science and its allied areas.</li>
+                <li>To promote entrepreneurial skills by industry-institute interaction for the advancement of e-society.</li>
+              </ul>
+            </motion.div>
+          </div>
+
+          {/* Faculty Intro Paragraph */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl"
+          >
+            <p className="text-slate-600 text-sm md:text-base leading-relaxed text-justify font-medium">
+              Our dedicated faculty, who not only strive to excel in the classrooms but also are always there to help the students. The department has enthusiastic faculty members who provide expertise in their areas of interests which are major areas of Computer Science & Engineering.
+            </p>
+          </motion.div>
+
+          {/* PEOs Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl flex flex-col gap-6"
+          >
+            <h2 className="text-xl md:text-2xl font-black text-primary uppercase relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-accent after:rounded-full tracking-tight">
+              PROGRAM EDUCATIONAL OBJECTIVES (PEOs)
+            </h2>
+            <div className="text-slate-600 text-xs md:text-sm font-medium space-y-4 pt-2">
+              <p><strong>PEO 1:</strong> To empower students of Computer Science and Engineering for industry readiness.</p>
+              <p><strong>PEO 2:</strong> To encourage graduates to go for higher studies and research in the domain of Computer Science and its allied fields.</p>
+              <p><strong>PEO 3:</strong> To enhance the leadership, entrepreneurial skills and ethical values of graduates for enrichment of the society.</p>
+            </div>
+          </motion.div>
+
+          {/* PSOs Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl flex flex-col gap-6"
+          >
+            <h2 className="text-xl md:text-2xl font-black text-primary uppercase relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-accent after:rounded-full tracking-tight">
+              PROGRAM SPECIFIC OUTCOMES (PSOs)
+            </h2>
+            <div className="text-slate-600 text-xs md:text-sm font-medium space-y-4 pt-2">
+              <p><strong>PSO1:</strong> The ability to understand, analyze, design and develop optimal solutions of a real-time problem by applying fundamental concepts of Computer Science and Engineering.</p>
+              <p><strong>PSO2:</strong> To apply software engineering principles and practices for developing scientific, business and general purpose applications.</p>
+              <p><strong>PSO3:</strong> To adapt emerging technologies for efficient use of digital platform in day to day life.</p>
+            </div>
+          </motion.div>
+
+          {/* Photo Gallery Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl flex flex-col gap-6"
+          >
+            <h2 className="text-xl md:text-2xl font-black text-primary uppercase relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-accent after:rounded-full tracking-tight">
+              PHOTO GALLERY
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+              {galleryImages.map((img, idx) => (
+                <div 
+                  key={idx} 
+                  onClick={() => setSelectedImage(img)}
+                  className="h-28 rounded-xl overflow-hidden border border-slate-100 cursor-pointer group relative shadow-sm"
+                >
+                  <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-black uppercase tracking-widest bg-black/40">
+                    View
+                  </div>
+                </div>
               ))}
-           </div>
-        </section>
+            </div>
+          </motion.div>
+
+        </div>
+
+        {/* ─── Right Column (Sidebar) ─── */}
+        <div className="lg:col-span-4 flex flex-col gap-8">
+          <DepartmentSidebar hod={hodData} activeBranch="cse" />
+        </div>
 
       </div>
+
+      {/* ─── Image Lightbox Modal ─── */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-navy-950/90 backdrop-blur-md" onClick={() => setSelectedImage(null)}>
+          <div className="relative max-w-4xl w-full max-h-[85vh] rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black">
+            <button 
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 z-10 p-2 bg-black/60 hover:bg-black/80 text-white rounded-xl transition-all border border-white/10"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img src={selectedImage} alt="Fullscreen View" className="w-full h-auto max-h-[85vh] object-contain mx-auto" />
+          </div>
+        </div>
+      )}
+
     </PageLayout>
   );
 };
