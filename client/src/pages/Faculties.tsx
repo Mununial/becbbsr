@@ -3,6 +3,7 @@ import { PageLayout } from '../components/PageLayout';
 import { Mail, Search, Users, ShieldAlert } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SEO } from '../components/SEO';
+import { useData } from '../context/DataContext';
 interface FacultyMember {
   name: string;
   role: string;
@@ -262,17 +263,30 @@ const staffData: FacultyMember[] = [
 
 export const Faculties = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { faculties } = useData();
 
-  const filteredStaff = staffData.filter(member => {
+  // Map dynamic 'department' to 'branch' and dynamic 'tag'
+  const displayStaff = faculties && faculties.length > 0 
+    ? faculties.map(f => ({
+        name: f.name,
+        role: f.role,
+        branch: f.department,
+        image: f.image || '',
+        email: f.email,
+        tag: f.tag || 'Faculty'
+      }))
+    : staffData;
+
+  const filteredStaff = displayStaff.filter(member => {
     return member.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
            member.branch.toLowerCase().includes(searchQuery.toLowerCase()) ||
            member.role.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   return (
-    <PageLayout title="Our Faculty members">
+    <PageLayout title="Our Staff members">
       <SEO 
-        title="Our Faculty &amp; Academic Staff | BEC Bhubaneswar"
+        title="Our Academic Staff | BEC Bhubaneswar"
         description="Meet the highly qualified professors, lecturers, and technical instructors at Bhubaneswar Engineering College (BEC) driving innovation and research."
         keywords={[
           "Bhubaneswar Engineering College faculty",
@@ -301,7 +315,7 @@ export const Faculties = () => {
                  <Users className="w-3.5 h-3.5" /> Academic Excellence
               </span>
               <h2 className="text-3xl lg:text-5xl font-black text-white uppercase tracking-tighter leading-none max-w-3xl mx-auto">
-                 Meet Our Distinguished <span className="text-accent italic">Faculty</span>
+                 Meet Our Distinguished <span className="text-accent italic">Staff</span>
               </h2>
               <p className="text-white/50 font-medium leading-relaxed text-sm md:text-base max-w-2xl mx-auto">
                  Our teachers, mentors and researchers are graduates from top institutions, committed to delivering real-world technical skills and fostering scientific innovation.

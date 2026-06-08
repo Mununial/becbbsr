@@ -27,7 +27,7 @@ const sidebarItems = [
   { name: 'Photo Gallery', icon: ImageIcon },
   { name: 'Event Highlights', icon: Zap },
   { name: 'Leadership', icon: Users },
-  { name: 'Faculty', icon: GraduationCap },
+  { name: 'Staff', icon: GraduationCap },
   { name: 'Achievements', icon: Award },
   { name: 'Aero Club', icon: Plane },
   { name: 'Workshops', icon: Monitor },
@@ -915,19 +915,19 @@ export const AdminDashboard = () => {
             </div>
           )}
 
-          {/* TAB 9: FACULTY */}
-          {activeTab === 'Faculty' && (
+          {/* TAB 9: STAFF */}
+          {activeTab === 'Staff' && (
             <div className="space-y-12 animate-fade-in">
               <div className="flex justify-between items-end border-b border-white/5 pb-8">
                 <div>
-                  <h3 className="text-2xl font-black uppercase tracking-tighter">Faculty Members</h3>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Staff Members</h3>
                   <p className="text-slate-400 text-sm font-semibold mt-1">Manage department head directories, staff listings, and email cards.</p>
                 </div>
                 <button 
-                  onClick={() => setEditingFaculty({ id: '', name: '', role: 'Assistant Professor', email: '', department: 'CSE Engg', image: '' })}
+                  onClick={() => setEditingFaculty({ id: '', name: '', role: 'Assistant Professor', email: '', department: 'CSE Engg', image: '', tag: 'Faculty' })}
                   className="px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-3 transition-transform hover:scale-105"
                 >
-                  <PlusCircle className="w-5 h-5" /> Add Faculty
+                  <PlusCircle className="w-5 h-5" /> Add Staff Member
                 </button>
               </div>
 
@@ -947,6 +947,7 @@ export const AdminDashboard = () => {
                       <div className="space-y-2 mb-6 border-t border-white/5 pt-4">
                         <p className="text-slate-500 text-xs font-semibold"><span className="text-slate-600 uppercase tracking-wider mr-2">Dept:</span> {f.department}</p>
                         <p className="text-slate-500 text-xs font-semibold"><span className="text-slate-600 uppercase tracking-wider mr-2">Email:</span> {f.email}</p>
+                        <p className="text-slate-500 text-xs font-semibold"><span className="text-slate-600 uppercase tracking-wider mr-2">Type:</span> <span className={f.tag === 'HOD' ? 'text-cyan-400 font-bold' : 'text-slate-400 font-bold'}>{f.tag || 'Faculty'}</span></p>
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -2050,17 +2051,17 @@ export const AdminDashboard = () => {
           </div>
         )}
 
-        {/* MODAL 8: EDIT FACULTY */}
+        {/* MODAL 8: EDIT FACULTY/STAFF */}
         {editingFaculty && (
           <div className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-md">
             <div className="bg-slate-900 rounded-[32px] w-full max-w-xl border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
               <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
-                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Faculty Card</h3>
+                <h3 className="text-xl font-black uppercase tracking-tighter italic">Configure Staff Card</h3>
                 <button onClick={() => setEditingFaculty(null)}><X className="w-6 h-6 opacity-40 hover:opacity-100" /></button>
               </div>
               <div className="p-8 overflow-y-auto space-y-6 custom-scrollbar text-slate-300">
                 <div className="space-y-2">
-                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Faculty Photo</span>
+                  <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest">Staff Photo</span>
                   <div className="flex gap-4 items-center">
                     <div className="w-16 h-16 rounded-full overflow-hidden bg-black flex items-center justify-center shrink-0 border border-white/10">
                       {editingFaculty.image ? <img src={editingFaculty.image} className="w-full h-full object-cover" alt="" /> : <Users className="w-6 h-6 text-white/20" />}
@@ -2073,7 +2074,7 @@ export const AdminDashboard = () => {
                 </div>
 
                 <label className="block space-y-2">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Faculty Name</span>
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Staff Name</span>
                   <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm text-white" value={editingFaculty.name} onChange={(e) => setEditingFaculty({ ...editingFaculty, name: e.target.value })} />
                 </label>
                 <div className="grid grid-cols-2 gap-4">
@@ -2089,6 +2090,17 @@ export const AdminDashboard = () => {
                 <label className="block space-y-2">
                   <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Email Contact</span>
                   <input className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm" value={editingFaculty.email} onChange={(e) => setEditingFaculty({ ...editingFaculty, email: e.target.value })} />
+                </label>
+                <label className="block space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Role Type Tag</span>
+                  <select 
+                    className="w-full bg-slate-950 p-4 border border-white/5 rounded-xl text-sm text-slate-300 focus:outline-none" 
+                    value={editingFaculty.tag || 'Faculty'} 
+                    onChange={(e) => setEditingFaculty({ ...editingFaculty, tag: e.target.value })}
+                  >
+                    <option value="Faculty">Faculty (Standard Listing)</option>
+                    <option value="HOD">HOD (Head of Department)</option>
+                  </select>
                 </label>
               </div>
               <div className="p-8 bg-white/5 border-t border-white/5 flex justify-end gap-4">

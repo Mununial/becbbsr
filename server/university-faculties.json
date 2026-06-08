@@ -1,85 +1,265 @@
-[
-  {
-    "id": "1",
-    "name": "Er. Anita Behera",
-    "role": "Associate Professor & Head",
-    "email": "cse@becbbsr.ac.in",
-    "department": "CSE Engg",
-    "image": "/facilities/hod files/anita_behera.jpg"
-  },
-  {
-    "id": "2",
-    "name": "Dr. Shipra Kumari",
-    "role": "Professor",
-    "email": "cse@becbbsr.ac.in",
-    "department": "CSE Engg"
-  },
-  {
-    "id": "3",
-    "name": "Er. S Hota",
-    "role": "Asst. Professor",
-    "email": "cse@becbbsr.ac.in",
-    "department": "CSE Engg"
-  },
-  {
-    "id": "4",
-    "name": "Dr. Sangram Keshari Samal",
-    "role": "Professor & Head",
-    "email": "aero@becbbsr.ac.in",
-    "department": "Aeronautical Engg",
-    "image": "/facilities/hod files/sangram_keshari_samal.jpg"
-  },
-  {
-    "id": "5",
-    "name": "Er. A. Panigrahy",
-    "role": "Asst. Professor",
-    "email": "aero@becbbsr.ac.in",
-    "department": "Aeronautical Engg"
-  },
-  {
-    "id": "6",
-    "name": "Er. Ananyaa Mohanty",
-    "role": "Assistant Professor & Head",
-    "email": "agr@becbbsr.ac.in",
-    "department": "Agriculture Engg",
-    "image": "/facilities/hod files/ananyaa_mohanty.jpg"
-  },
-  {
-    "id": "7",
-    "name": "Er. Saswat Mohanty",
-    "role": "Assistant Professor & Head",
-    "email": "civil@becbbsr.ac.in",
-    "department": "Civil Engg",
-    "image": "/facilities/hod files/saswat_mohanty.png"
-  },
-  {
-    "id": "8",
-    "name": "Er. Pabitra Mohan Dash",
-    "role": "Assistant Professor & Head",
-    "email": "electrical@becbbsr.ac.in",
-    "department": "Electrical Engg"
-  },
-  {
-    "id": "9",
-    "name": "Dr. Bishnu Prasad Mishra",
-    "role": "Professor & Head",
-    "email": "mech@becbbsr.ac.in",
-    "department": "Mechanical Engg",
-    "image": "/facilities/hod files/bishnu_prasad_mishra.jpg"
-  },
-  {
-    "id": "10",
-    "name": "Mr. Ashis Kumar Behera",
-    "role": "Asst. Professor & Head",
-    "email": "mba@gmail.com",
-    "department": "MBA & Basic Sciences",
-    "image": "/facilities/hod files/ashis_kumar_behera.jpg"
-  },
-  {
-    "id": "11",
-    "name": "Er. S Jena",
-    "role": "Assistant Professor & Head",
-    "email": "ame@becbbsr.ac.in",
-    "department": "Aircraft Maintenance Engineering"
-  }
-]
+{
+  "items": [
+    {
+      "id": "1",
+      "name": "Er. Ananyaa Mohanty",
+      "role": "Assistant Professor & Head",
+      "department": "Agriculture Engineering",
+      "image": "/facilities/STAFF/ANANYAA MOHANTY(agriculte hod).jpg",
+      "email": "agriculture@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "2",
+      "name": "Er. Anita Behera",
+      "role": "Associate Professor & Head",
+      "department": "Computer Science Engineering",
+      "image": "/facilities/STAFF/Anita Behera(cse hod).jpg",
+      "email": "cse@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "3",
+      "name": "Mr. Ashis Kumar Behera",
+      "role": "Assistant Professor & Head",
+      "department": "MBA",
+      "image": "/facilities/STAFF/Ashis Kumar Behera(mba hod).jpg",
+      "email": "mba@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "4",
+      "name": "Mr. Avinash Lenka",
+      "role": "Assistant Professor",
+      "department": "Basic Science & Humanities",
+      "image": "/facilities/STAFF/Avinash Lenka (BS).png",
+      "email": "avinash.bsh@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "5",
+      "name": "Mr. Bijay Kumar Sahu",
+      "role": "Assistant Professor & Head",
+      "department": "Electrical Engineering",
+      "image": "/facilities/STAFF/BIJAY KUMAR SAHU (EE).jpeg",
+      "email": "electrical@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "6",
+      "name": "Mr. Chinmaya Kumar Panda",
+      "role": "Assistant Professor",
+      "department": "Basic Science & Humanities",
+      "image": "/facilities/STAFF/Chinmaya Kumar Pqndaanda(BS).png",
+      "email": "chinmaya.bsh@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "7",
+      "name": "Dr. Bishnu Prasad Mishra",
+      "role": "Professor & Head",
+      "department": "Mechanical Engineering",
+      "image": "/facilities/STAFF/Dr. Bishnu Prasad Mishra(mech hod ).jpg",
+      "email": "mechanical@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "8",
+      "name": "Dr. Sonali Swagatika",
+      "role": "Assistant Professor",
+      "department": "Agriculture Engineering",
+      "image": "/facilities/STAFF/Dr. Sonali Swagatika (AGRI).jpg",
+      "email": "sonali.agri@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "9",
+      "name": "Mrs. Geetanjali Mohanty",
+      "role": "Assistant Professor",
+      "department": "Mechanical Engineering",
+      "image": "/facilities/STAFF/Geetanjali Mohanty (MECH).jpg",
+      "email": "geetanjali.mech@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "10",
+      "name": "Mr. Gyanaranjan Prusty",
+      "role": "Assistant Professor & Head",
+      "department": "Basic Science & Humanities",
+      "image": "/facilities/STAFF/Gyanaranjan Prusty (BS).jpg",
+      "email": "bsh@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "11",
+      "name": "Mr. Hemanta Mahananda",
+      "role": "Assistant Professor",
+      "department": "Aeronautical Engineering",
+      "image": "/facilities/STAFF/HEMANTA MAHANANDA (AERO).jpg",
+      "email": "hemanta.aero@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "12",
+      "name": "Mrs. Lipsa Tanaya Mishra",
+      "role": "Professor",
+      "department": "Computer Science Engineering",
+      "image": "/facilities/STAFF/LIPSA TANAYA MISHRA(CSE).png",
+      "email": "lipsa.cse@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "13",
+      "name": "Mr. Manmeshu Kumar Swain",
+      "role": "Assistant Professor",
+      "department": "Computer Science Engineering",
+      "image": "/facilities/STAFF/MANMESHU KUMAR SWAIN (CSE).jpg",
+      "email": "manmeshu.cse@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "14",
+      "name": "Mr. Srikanta Kumar Sahoo",
+      "role": "Assistant Professor",
+      "department": "Computer Science Engineering",
+      "image": "/facilities/STAFF/MR. SRIKANTA KUMAR SAHOO (CSE).jpg",
+      "email": "srikanta.cse@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "15",
+      "name": "Ms. Priyata Prangya Sahoo",
+      "role": "Assistant Professor",
+      "department": "Computer Science Engineering",
+      "image": "/facilities/STAFF/Miss PriyataPrangya Sahoo (CSE).jpg",
+      "email": "priyata.cse@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "16",
+      "name": "Mr. Saswat Mishra",
+      "role": "Assistant Professor & Head",
+      "department": "Civil Engineering",
+      "image": "/facilities/STAFF/Mr. Saswat Mishra(Civil hod).png",
+      "email": "civil@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "17",
+      "name": "Mr. Pratik Kumar Mohapatra",
+      "role": "Assistant Professor",
+      "department": "Aeronautical Engineering",
+      "image": "/facilities/STAFF/Pratik kumar Mohapatra (AERO).jpg",
+      "email": "pratik.aero@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "18",
+      "name": "Mrs. Rupali Sahoo",
+      "role": "Assistant Professor",
+      "department": "Mechanical Engineering",
+      "image": "/facilities/STAFF/RUPALI SAHOO (MECH).jpg",
+      "email": "rupali.mech@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "19",
+      "name": "Mrs. Rasmita Sahoo",
+      "role": "Assistant Professor",
+      "department": "Basic Science & Humanities",
+      "image": "/facilities/STAFF/Rasmita Sahoo (BS).png",
+      "email": "rasmita.bsh@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "20",
+      "name": "Dr. Sangram Keshari Samal",
+      "role": "Professor & Head",
+      "department": "Aeronautical Engineering",
+      "image": "/facilities/STAFF/SANGRAM KESHARI SAMAL (aero hod).jpg",
+      "email": "aero@becbbsr.ac.in",
+      "tag": "HOD"
+    },
+    {
+      "id": "21",
+      "name": "Mr. Santanu Mohapatra",
+      "role": "Assistant Professor",
+      "department": "Mechanical Engineering",
+      "image": "/facilities/STAFF/SANTANU MOHAPATRA (MECH).jpg",
+      "email": "santanu.mech@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "22",
+      "name": "Mr. Sushil Harichandan",
+      "role": "Assistant Professor",
+      "department": "Agriculture Engineering",
+      "image": "/facilities/STAFF/SUSHILHARICHANDAN (AGRI).jpg",
+      "email": "sushil.agri@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "23",
+      "name": "Mrs. Snigdharani Jena",
+      "role": "Assistant Professor",
+      "department": "Agriculture Engineering",
+      "image": "/facilities/STAFF/Snigdharani Jena (AGRI).jpg",
+      "email": "snigdharani.agri@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "24",
+      "name": "Mrs. Snigdharani Jena",
+      "role": "Assistant Professor",
+      "department": "MBA",
+      "image": "/facilities/STAFF/Snigdharani Jena (MBA).jpg",
+      "email": "snigdharani.mba@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "25",
+      "name": "Mrs. Sumitra Sahoo",
+      "role": "Assistant Professor",
+      "department": "Basic Science & Humanities",
+      "image": "/facilities/STAFF/Sumitra Sahoo (BS).jpg",
+      "email": "sumitra.bsh@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "26",
+      "name": "Mrs. Sunita Sahu",
+      "role": "Assistant Professor",
+      "department": "Computer Science Engineering",
+      "image": "/facilities/STAFF/SunitaSahu(CSE).jpg",
+      "email": "sunita.cse@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "27",
+      "name": "Mr. Suraj Kumar Sahoo",
+      "role": "Assistant Professor",
+      "department": "Aeronautical Engineering",
+      "image": "/facilities/STAFF/Suraj Kumar Sahoo (AERO).jpg",
+      "email": "suraj.aero@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "28",
+      "name": "Mr. Swagat Prasad Das",
+      "role": "Assistant Professor",
+      "department": "Aeronautical Engineering",
+      "image": "/facilities/STAFF/Swagat Prasad Das (AERO).jpg",
+      "email": "swagat.aero@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "29",
+      "name": "Mrs. Swetalina Das",
+      "role": "Assistant Professor",
+      "department": "Basic Science & Humanities",
+      "image": "/facilities/STAFF/Swetalina Das (BS).jpg",
+      "email": "swetalina.bsh@becbbsr.ac.in",
+      "tag": "Faculty"
+    }
+  ]
+}

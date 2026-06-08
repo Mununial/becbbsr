@@ -216,11 +216,11 @@ export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
          { name: "Chairman Message", href: "/chairman-ayush-msg" },
          { name: "Trust Members", href: "/trusty" },
          { name: "Director Profile", href: "/director-profile" },
-         { name: "Our Faculty", href: "/faculties" },
+         { name: "Our Staff", href: "/faculties" },
          { name: "Mandatory Disclosure", href: mandatoryUrl, target: "_blank" }
       ]
     },
-    { name: 'Faculty', href: '/faculties' },
+    { name: 'Staff', href: '/faculties' },
     {
       name: 'Approvals & Affiliations',
       href: '#',

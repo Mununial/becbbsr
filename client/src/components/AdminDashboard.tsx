@@ -203,11 +203,12 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
    const addFaculty = () => {
       const newFaculty: Faculty = {
          id: Date.now().toString(),
-         name: "New Faculty Name",
+         name: "New Staff Member",
          role: "Assistant Professor",
-         email: "faculty@becbbsr.ac.in",
+         email: "staff@becbbsr.ac.in",
          department: "CSE Engg",
-         image: ""
+         image: "",
+         tag: "Faculty"
       };
       onSaveFaculties([newFaculty, ...faculties]);
    };
@@ -289,7 +290,7 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
                   onClick={() => setActiveTab('faculty')}
                   className={cn("flex items-center gap-4 px-6 py-4 rounded-xl font-black text-sm transition-all", activeTab === 'faculty' ? 'bg-primary text-white shadow-lg' : 'text-white/40 hover:bg-white/5 hover:text-white')}
                >
-                  <Users className="w-5 h-5" /> FACULTY
+                  <Users className="w-5 h-5" /> STAFF
                </button>
                <button
                   onClick={() => setActiveTab('docs')}
@@ -553,29 +554,32 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
                   <>
                      <div className="flex justify-between items-end mb-16">
                         <div>
-                           <h2 className="text-5xl font-black text-white uppercase tracking-tighter mb-4">Faculty Members</h2>
-                           <p className="text-white/30 text-lg font-medium">Manage faculty for all departments. Upload photos and details.</p>
+                           <h2 className="text-5xl font-black text-white uppercase tracking-tighter mb-4">Staff Members</h2>
+                           <p className="text-white/30 text-lg font-medium">Manage staff members for all departments. Upload photos and details.</p>
                         </div>
                         <button onClick={addFaculty} className="px-8 py-5 bg-secondary text-navy-900 font-black text-xs rounded-xl shadow-2xl hover:scale-105 transition-all flex items-center gap-3">
-                           <PlusCircle className="w-5 h-5" /> ADD NEW FACULTY
+                           <PlusCircle className="w-5 h-5" /> ADD NEW STAFF MEMBER
                         </button>
                      </div>
 
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                         {faculties.map((f) => (
-                           <div key={f.id} className="bg-navy-900 border border-white/5 rounded-3xl overflow-hidden group hover:border-primary/50 transition-all p-6 shadow-2xl relative">
-                              <div className="flex items-center gap-6 mb-6">
-                                 <div className="w-16 h-16 rounded-full overflow-hidden bg-black/50 border border-white/10 flex items-center justify-center shrink-0">
-                                    {f.image ? <img src={f.image} className="w-full h-full object-cover" /> : <Users className="w-8 h-8 text-white/30" />}
+                           <div key={f.id} className="bg-navy-900 border border-white/5 rounded-3xl overflow-hidden group hover:border-primary/50 transition-all p-6 shadow-2xl relative flex flex-col justify-between">
+                              <div>
+                                 <div className="flex items-center gap-6 mb-6">
+                                    <div className="w-16 h-16 rounded-full overflow-hidden bg-black/50 border border-white/10 flex items-center justify-center shrink-0">
+                                       {f.image ? <img src={f.image} className="w-full h-full object-cover" /> : <Users className="w-8 h-8 text-white/30" />}
+                                    </div>
+                                    <div className="flex-1">
+                                       <h3 className="font-bold text-lg text-white mb-1">{f.name}</h3>
+                                       <p className="text-primary text-xs font-bold uppercase tracking-widest">{f.role}</p>
+                                    </div>
                                  </div>
-                                 <div className="flex-1">
-                                    <h3 className="font-bold text-lg text-white mb-1">{f.name}</h3>
-                                    <p className="text-primary text-xs font-bold uppercase tracking-widest">{f.role}</p>
+                                 <div className="space-y-2 mb-6">
+                                    <p className="text-white/40 text-xs"><span className="text-white/20 uppercase tracking-widest mr-2">Dept:</span> {f.department}</p>
+                                    <p className="text-white/40 text-xs"><span className="text-white/20 uppercase tracking-widest mr-2">Email:</span> {f.email}</p>
+                                    <p className="text-white/40 text-xs"><span className="text-white/20 uppercase tracking-widest mr-2">Type:</span> <span className={f.tag === 'HOD' ? 'text-cyan-400 font-bold' : 'text-white/60 font-bold'}>{f.tag || 'Faculty'}</span></p>
                                  </div>
-                              </div>
-                              <div className="space-y-2 mb-6">
-                                 <p className="text-white/40 text-xs"><span className="text-white/20 uppercase tracking-widest mr-2">Dept:</span> {f.department}</p>
-                                 <p className="text-white/40 text-xs"><span className="text-white/20 uppercase tracking-widest mr-2">Email:</span> {f.email}</p>
                               </div>
                               <div className="flex gap-3 mt-auto">
                                  <button onClick={() => setEditingFaculty(f)} className="flex-1 bg-white/5 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">Edit Info</button>
@@ -1120,7 +1124,7 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
             <div className="fixed inset-0 z-[7000] bg-navy-950/95 flex items-center justify-center p-8">
                <div className="bg-navy-900 rounded-[3rem] w-full max-w-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                   <div className="p-10 border-b border-white/5 flex justify-between items-center bg-white/5">
-                      <h2 className="text-3xl font-black uppercase tracking-tighter">Edit Faculty Member</h2>
+                      <h2 className="text-3xl font-black uppercase tracking-tighter">Edit Staff Member</h2>
                       <button onClick={() => setEditingFaculty(null)}><X className="w-8 h-8 opacity-40 hover:opacity-100" /></button>
                   </div>
                   <div className="p-10 overflow-y-auto space-y-8 custom-scrollbar">
@@ -1138,7 +1142,7 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
                                      {uploading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'UPLOAD PHOTO'}
                                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, (url) => setEditingFaculty({ ...editingFaculty, image: url }))} />
                                   </label>
-                               </div>
+                                </div>
                             </div>
                          </div>
                          <div className="col-span-2 md:col-span-1 space-y-6">
@@ -1174,11 +1178,22 @@ export const AdminDashboard = ({ onClose, slides, onSave, scenes, onSaveScenes, 
                                <input type="email" className="w-full bg-navy-950 p-4 border border-white/5 rounded-xl outline-none focus:border-primary transition-all text-white" value={editingFaculty.email} onChange={(e) => setEditingFaculty({ ...editingFaculty, email: e.target.value })} />
                             </div>
                          </div>
+                         <div>
+                            <label className="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-3">Role Type Tag</label>
+                            <select 
+                               className="w-full bg-navy-950 p-4 border border-white/5 rounded-xl outline-none focus:border-primary transition-all text-white/80 focus:outline-none" 
+                               value={editingFaculty.tag || 'Faculty'} 
+                               onChange={(e) => setEditingFaculty({ ...editingFaculty, tag: e.target.value })}
+                            >
+                               <option value="Faculty">Faculty (Standard Listing)</option>
+                               <option value="HOD">HOD (Head of Department)</option>
+                            </select>
+                         </div>
                       </div>
                   </div>
                   <div className="p-10 bg-white/5 border-t border-white/5 flex justify-end gap-6">
                       <button onClick={() => setEditingFaculty(null)} className="px-10 py-4 bg-white/5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Cancel</button>
-                      <button onClick={() => { onSaveFaculties(faculties.map(f => f.id === editingFaculty.id ? editingFaculty : f)); setEditingFaculty(null); }} className="px-10 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">Save Faculty</button>
+                      <button onClick={() => { onSaveFaculties(faculties.map(f => f.id === editingFaculty.id ? editingFaculty : f)); setEditingFaculty(null); }} className="px-10 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">Save Staff Member</button>
                   </div>
                </div>
             </div>

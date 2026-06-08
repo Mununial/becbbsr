@@ -82,6 +82,7 @@ export type Faculty = {
   email: string;
   department: string;
   image?: string;
+  tag?: string;
 }
 
 export interface Note {
