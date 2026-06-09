@@ -41,7 +41,7 @@
       "name": "Mr. Bijay Kumar Sahu",
       "role": "Assistant Professor & Head",
       "department": "Electrical Engineering",
-      "image": "/facilities/STAFF/BIJAY KUMAR SAHU (EE).jpeg",
+      "image": "/facilities/STAFF/MR.BIJAY KUMAR SAHU.jpg",
       "email": "electrical@becbbsr.ac.in",
       "tag": "HOD"
     },
@@ -259,6 +259,87 @@
       "department": "Basic Science & Humanities",
       "image": "/facilities/STAFF/Swetalina Das (BS).jpg",
       "email": "swetalina.bsh@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "30",
+      "name": "Mr. Adarsh Pattnaik",
+      "role": "Assistant Professor",
+      "department": "Civil Engineering",
+      "image": "/facilities/STAFF/Mr.ADARSH PATTNAIK.jpg",
+      "email": "adarsh.civil@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "31",
+      "name": "Mrs. Harishankar Jeevan Dash",
+      "role": "Assistant Professor",
+      "department": "Civil Engineering",
+      "image": "/facilities/STAFF/Mrs.HARISHANKAR JEEVAN DASH.jpg",
+      "email": "harishankar.civil@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "32",
+      "name": "Ms. Ompriya Sahu",
+      "role": "Assistant Professor",
+      "department": "Civil Engineering",
+      "image": "/facilities/STAFF/Ms. OMPRIYA SAHU.jpg",
+      "email": "ompriya.civil@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "33",
+      "name": "Dr. Binaya Kumar Malika",
+      "role": "Associate Professor",
+      "department": "Electrical Engineering",
+      "image": "/facilities/STAFF/DR.BINAYA KUMAR MALIKA.jpg",
+      "email": "binaya.ee@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "34",
+      "name": "Dr. Pabitra Mohan Dash",
+      "role": "Professor",
+      "department": "Electrical Engineering",
+      "image": "/facilities/STAFF/DR.PABITRA MOHAN DASH.jpg",
+      "email": "pabitra.ee@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "35",
+      "name": "Mr. Jayaprakash Mishra",
+      "role": "Assistant Professor",
+      "department": "Electrical Engineering",
+      "image": "/facilities/STAFF/MR. JAYAPRAKASH MISHRA.jpg",
+      "email": "jayaprakash.ee@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "36",
+      "name": "Mr. Aruna Kumar Rout",
+      "role": "Assistant Professor",
+      "department": "Electrical Engineering",
+      "image": "/facilities/STAFF/MR.ARUNA KUMAR ROUT.jpg",
+      "email": "aruna.ee@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "37",
+      "name": "Mr. Sandeep Prasad Singh",
+      "role": "Assistant Professor",
+      "department": "Electrical Engineering",
+      "image": "/facilities/STAFF/MR.SANDEEP PRASAD SINGH.jpg",
+      "email": "sandeep.ee@becbbsr.ac.in",
+      "tag": "Faculty"
+    },
+    {
+      "id": "38",
+      "name": "Mr. Gouri Sankar Behera",
+      "role": "Assistant Professor",
+      "department": "Electrical Engineering",
+      "image": "/facilities/STAFF/Mr.Gouri Sankar Behera.jpg",
+      "email": "gouri.ee@becbbsr.ac.in",
       "tag": "Faculty"
     }
   ]

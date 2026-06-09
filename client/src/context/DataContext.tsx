@@ -156,7 +156,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       { id: "2", name: "Er. Anita Behera", role: "Associate Professor & Head", department: "Computer Science Engineering", image: "/facilities/STAFF/Anita Behera(cse hod).jpg", email: "cse@becbbsr.ac.in", tag: "HOD" },
       { id: "3", name: "Mr. Ashis Kumar Behera", role: "Assistant Professor & Head", department: "MBA", image: "/facilities/STAFF/Ashis Kumar Behera(mba hod).jpg", email: "mba@becbbsr.ac.in", tag: "HOD" },
       { id: "4", name: "Mr. Avinash Lenka", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Avinash Lenka (BS).png", email: "avinash.bsh@becbbsr.ac.in", tag: "Faculty" },
-      { id: "5", name: "Mr. Bijay Kumar Sahu", role: "Assistant Professor & Head", department: "Electrical Engineering", image: "/facilities/STAFF/BIJAY KUMAR SAHU (EE).jpeg", email: "electrical@becbbsr.ac.in", tag: "HOD" },
+      { id: "5", name: "Mr. Bijay Kumar Sahu", role: "Assistant Professor & Head", department: "Electrical Engineering", image: "/facilities/STAFF/MR.BIJAY KUMAR SAHU.jpg", email: "electrical@becbbsr.ac.in", tag: "HOD" },
       { id: "6", name: "Mr. Chinmaya Kumar Panda", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Chinmaya Kumar Pqndaanda(BS).png", email: "chinmaya.bsh@becbbsr.ac.in", tag: "Faculty" },
       { id: "7", name: "Dr. Bishnu Prasad Mishra", role: "Professor & Head", department: "Mechanical Engineering", image: "/facilities/STAFF/Dr. Bishnu Prasad Mishra(mech hod ).jpg", email: "mechanical@becbbsr.ac.in", tag: "HOD" },
       { id: "8", name: "Dr. Sonali Swagatika", role: "Assistant Professor", department: "Agriculture Engineering", image: "/facilities/STAFF/Dr. Sonali Swagatika (AGRI).jpg", email: "sonali.agri@becbbsr.ac.in", tag: "Faculty" },
@@ -180,7 +180,16 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       { id: "26", name: "Mrs. Sunita Sahu", role: "Assistant Professor", department: "Computer Science Engineering", image: "/facilities/STAFF/SunitaSahu(CSE).jpg", email: "sunita.cse@becbbsr.ac.in", tag: "Faculty" },
       { id: "27", name: "Mr. Suraj Kumar Sahoo", role: "Assistant Professor", department: "Aeronautical Engineering", image: "/facilities/STAFF/Suraj Kumar Sahoo (AERO).jpg", email: "suraj.aero@becbbsr.ac.in", tag: "Faculty" },
       { id: "28", name: "Mr. Swagat Prasad Das", role: "Assistant Professor", department: "Aeronautical Engineering", image: "/facilities/STAFF/Swagat Prasad Das (AERO).jpg", email: "swagat.aero@becbbsr.ac.in", tag: "Faculty" },
-      { id: "29", name: "Mrs. Swetalina Das", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Swetalina Das (BS).jpg", email: "swetalina.bsh@becbbsr.ac.in", tag: "Faculty" }
+      { id: "29", name: "Mrs. Swetalina Das", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Swetalina Das (BS).jpg", email: "swetalina.bsh@becbbsr.ac.in", tag: "Faculty" },
+      { id: "30", name: "Mr. Adarsh Pattnaik", role: "Assistant Professor", department: "Civil Engineering", image: "/facilities/STAFF/Mr.ADARSH PATTNAIK.jpg", email: "adarsh.civil@becbbsr.ac.in", tag: "Faculty" },
+      { id: "31", name: "Mrs. Harishankar Jeevan Dash", role: "Assistant Professor", department: "Civil Engineering", image: "/facilities/STAFF/Mrs.HARISHANKAR JEEVAN DASH.jpg", email: "harishankar.civil@becbbsr.ac.in", tag: "Faculty" },
+      { id: "32", name: "Ms. Ompriya Sahu", role: "Assistant Professor", department: "Civil Engineering", image: "/facilities/STAFF/Ms. OMPRIYA SAHU.jpg", email: "ompriya.civil@becbbsr.ac.in", tag: "Faculty" },
+      { id: "33", name: "Dr. Binaya Kumar Malika", role: "Associate Professor", department: "Electrical Engineering", image: "/facilities/STAFF/DR.BINAYA KUMAR MALIKA.jpg", email: "binaya.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "34", name: "Dr. Pabitra Mohan Dash", role: "Professor", department: "Electrical Engineering", image: "/facilities/STAFF/DR.PABITRA MOHAN DASH.jpg", email: "pabitra.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "35", name: "Mr. Jayaprakash Mishra", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/MR. JAYAPRAKASH MISHRA.jpg", email: "jayaprakash.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "36", name: "Mr. Aruna Kumar Rout", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/MR.ARUNA KUMAR ROUT.jpg", email: "aruna.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "37", name: "Mr. Sandeep Prasad Singh", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/MR.SANDEEP PRASAD SINGH.jpg", email: "sandeep.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "38", name: "Mr. Gouri Sankar Behera", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/Mr.Gouri Sankar Behera.jpg", email: "gouri.ee@becbbsr.ac.in", tag: "Faculty" }
     ]);
 
     // 5. Placed Alumni
