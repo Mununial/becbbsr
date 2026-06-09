@@ -245,7 +245,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     const unsubOfficialDocs = setupListener('official-docs', setOfficialDocs, [
       { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory final.pdf?v=1.0.2', category: 'Disclosure' },
       { id: 'aicte-approval', name: 'AICTE Approval', url: '/facilities/AICTE_Approval.pdf?v=1.0.1', category: 'Approval' },
-      { id: 'bput-affiliation', name: 'BPUT Affiliation', url: '/facilities/BPUT_Affiliation.pdf?v=1.0.1', category: 'Affiliation' },
+      { id: 'bput-affiliation', name: 'BPUT Affiliation', url: '/facilities/BPUT_Affiliation.pdf?v=2.0.0', category: 'Affiliation' },
       { id: 'sctevt-affiliation', name: 'SCTE&VT Affiliation', url: '/facilities/SCTEVT_Affiliation.png?v=1.0.1', category: 'Affiliation' }
     ]);
 
