@@ -4,6 +4,7 @@ import { DepartmentSidebar, type HODData } from '../components/DepartmentSidebar
 import { X } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { motion } from 'framer-motion';
+import { DepartmentDetailsHub } from '../components/DepartmentDetailsHub';
 
 const pageSchema = {
   "@context": "https://schema.org",
@@ -210,6 +211,11 @@ export const BasicScienceHumanities = () => {
           <DepartmentSidebar hod={hodData} activeBranch="bsh" />
         </div>
 
+      </div>
+
+      {/* ─── Redesigned Full Width Landscape Department Details Hub ─── */}
+      <div className="mt-12">
+        <DepartmentDetailsHub department="bsh" />
       </div>
 
       {/* ─── Image Lightbox modal ─── */}

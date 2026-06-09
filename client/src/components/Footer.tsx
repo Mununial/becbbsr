@@ -184,6 +184,31 @@ export const Footer = () => {
           </div>
         </div>
 
+        {/* Placement Cell Contact Strip */}
+        <div className="mb-16 bg-white/5 border border-white/10 rounded-2xl px-8 py-6 flex flex-col md:flex-row items-start md:items-center gap-6">
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-accent/30 bg-white/10 shrink-0">
+              <img src="/facilities/image.png" alt="Subrat Kumar Sahoo" className="w-full h-full object-cover object-top" />
+            </div>
+            <div>
+              <div className="text-[10px] font-black text-accent uppercase tracking-[0.25em] mb-0.5">Training &amp; Placement Cell</div>
+              <div className="text-white font-black text-sm uppercase tracking-tight">Mr. Subrat Kumar Sahoo</div>
+              <div className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Head — Placement Department</div>
+            </div>
+          </div>
+          <div className="w-px h-12 bg-white/10 hidden md:block" />
+          <div className="flex flex-col sm:flex-row gap-4">
+            <a href="tel:7008684743" className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-accent/30 hover:bg-white/10 transition-all group">
+              <Phone className="w-4 h-4 text-accent shrink-0" />
+              <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">7008684743</span>
+            </a>
+            <a href="mailto:subrat@becbbsr.ac.in" className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-accent/30 hover:bg-white/10 transition-all group">
+              <Mail className="w-4 h-4 text-accent shrink-0" />
+              <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">subrat@becbbsr.ac.in</span>
+            </a>
+          </div>
+        </div>
+
         <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col gap-1 text-center md:text-left">
             <div className="text-slate-600 text-xs font-bold uppercase tracking-[0.2em] font-inter">

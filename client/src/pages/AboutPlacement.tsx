@@ -1,6 +1,6 @@
 import { PageLayout } from '../components/PageLayout';
 import { SEO } from '../components/SEO';
-import { Briefcase, Target, CheckCircle2, TrendingUp, Award } from 'lucide-react';
+import { Briefcase, Target, CheckCircle2, TrendingUp, Award, Phone, Mail } from 'lucide-react';
 
 const objectives = [
   "Organize campus placement for final year students.",
@@ -77,61 +77,136 @@ export const AboutPlacement = () => {
            </div>
         </section>
 
-        {/* Placement Head Desk */}
-        <section className="bg-gradient-to-br from-slate-900 via-navy-950 to-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 border border-white/5 relative overflow-hidden shadow-2xl">
-           <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-             style={{
-               backgroundImage: 'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)',
-               backgroundSize: '30px 30px'
-             }}
-           />
-           <div className="absolute top-0 right-1/4 w-72 h-72 bg-accent/10 rounded-full blur-[80px] -translate-y-1/2 pointer-events-none" />
-           <div className="absolute bottom-0 left-1/4 w-56 h-56 bg-primary/20 rounded-full blur-[70px] translate-y-1/2 pointer-events-none" />
+        {/* Placement Head Desk — Government-Style Profile */}
+        <section style={{ background: '#fff', border: '2px solid #1a237e', borderRadius: '0', padding: '0', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.13)' }}>
 
-           <div className="relative z-10 flex flex-col lg:flex-row gap-10 items-center">
-             {/* Head Image */}
-             <div className="w-44 h-44 md:w-52 md:h-52 rounded-3xl overflow-hidden border-4 border-white/10 shrink-0 bg-slate-800 shadow-2xl relative group">
-               <img 
-                 src="/facilities/image.png" 
-                 alt="Subrat Kumar Sahoo" 
-                 className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" 
-               />
-             </div>
-             
-             {/* Head Details */}
-             <div className="flex-1 space-y-5 text-center lg:text-left">
-               <div className="space-y-2">
-                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-accent/15 border border-accent/30 text-accent rounded-full text-[9px] font-black uppercase tracking-widest">
-                   <Award className="w-3.5 h-3.5" /> Department Leadership
-                 </span>
-                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white font-poppins">
-                   Subrat Kumar Sahoo
-                 </h3>
-                 <p className="text-xs text-accent font-bold uppercase tracking-widest font-inter">
-                   Head - Training & Placement Department
-                 </p>
-               </div>
+          {/* Header Bar */}
+          <div style={{ background: '#1a237e', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px', borderBottom: '4px solid #c8a400', flexWrap: 'wrap' }}>
+            <Award style={{ color: '#ffd700', width: 20, height: 20, flexShrink: 0 }} />
+            <span style={{ color: '#fff', fontWeight: 800, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', fontFamily: 'Georgia, serif', lineHeight: 1.4 }}>
+              Training &amp; Placement Department — Head of Department
+            </span>
+          </div>
 
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left font-inter text-xs">
-                 <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
-                   <span className="text-[9px] font-black text-white/40 uppercase tracking-widest block">Education</span>
-                   <p className="font-bold text-white uppercase">MBA, PGDEMA</p>
-                 </div>
-                 <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-1">
-                   <span className="text-[9px] font-black text-white/40 uppercase tracking-widest block">Experience</span>
-                   <p className="font-bold text-white uppercase">19+ Years</p>
-                 </div>
-               </div>
+          {/* Profile Body — stacks on mobile */}
+          <div className="flex flex-col md:flex-row" style={{ alignItems: 'stretch', gap: 0 }}>
 
-               <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-2 text-left font-inter">
-                 <span className="text-[9px] font-black text-accent uppercase tracking-widest block">Area of Specialization</span>
-                 <p className="text-xs text-white/80 leading-relaxed font-semibold">
-                   Training & Placement, Campus Recruitment, Industry Relations, Career Development, and Employability Enhancement.
-                 </p>
-               </div>
-             </div>
-           </div>
+            {/* Photo Column — full width on mobile, fixed on desktop */}
+            <div className="w-full md:w-auto border-b-[3px] md:border-b-0 md:border-r-[3px] border-[#1a237e]" style={{
+              background: 'linear-gradient(180deg, #e8edf8 0%, #c9d4ee 60%, #b0bedd 100%)',
+              padding: '32px 24px 0 24px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0',
+              position: 'relative',
+              overflow: 'hidden',
+              flexShrink: 0
+            }}>
+              {/* Stripe decoration */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, height: '8px',
+                background: 'repeating-linear-gradient(90deg, #1a237e 0px, #1a237e 40px, #c8a400 40px, #c8a400 48px)'
+              }} />
+
+              {/* Photo Frame */}
+              <div style={{
+                width: '200px',
+                height: '250px',
+                border: '5px solid #1a237e',
+                outline: '3px solid #c8a400',
+                outlineOffset: '4px',
+                overflow: 'hidden',
+                background: '#d0daf2',
+                flexShrink: 0,
+                position: 'relative',
+                boxShadow: '0 12px 40px rgba(26,35,126,0.25), 0 4px 12px rgba(0,0,0,0.15)',
+                marginTop: '20px'
+              }}>
+                <img
+                  src="/facilities/image.png"
+                  alt="Subrat Kumar Sahoo"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block', filter: 'contrast(1.05) brightness(1.02)' }}
+                />
+              </div>
+
+              {/* Nameplate */}
+              <div style={{ background: '#1a237e', color: '#fff', padding: '10px 20px', textAlign: 'center', width: 'calc(100% + 48px)', marginLeft: '-24px', marginRight: '-24px', marginTop: '20px', borderTop: '4px solid #c8a400' }}>
+                <div style={{ fontWeight: 900, fontSize: '14px', letterSpacing: '2px', textTransform: 'uppercase', fontFamily: 'Georgia, serif' }}>
+                  Subrat Kumar Sahoo
+                </div>
+              </div>
+              <div style={{ background: '#c8a400', color: '#000', padding: '5px 20px', textAlign: 'center', width: 'calc(100% + 48px)', marginLeft: '-24px', marginRight: '-24px' }}>
+                <div style={{ fontWeight: 800, fontSize: '10px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+                  Head — Training &amp; Placement Dept.
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT — Details Column */}
+            <div style={{ flex: 1, padding: '20px 16px', minWidth: 0 }}>
+
+              {/* Name & Designation */}
+              <div style={{ borderBottom: '2px solid #1a237e', paddingBottom: '12px', marginBottom: '16px' }}>
+                <h3 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, fontSize: '20px', color: '#1a237e', textTransform: 'uppercase', margin: 0, letterSpacing: '1px', wordBreak: 'break-word' }}>
+                  Mr. Subrat Kumar Sahoo
+                </h3>
+                <p style={{ color: '#c8a400', fontWeight: 700, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.5px', margin: '4px 0 0 0', fontFamily: 'Georgia, serif' }}>
+                  Head — Training &amp; Placement Department
+                </p>
+                <p style={{ color: '#444', fontWeight: 500, fontSize: '12px', margin: '4px 0 0 0' }}>
+                  Bhubaneswar Engineering College (BEC), Bhubaneswar, Odisha
+                </p>
+              </div>
+
+              {/* Info Table — responsive */}
+              <div style={{ overflowX: 'auto', marginBottom: '16px' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                  <tbody>
+                    {[
+                      { label: 'Qualification', value: 'MBA, PGDEMA' },
+                      { label: 'Experience', value: '19+ Years in Industry & Academia' },
+                      { label: 'Specialization', value: 'Training & Placement, Campus Recruitment, Industry Relations, Career Development, Employability Enhancement' },
+                      { label: 'Department', value: 'Training & Placement Cell, BEC' },
+                      { label: 'Phone No.', value: '7008684743', isPhone: true },
+                      { label: 'Email ID', value: 'subrat@becbbsr.ac.in', isEmail: true },
+                    ].map((row: any, i) => (
+                      <tr key={i} style={{ borderBottom: '1px solid #e0e0e0', background: i % 2 === 0 ? '#f7f8fc' : '#fff' }}>
+                        <td style={{ padding: '8px 10px', fontWeight: 700, color: '#1a237e', width: '35%', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.5px', borderRight: '2px solid #1a237e', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            {row.isPhone && <Phone style={{ width: 11, height: 11, flexShrink: 0 }} />}
+                            {row.isEmail && <Mail style={{ width: 11, height: 11, flexShrink: 0 }} />}
+                            {row.label}
+                          </span>
+                        </td>
+                        <td style={{ padding: '8px 10px', color: '#222', fontWeight: 600, wordBreak: 'break-word' }}>
+                          {row.isPhone ? (
+                            <a href={`tel:${row.value}`} style={{ color: '#1a237e', textDecoration: 'none', fontWeight: 700 }}>{row.value}</a>
+                          ) : row.isEmail ? (
+                            <a href={`mailto:${row.value}`} style={{ color: '#1a237e', textDecoration: 'none', fontWeight: 700, wordBreak: 'break-all' }}>{row.value}</a>
+                          ) : row.value}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Placement Record Badge */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', background: '#f0f4ff', border: '1.5px solid #1a237e', padding: '10px 12px' }}>
+                <div style={{ width: '8px', minHeight: '36px', background: '#1a237e', flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontWeight: 800, color: '#1a237e', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>Placement Record</div>
+                  <div style={{ color: '#333', fontSize: '12px', fontWeight: 600, lineHeight: 1.6 }}>
+                    75%+ Placement Rate &nbsp;|&nbsp; Highest: ₹10 LPA &nbsp;|&nbsp; Avg: ₹3.5 LPA
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </section>
+
 
         {/* Training Modules */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-12">
