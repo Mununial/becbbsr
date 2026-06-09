@@ -212,7 +212,7 @@ const staffData: FacultyMember[] = [
     tag: "Faculty"
   },
   { 
-    name: "Mrs. Snigdharani Jena", 
+    name: "Ms. Soyeenika Mishra", 
     role: "Assistant Professor", 
     branch: "MBA", 
     image: "/facilities/STAFF/Snigdharani Jena (MBA).jpg", 

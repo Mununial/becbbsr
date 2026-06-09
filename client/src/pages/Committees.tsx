@@ -165,7 +165,7 @@ const committeesData: Committee[] = [
         email: "snigdharani.agri@becbbsr.ac.in"
       },
       {
-        name: "Mrs. Snigdharani Jena",
+        name: "Ms. Soyeenika Mishra",
         role: "Member",
         collegeRole: "Assistant Professor, MBA",
         image: "/facilities/STAFF/Snigdharani Jena (MBA).jpg",
