@@ -904,6 +904,145 @@ app.post('/api/chatbot/inquiries/clear', (req, res) => {
 });
 
 // Generic Config Persistence Endpoints
+const https = require('https');
+const API_KEY = "AIzaSyAM4mbEIHcTUMNr7l4huOCOalFRKjGUIU4";
+const PROJECT_ID = "becbbsr-90a44";
+const BASE_URL = "firestore.googleapis.com";
+
+let cachedFbToken = null;
+let tokenExpiry = 0;
+
+// Authenticate via Firebase Auth REST API using Admin credentials
+async function getAuthToken() {
+  return new Promise((resolve, reject) => {
+    const postData = JSON.stringify({
+      email: "admin@becbbsr.ac.in",
+      password: "becadmin@2026",
+      returnSecureToken: true
+    });
+
+    const options = {
+      hostname: 'identitytoolkit.googleapis.com',
+      path: `/v1/accounts:signInWithPassword?key=${API_KEY}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          try {
+            const result = JSON.parse(data);
+            resolve({
+              token: result.idToken,
+              expiresIn: parseInt(result.expiresIn || '3600')
+            });
+          } catch (e) {
+            reject(new Error("Failed to parse Auth response: " + e.message));
+          }
+        } else {
+          reject(new Error(`Auth failed: ${res.statusCode} - ${data}`));
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.write(postData);
+    req.end();
+  });
+}
+
+// Convert JS structures to Firestore REST JSON value format
+function toFirestoreValue(val) {
+  if (val === null || val === undefined) return { nullValue: null };
+  if (typeof val === 'string') return { stringValue: val };
+  if (typeof val === 'boolean') return { booleanValue: val };
+  if (typeof val === 'number') return Number.isInteger(val) ? { integerValue: String(val) } : { doubleValue: val };
+  if (Array.isArray(val)) return { arrayValue: { values: val.map(toFirestoreValue) } };
+  if (typeof val === 'object') {
+    const fields = {};
+    for (const [k, v] of Object.entries(val)) {
+      fields[k] = toFirestoreValue(v);
+    }
+    return { mapValue: { fields } };
+  }
+  return { stringValue: String(val) };
+}
+
+function makeBody(items) {
+  return JSON.stringify({
+    fields: {
+      items: toFirestoreValue(items)
+    }
+  });
+}
+
+async function patchDoc(docId, items, idToken) {
+  return new Promise((resolve, reject) => {
+    const body = makeBody(items);
+    const options = {
+      hostname: BASE_URL,
+      path: `/v1/projects/${PROJECT_ID}/databases/(default)/documents/configs/${docId}`,
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+        'Authorization': `Bearer ${idToken}`
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(data);
+        } else {
+          reject(new Error(`Firestore PATCH failed: ${res.statusCode} - ${data}`));
+        }
+      });
+    });
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+async function getFirebaseToken() {
+  const now = Date.now();
+  if (cachedFbToken && now < tokenExpiry) {
+    return cachedFbToken;
+  }
+  const tokenData = await getAuthToken();
+  cachedFbToken = tokenData.token;
+  tokenExpiry = now + (tokenData.expiresIn * 1000) - 60000; // 1 min buffer
+  return cachedFbToken;
+}
+
+async function syncConfigToFirestore(docId, data) {
+  try {
+    let items = [];
+    if (Array.isArray(data)) {
+      items = data;
+    } else if (data && Array.isArray(data.items)) {
+      items = data.items;
+    } else if (data && typeof data === 'object') {
+      items = [data];
+    }
+
+    const token = await getFirebaseToken();
+    await patchDoc(docId, items, token);
+    console.log(`[Firestore Sync] Successfully synced configs/${docId}`);
+  } catch (err) {
+    console.error(`[Firestore Sync] Error syncing configs/${docId}:`, err.message);
+  }
+}
+
 app.get('/api/config/:key', (req, res) => {
   const key = req.params.key;
   if (key.includes('..') || key.includes('/') || key.includes('\\')) {
@@ -929,11 +1068,18 @@ app.post('/api/config/:key', (req, res) => {
   const file = path.join(__dirname, `${key}.json`);
   try {
     fs.writeFileSync(file, JSON.stringify(req.body, null, 2));
+
+    // Sync to Firestore in the background
+    syncConfigToFirestore(key, req.body).catch(err => {
+      console.error(`[Firestore Sync] Background sync failed for ${key}:`, err.message);
+    });
+
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Achievements persistence
 const achievementsFile = path.join(__dirname, 'achievements.json');
