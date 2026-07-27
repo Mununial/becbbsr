@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowUpRight, Camera } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Link } from 'react-router-dom';
+const Link = ({ to, ...props }: any) => <a href={to} {...props} />;
 import { type GalleryImage } from '../types';
 
 interface CampusGalleryProps {

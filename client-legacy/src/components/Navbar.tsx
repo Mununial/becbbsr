@@ -1,0 +1,600 @@
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, LayoutDashboard, Mail, Phone, ChevronDown, GraduationCap, Bell, Zap, Trophy, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { cn } from '../lib/utils';
+import { useData } from '../context/DataContext';
+
+interface NavItem {
+  name: string;
+  href: string;
+  target?: string;
+  dropdown?: { name: string; href: string; target?: string }[];
+}
+
+const DesktopMenuItem = ({ item }: { item: NavItem }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <div 
+      className="relative flex items-center h-full group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="flex items-center">
+        {item.dropdown || item.href.startsWith('http') ? (
+          <a
+            href={item.dropdown ? undefined : item.href}
+            target={item.target}
+            rel={item.target === '_blank' ? "noopener noreferrer" : undefined}
+            className="nav-link px-3.5 py-1 text-xs font-black uppercase tracking-[0.1em] text-white/80 hover:text-white flex items-center gap-1.5 cursor-pointer"
+          >
+            {item.name}
+            {item.dropdown && <ChevronDown className={cn("w-3 h-3 text-white/60 transition-transform duration-300", isHovered && "rotate-180 text-accent")} />}
+          </a>
+        ) : (
+          <Link
+            to={item.href}
+            className="nav-link px-2 py-1 text-xs font-black uppercase tracking-[0.1em] text-white/80 hover:text-white flex items-center gap-1 cursor-pointer"
+          >
+            {item.name}
+          </Link>
+        )}
+      </div>
+
+      {item.dropdown && (
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div
+              initial={{ opacity: 0, y: 15, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 15, scale: 0.98 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="absolute top-full left-0 min-w-[260px] bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden py-3 z-[200] mt-1"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent"></div>
+              <div className="flex flex-col">
+                  {item.dropdown.map((sub) => (
+                  sub.href.startsWith('http') || sub.href.includes('/facilities/') ? (
+                    <a 
+                      key={sub.name} 
+                      href={sub.href}
+                      target={sub.target || "_blank"}
+                      rel="noopener noreferrer"
+                      className="group/sub px-6 py-3 text-[12px] font-bold text-gray-600 hover:text-white hover:bg-primary flex items-center justify-between transition-all duration-300"
+                    >
+                      <span>{sub.name}</span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/sub:opacity-100 transition-opacity" />
+                    </a>
+                  ) : (
+                    <Link 
+                      key={sub.name} 
+                      to={sub.href}
+                      className="group/sub px-6 py-3 text-[12px] font-bold text-gray-600 hover:text-white hover:bg-primary flex items-center justify-between transition-all duration-300"
+                    >
+                      <span>{sub.name}</span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/sub:opacity-100 transition-opacity" />
+                    </Link>
+                  )
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
+    </div>
+  );
+};
+
+const HeaderApprovalsDropdown = ({ aicteUrl, bputUrl, sctevtUrl }: { aicteUrl: string, bputUrl: string, sctevtUrl: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className="relative flex items-center h-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <button className="px-4 py-2.5 bg-slate-50 border border-slate-100 hover:border-slate-200 text-primary rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-all duration-300">
+        <span>Approvals & Affiliations</span>
+        <ChevronDown className={cn("w-3.5 h-3.5 text-primary/60 transition-transform duration-300", isHovered && "rotate-180")} />
+      </button>
+
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute top-full right-0 min-w-[240px] bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden py-2 z-[300] mt-2"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent"></div>
+            <div className="flex flex-col">
+              {[
+                { name: "Approved by AICTE", href: aicteUrl },
+                { name: "Affiliated with BPUT", href: bputUrl },
+                { name: "Affiliated with SCTE&VT", href: sctevtUrl }
+              ].map((sub) => (
+                <a 
+                  key={sub.name} 
+                  href={sub.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/sub px-5 py-2.5 text-[11px] font-bold text-gray-600 hover:text-white hover:bg-primary flex items-center justify-between transition-all duration-300"
+                >
+                  <span>{sub.name}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/sub:opacity-100 transition-opacity" />
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const HeaderCommitteesDropdown = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className="relative flex items-center h-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <button className="px-4 py-2.5 bg-slate-50 border border-slate-100 hover:border-slate-200 text-primary rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-all duration-300">
+        <span>Committees</span>
+        <ChevronDown className={cn("w-3.5 h-3.5 text-primary/60 transition-transform duration-300", isHovered && "rotate-180")} />
+      </button>
+
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute top-full right-0 min-w-[220px] bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden py-2 z-[300] mt-2 font-poppins"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent"></div>
+            <div className="flex flex-col">
+              {[
+                { name: "Anti-Ragging Committee", href: "/committees#anti-ragging" },
+                { name: "Women Grievance Cell", href: "/committees#women-cell" },
+                { name: "Discipline Committee", href: "/committees#discipline" },
+                { name: "Grievance Redressal Cell", href: "/committees#grievance" },
+                { name: "SC/ST Committee", href: "/committees#sc-st" }
+              ].map((sub) => (
+                <Link 
+                  key={sub.name} 
+                  to={sub.href}
+                  className="group/sub px-5 py-2.5 text-[11px] font-bold text-gray-600 hover:text-white hover:bg-primary flex items-center justify-between transition-all duration-300"
+                >
+                  <span>{sub.name}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/sub:opacity-100 transition-opacity" />
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  const { officialDocs } = useData();
+  const mandatoryDoc = officialDocs?.find(d => d.name.toLowerCase().includes('mandatory'));
+  const rawUrl = mandatoryDoc?.url || "/facilities/BEC Mandatory final.pdf";
+  const mandatoryUrl = rawUrl.includes('?') ? rawUrl : `${rawUrl}?v=1.0.2`;
+
+  const aicteDoc = officialDocs?.find(d => d.id === 'aicte-approval' || d.name.toLowerCase().includes('aicte'));
+  const rawAicteUrl = aicteDoc?.url || "/facilities/AICTE_Approval.pdf";
+  const aicteUrl = rawAicteUrl.includes('?') ? rawAicteUrl : `${rawAicteUrl}?v=1.0.1`;
+
+  const bputDoc = officialDocs?.find(d => d.id === 'bput-affiliation' || d.name.toLowerCase().includes('bput'));
+  const rawBputUrl = bputDoc?.url || "/facilities/BPUT_Affiliation.pdf";
+  const bputUrl = rawBputUrl.includes('?') ? rawBputUrl : `${rawBputUrl}?v=1.0.1`;
+
+  const sctevtDoc = officialDocs?.find(d => d.id === 'sctevt-affiliation' || d.name.toLowerCase().includes('sctevt'));
+  const rawSctevtUrl = sctevtDoc?.url || "/facilities/SCTEVT_Affiliation.png";
+  const sctevtUrl = rawSctevtUrl.includes('?') ? rawSctevtUrl : `${rawSctevtUrl}?v=1.0.1`;
+
+  const navItems: NavItem[] = [
+    { name: 'Home', href: '/' },
+    { 
+      name: 'About', 
+      href: '#',
+      dropdown: [
+         { name: "About College", href: "/about-college" },
+         { name: "Chairman Message", href: "/chairman-ayush-msg" },
+         { name: "Trust Members", href: "/trusty" },
+         { name: "Director Profile", href: "/director-profile" },
+         { name: "Our Staff", href: "/faculties" },
+         { name: "Mandatory Disclosure", href: mandatoryUrl, target: "_blank" }
+      ]
+    },
+    { name: 'Staff', href: '/faculties' },
+    {
+      name: 'Approvals & Affiliations',
+      href: '#',
+      dropdown: [
+         { name: "Approved by AICTE", href: aicteUrl, target: "_blank" },
+         { name: "Affiliated with BPUT", href: bputUrl, target: "_blank" },
+         { name: "Affiliated with SCTE&VT", href: sctevtUrl, target: "_blank" }
+      ]
+    },
+    { 
+      name: 'Admissions', 
+      href: '#',
+      dropdown: [
+         { name: "Admission Procedure", href: "/admission/procedure" },
+         { name: "Doc Required For Admission", href: "/admission/documents" },
+         { name: "Bank Loan Procedures", href: "/admission/bank-loan" },
+         { name: "Scholarship", href: "/admission/scholarship" },
+         { name: "Apply Online", href: "/admission_query" },
+         { name: "Fees Payment", href: "/fees" },
+         { name: "Admission Contacts", href: "/admission/contacts" },
+         { name: "Download Prospectus", href: "/admission/prospectus" },
+         { name: "News & Events", href: "/admission/news" }
+      ]
+    },
+    { 
+      name: 'Programs', 
+      href: '#',
+      dropdown: [
+         { name: "B.Tech", href: "/btech" },
+         { name: "MBA", href: "/mba" },
+         { name: "Diploma", href: "/diploma" },
+         { name: "Syllabus", href: "/syllabus" }
+      ]
+    },
+    { name: 'Facilities', href: '/facilities' },
+    { name: 'E-Learning', href: '/e-learning' },
+    { 
+      name: 'Departments', 
+      href: '#',
+      dropdown: [
+          { name: "Aero & AME Engg.", href: "/aeronautical-engg" },
+          { name: "Agriculture Engineering", href: "/agriculture-engg" },
+          { name: "Civil & Environmental", href: "/civil-engg" },
+          { name: "CSE & Data Science", href: "/cse-engg" },
+          { name: "EE & Computer Science", href: "/ee-engg" },
+          { name: "Mech & Additive Mfg.", href: "/mechanical-engg" },
+          { name: "Basic Science & Humanities", href: "/basic-science-humanities" }
+      ]
+    },
+    { 
+      name: 'Placement', 
+      href: '#',
+      dropdown: [
+         { name: "About Placement", href: "/about_placement" },
+         { name: "Campus Updates", href: "/placement" }
+      ]
+    },
+    { 
+      name: 'Activities', 
+      href: '#',
+      dropdown: [
+         { name: "Achievements", href: "/achievements" },
+         { name: "Aero Club", href: "/areo-club" },
+         { name: "Seminars & Workshops", href: "/seminar-workshop" },
+         { name: "Sports & Games", href: "/sports-games" },
+         { name: "Photo Gallery", href: "/photo-gallery" }
+      ]
+    },
+    { 
+      name: 'Results', 
+      href: '#',
+      dropdown: [
+         { name: "B.Tech (BPUT)", href: "https://results.bput.ac.in/", target: "_blank" },
+         { name: "Diploma (SCTE&VT)", href: "https://sctevtexams.in/sn20Yz", target: "_blank" },
+         { name: "MBA (BPUT)", href: "https://results.bput.ac.in/", target: "_blank" }
+      ]
+    },
+    { name: 'Contact', href: '/contactus' },
+    { name: 'ICACBEC', href: 'https://icacbec.in/', target: '_blank' },
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <>
+      {/* 1. TOP BAR - Clean Info */}
+      <div className="hidden xl:block bg-[#0F172A] text-white py-2 border-b border-white/5">
+        <div className="max-w-[1400px] mx-auto px-6 xl:px-8 flex justify-between items-center text-xs font-bold tracking-[0.2em] uppercase font-poppins">
+          <div className="flex items-center gap-10">
+            <a href="mailto:info@becbbsr.ac.in" className="flex items-center gap-2.5 hover:text-accent transition-all duration-300">
+              <Mail className="w-3.5 h-3.5 text-accent" /> info@becbbsr.ac.in
+            </a>
+            <a href="tel:+919437090875" className="flex items-center gap-2.5 hover:text-accent transition-all duration-300 border-l border-white/10 pl-10">
+              <Phone className="w-3.5 h-3.5 text-accent" /> +91 94370 90875
+            </a>
+          </div>
+
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-4">
+              <Link to="/fees" className="px-5 py-1.5 bg-green-500 text-white rounded-lg hover:bg-white hover:text-green-600 transition-all shadow-lg shadow-green-500/20 flex items-center gap-2">
+                Fees Payment
+              </Link>
+              <Link to="/admission_query" className="px-5 py-1.5 bg-accent text-white rounded-lg hover:bg-white hover:text-primary transition-all shadow-lg shadow-accent/20">Admission 2026</Link>
+              <a href="http://31.97.63.174:3006/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-white/60 hover:text-white transition-all pl-4">
+                <LayoutDashboard className="w-4 h-4 text-accent" /> ERP Portal
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. MAIN BRANDING */}
+      <div className="bg-white py-4 lg:py-5 border-b border-slate-50">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-10">
+          
+          <Link to="/" className="flex items-center gap-8 group">
+            <img 
+              src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" 
+              alt="BEC Logo" 
+              className="w-20 h-20 md:w-24 md:h-24 object-contain transition-all duration-500 group-hover:scale-105" 
+            />
+            <div className="flex flex-col">
+              <h1 className="font-black text-2xl md:text-4xl leading-tight tracking-tighter text-primary uppercase font-poppins flex items-center flex-wrap gap-x-2">
+                Bhubaneswar <span className="text-accent">Engineering</span> College (BEC)
+              </h1>
+              <div className="mt-2 flex flex-col gap-1">
+                <span className="text-[18px] font-black text-primary/70 tracking-wide font-odia leading-none drop-shadow-sm">ଭୁବନେଶ୍ୱର ଇଞ୍ଜିନିୟରିଂ କଲେଜ</span>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.25em] leading-tight">
+                  Approved by AICTE & Affiliated to BPUT and SCTE & VT, Odisha
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Institutional Partners */}
+          <div className="hidden xl:flex items-center gap-8 border-l border-slate-100 pl-10 relative">
+            <div className="flex items-center gap-6">
+              {[
+                { id: 'aicte', name: 'AICTE', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629482/becweb/org_logo3.png', href: aicteUrl },
+                { id: 'bput', name: 'BPUT', src: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629347/becweb/bput.png', href: bputUrl },
+                { id: 'sctevt', name: 'SCTE & VT', src: '/sctevt.png', href: sctevtUrl }
+              ].map((logo) => (
+                <a 
+                  key={logo.id} 
+                  href={logo.href} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:scale-105 transition-all duration-300 flex items-center"
+                  title={`Click to view ${logo.name} Document`}
+                >
+                  <img 
+                    src={logo.src} 
+                    alt={logo.name} 
+                    className="h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-all duration-500 cursor-pointer" 
+                  />
+                </a>
+              ))}
+            </div>
+
+            <HeaderApprovalsDropdown aicteUrl={aicteUrl} bputUrl={bputUrl} sctevtUrl={sctevtUrl} />
+            <HeaderCommitteesDropdown />
+          </div>
+        </div>
+      </div>
+
+      {/* 3. STICKY NAVIGATION */}
+      <nav className={cn(
+        "w-full z-[100] transition-all duration-500",
+        scrolled ? "fixed top-0 bg-primary/95 backdrop-blur-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] py-1" : "relative bg-primary py-0"
+      )}>
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
+          <div className="hidden xl:flex items-center h-14 pl-6">
+            <div className="flex items-center h-full gap-0.5 ml-2">
+              {navItems.filter(item => item.name !== 'Approvals & Affiliations').map((item) => (
+                <div key={item.name} className="h-full group/nav relative">
+                  <DesktopMenuItem item={item} />
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all duration-500 group-hover/nav:w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="xl:hidden w-full flex items-center justify-between px-6 py-2 bg-primary/70 backdrop-blur-[20px] border-b border-white/5 relative overflow-hidden shadow-2xl">
+             {/* Dynamic Ambient Light */}
+             <div className="absolute -top-10 -left-10 w-40 h-40 bg-accent/20 blur-[80px] rounded-full pointer-events-none animate-pulse" />
+             
+             <Link to="/" className="flex flex-col active:scale-95 transition-transform relative z-10 py-1">
+               <motion.div
+                 initial={{ opacity: 0, x: -10 }}
+                 animate={{ opacity: 1, x: 0 }}
+                 transition={{ duration: 0.6 }}
+                 className="flex flex-col gap-0"
+               >
+                 <span 
+                   className="text-[19px] font-medium text-white tracking-tight leading-none italic drop-shadow-[0_0_15px_rgba(6,182,212,0.3)] bg-gradient-to-r from-white via-white/80 to-white bg-clip-text"
+                   style={{ fontFamily: "'Playfair Display', serif" }}
+                 >
+                   Bhubaneswar
+                 </span>
+                 <span className="text-xs font-black text-accent tracking-[0.3em] uppercase -mt-0.5 font-poppins opacity-90">
+                   Engineering College (BEC)
+                 </span>
+               </motion.div>
+             </Link>
+
+             <motion.button 
+               whileTap={{ scale: 0.9 }}
+               onClick={() => setIsOpen(!isOpen)} 
+               className="p-2.5 bg-white/5 rounded-xl border border-white/10 shadow-lg relative z-10 overflow-hidden"
+             >
+               {isOpen ? <X className="w-6 h-6 text-accent" /> : <Menu className="w-6 h-6 text-white" />}
+             </motion.button>
+          </div>
+
+          <div className="hidden xl:block pr-6 shrink-0">
+            <Link 
+              to="/admission_query"
+              className="px-8 py-2.5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] hover:bg-white hover:text-primary transition-all duration-500 shadow-xl shadow-accent/20 whitespace-nowrap"
+            >
+              Apply Online
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* 4. PREMIUM ANNOUNCEMENT */}
+      <div className="bg-white border-b border-slate-100 h-10 flex items-center overflow-hidden relative z-[50]">
+        <div className="flex-1 overflow-hidden relative h-full flex items-center">
+          <div className="px-4 md:px-8 h-full bg-[#0F172A] flex items-center gap-2 md:gap-3 z-20 shrink-0 font-black text-[10px] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-white shadow-[15px_0_40px_rgba(15,23,42,0.4)]">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent animate-pulse shrink-0" /> Latest Board
+          </div>
+          <div className="flex animate-marquee whitespace-nowrap gap-10 md:gap-20 text-[10px] md:text-xs font-bold text-primary/70 uppercase tracking-wider md:tracking-widest px-4 md:px-10">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <span key={i} className="flex items-center gap-10 shrink-0">
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <Zap className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> Admissions for Academic Session 2026-27 are now open 
+                </span>
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <Trophy className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> BEC Students secure placements at Amazon, TCS and Infosys
+                </span>
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <GraduationCap className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> AICTE Approved & BPUT Affiliated College
+                </span>
+                <span className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <ArrowUpRight className="w-3 md:w-3.5 h-3 md:h-3.5 text-accent animate-pulse shrink-0" /> Register for Alumni Homecoming 2026
+                </span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 z-[140] bg-black/40 backdrop-blur-sm xl:hidden"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed right-0 top-0 bottom-0 w-[85%] z-[150] bg-white shadow-2xl flex flex-col xl:hidden overflow-hidden"
+            >
+              <div className="p-8 flex justify-between items-center border-b border-slate-50">
+                 <img src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629472/becweb/logo.png" alt="BEC" className="h-12 w-auto object-contain" />
+                 <button onClick={() => setIsOpen(false)} className="p-2 rounded-full bg-slate-50 text-primary">
+                   <X className="w-6 h-6" />
+                 </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-8 space-y-8">
+                {navItems.map((item) => (
+                  <div key={item.name} className="space-y-4">
+                    {!item.dropdown ? (
+                      item.href.startsWith('http') ? (
+                        <a
+                          href={item.href}
+                          target={item.target || "_blank"}
+                          rel="noopener noreferrer"
+                          onClick={() => setIsOpen(false)}
+                          className="text-lg font-black uppercase tracking-tighter text-primary font-poppins hover:text-accent transition-colors flex justify-between items-center w-full"
+                        >
+                          {item.name}
+                        </a>
+                      ) : (
+                        <Link
+                          to={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className="text-lg font-black uppercase tracking-tighter text-primary font-poppins hover:text-accent transition-colors flex justify-between items-center w-full"
+                        >
+                          {item.name}
+                        </Link>
+                      )
+                    ) : (
+                      <div
+                        onClick={() => setActiveDropdown(prev => prev === item.name ? null : item.name)}
+                        className="flex justify-between items-center group/m cursor-pointer w-full"
+                      >
+                        <span className="text-lg font-black uppercase tracking-tighter text-primary font-poppins group-hover/m:text-accent transition-colors">
+                          {item.name}
+                        </span>
+                        <ChevronDown 
+                          className={cn(
+                            "w-5 h-5 text-accent transition-transform duration-300", 
+                            activeDropdown === item.name && "rotate-180"
+                          )} 
+                        />
+                      </div>
+                    )}
+                    
+                    {item.dropdown && (
+                      <AnimatePresence initial={false}>
+                        {activeDropdown === item.name && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden pl-4 border-l-2 border-slate-100 flex flex-col gap-3"
+                          >
+                            {item.dropdown.map((sub) => (
+                              sub.href.startsWith('http') || sub.href.includes('/facilities/') ? (
+                                <a 
+                                  key={sub.name} 
+                                  href={sub.href}
+                                  target={sub.target || "_blank"}
+                                  rel="noopener noreferrer"
+                                  onClick={() => setIsOpen(false)}
+                                  className="text-slate-400 hover:text-primary font-bold text-xs uppercase tracking-widest transition-colors py-1 block"
+                                >
+                                  {sub.name}
+                                </a>
+                              ) : (
+                                <Link 
+                                  key={sub.name} 
+                                  to={sub.href}
+                                  onClick={() => setIsOpen(false)}
+                                  className="text-slate-400 hover:text-primary font-bold text-xs uppercase tracking-widest transition-colors py-1 block"
+                                >
+                                  {sub.name}
+                                </Link>
+                              )
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="p-8 bg-slate-50 mt-auto flex flex-col gap-4">
+                 <a href="http://31.97.63.174:3006/" target="_blank" rel="noopener noreferrer" className="w-full py-4 bg-white border border-slate-200 rounded-xl text-primary font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-sm shadow-slate-100">
+                   <LayoutDashboard className="w-5 h-5 text-accent" /> Student Portal
+                 </a>
+                 <Link to="/admission_query" className="w-full py-5 bg-accent text-white rounded-xl text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-lg shadow-accent/20">
+                   Join BEC 2026 <GraduationCap className="w-5 h-5" />
+                 </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};

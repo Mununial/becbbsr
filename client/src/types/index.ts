@@ -1,6 +1,6 @@
 export type Slide = {
   id: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'modern';
   url: string;                                          
   title: string;        
   subtitle: string;
@@ -108,4 +108,3 @@ export interface BranchData {
   borderColor: string;
   semesters: SemesterData[];
 }
-

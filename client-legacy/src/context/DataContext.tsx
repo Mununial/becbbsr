@@ -1,0 +1,450 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader, type BranchData } from '../types';
+import { db, auth } from '../lib/firebase';
+import { doc, onSnapshot, collection, query, orderBy } from 'firebase/firestore';
+import axios from 'axios';
+
+interface DataContextType {
+  notices: Notice[];
+  updateNotices: (notices: Notice[]) => void;
+  slides: Slide[];
+  updateSlides: (slides: Slide[]) => void;
+  gallery: GalleryImage[];
+  updateGallery: (images: GalleryImage[]) => void;
+  faculties: Faculty[];
+  updateFaculties: (faculties: Faculty[]) => void;
+  students: SelectedStudent[];
+  updateStudents: (students: SelectedStudent[]) => void;
+  scenes: Scene[];
+  updateScenes: (scenes: Scene[]) => void;
+  highlights: Highlight[];
+  updateHighlights: (highlights: Highlight[]) => void;
+  leaders: Leader[];
+  updateLeaders: (leaders: Leader[]) => void;
+  achievements: any[];
+  updateAchievements: (achievements: any[]) => void;
+  aeroclub: any[];
+  updateAeroClub: (aeroclub: any[]) => void;
+  workshop: any[];
+  updateWorkshops: (workshop: any[]) => void;
+  sports: any[];
+  updateSports: (sports: any[]) => void;
+  inquiries: any[];
+  updateInquiries: (inquiries: any[]) => void;
+  officialDocs: any[];
+  updateOfficialDocs: (docs: any[]) => void;
+  lectureNotes: BranchData[];
+  updateLectureNotes: (notes: BranchData[]) => void;
+}
+
+const DataContext = createContext<DataContextType | undefined>(undefined);
+
+export const DataProvider = ({ children }: { children: React.ReactNode }) => {
+  // Core Configuration States
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [gallery, setGallery] = useState<GalleryImage[]>([]);
+  const [faculties, setFaculties] = useState<Faculty[]>([]);
+  const [students, setStudents] = useState<SelectedStudent[]>([]);
+  const [scenes, setScenes] = useState<Scene[]>([]);
+  const [highlights, setHighlights] = useState<Highlight[]>([]);
+  const [leaders, setLeaders] = useState<Leader[]>([]);
+  const [achievements, setAchievements] = useState<any[]>([]);
+  const [aeroclub, setAeroclub] = useState<any[]>([]);
+  const [workshop, setWorkshop] = useState<any[]>([]);
+  const [sports, setSports] = useState<any[]>([]);
+  const [inquiries, setInquiries] = useState<any[]>([]);
+  const [officialDocs, setOfficialDocs] = useState<any[]>([]);
+  const [lectureNotes, setLectureNotes] = useState<BranchData[]>([]);
+
+  useEffect(() => {
+    // Helper to spin up a realtime listener on a Firestore configuration doc key with multi-device backup polling
+    const setupListener = (key: string, setFn: (data: any[]) => void, defaultData: any) => {
+      // Track if the Express server has already provided fresh data (server = ground truth)
+      let serverHasResponded = false;
+
+      // 1. Synchronously load from localStorage first (offline-first, prevents layout shift/resets)
+      const local = localStorage.getItem(key);
+      let initialData = defaultData;
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (Array.isArray(parsed)) {
+            initialData = parsed;
+          }
+        } catch (_) {}
+      }
+      setFn(initialData);
+
+      // Helper to parse server response
+      const parseServerItems = (data: any): any[] | null => {
+        const isHtml = typeof data === 'string' && (data.includes('<!DOCTYPE') || data.includes('<html') || data.includes('<head'));
+        if (isHtml) return null;
+        if (data && Array.isArray(data.items) && data.items.length > 0) return data.items;
+        if (Array.isArray(data) && data.length > 0) return data;
+        return null;
+      };
+
+      // 2. Fetch live config from the local Express server immediately on mount to override with server data if available
+      axios.get(`/api/config/${key}`)
+        .then(res => {
+          const serverItems = parseServerItems(res.data);
+          if (serverItems) {
+            serverHasResponded = true;
+            setFn(serverItems);
+            localStorage.setItem(key, JSON.stringify(serverItems));
+          }
+        })
+        .catch(() => {});
+
+      // 3. Start backup background polling loop on local server JSON file (ensures reload-free cross-device updates)
+      const pollInterval = setInterval(() => {
+        axios.get(`/api/config/${key}`)
+          .then(res => {
+            const serverItems = parseServerItems(res.data);
+            if (serverItems) {
+              serverHasResponded = true;
+              setFn(serverItems);
+              localStorage.setItem(key, JSON.stringify(serverItems));
+            }
+          })
+          .catch(() => {});
+      }, 3000);
+
+      // 4. Parallel live Firestore websocket listener
+      // Always apply Firestore updates to enable instant real-time multi-device synchronization
+      const docRef = doc(db, "configs", key);
+      const unsubFirestore = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
+          const items = docSnap.data().items;
+          setFn(items);
+          localStorage.setItem(key, JSON.stringify(items));
+        }
+      }, (err) => {
+        console.warn(`Firestore live sync suspended for key ${key}: ${err.message}`);
+      });
+
+      // Cleanup hook to clear intervals and listeners on unmount
+      return () => {
+        clearInterval(pollInterval);
+        unsubFirestore();
+      };
+    };
+
+
+    // 1. Home Slides
+    const unsubSlides = setupListener('hero-slides', setSlides, [
+      { id: '1', type: 'modern', url: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1779825331/becweb/student_hero_cutout.jpg', title: 'Join the BEC Community', subtitle: 'Admissions Open 2026-27', description: 'Admissions for the 2026-27 session are now open. Secure your future with us today.', ctaText: 'Apply Now' },
+      { id: '2', type: 'video', url: 'https://res.cloudinary.com/dpogq7cbe/video/upload/v1777008335/bec_web_assets/uqfnp6eghnygsiepu7bq.mp4', title: 'BHUBANESWAR ENGINEERING COLLEGE (BEC)', subtitle: 'Excellence • Innovation • Leadership', description: 'A Premier Institution for tomorrow\'s global engineering leaders.', ctaText: 'Explore Campus' },
+      { id: '3', type: 'video', url: 'https://res.cloudinary.com/dpogq7cbe/video/upload/v1776627787/bec_web_assets/khelbjx19zqw0nxysdam.mp4', title: 'EXCELLENCE IN LEARNING', subtitle: 'Aeronautical • Research • Global', description: 'Experience the state-of-the-art infrastructure and vibrant student life at BEC.', ctaText: 'Apply Now' }
+    ]);
+
+    // 2. Latest Notices
+    const unsubNotices = setupListener('university-notices', setNotices, [
+      { id: '1', title: 'Admission Open 2026-27: Application portal is now officially open for B.Tech, Diploma, and MBA programs.', date: 'May 26, 2026', category: 'Admission', url: '/admission_query', type: 'image', isNew: true },
+      { id: '2', title: 'BEC Campus Notice: General Holiday declared on May 28, 2026; all academic operations suspended.', date: 'May 28, 2026', category: 'Events', url: '/admission/news', type: 'image', isNew: true }
+    ]);
+
+    // 3. Photo Gallery
+    const unsubGallery = setupListener('campus-gallery', setGallery, [
+      { id: '1', url: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg', title: 'Main Campus', category: 'Infrastructure' }
+    ]);
+
+    // 4. Faculty Directory
+    const unsubFaculties = setupListener('university-faculties', setFaculties, [
+      { id: "1", name: "Er. Ananyaa Mohanty", role: "Assistant Professor & Head", department: "Agriculture Engineering", image: "/facilities/STAFF/ANANYAA MOHANTY(agriculte hod).jpg", email: "agriculture@becbbsr.ac.in", tag: "HOD" },
+      { id: "2", name: "Er. Anita Behera", role: "Associate Professor & Head", department: "Computer Science Engineering", image: "/facilities/STAFF/Anita Behera(cse hod).jpg", email: "cse@becbbsr.ac.in", tag: "HOD" },
+      { id: "3", name: "Mr. Ashis Kumar Behera", role: "Assistant Professor & Head", department: "MBA", image: "/facilities/STAFF/Ashis Kumar Behera(mba hod).jpg", email: "mba@becbbsr.ac.in", tag: "HOD" },
+      { id: "4", name: "Mr. Avinash Lenka", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Avinash Lenka (BS).png", email: "avinash.bsh@becbbsr.ac.in", tag: "Faculty" },
+      { id: "5", name: "Mr. Bijay Kumar Sahu", role: "Assistant Professor & Head", department: "Electrical Engineering", image: "/facilities/STAFF/MR.BIJAY KUMAR SAHU.jpg", email: "electrical@becbbsr.ac.in", tag: "HOD" },
+      { id: "6", name: "Mr. Chinmaya Kumar Panda", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Chinmaya Kumar Pqndaanda(BS).png", email: "chinmaya.bsh@becbbsr.ac.in", tag: "Faculty" },
+      { id: "7", name: "Dr. Bishnu Prasad Mishra", role: "Professor & Head", department: "Mechanical Engineering", image: "/facilities/STAFF/Dr. Bishnu Prasad Mishra(mech hod ).jpg", email: "mechanical@becbbsr.ac.in", tag: "HOD" },
+      { id: "8", name: "Dr. Sonali Swagatika", role: "Assistant Professor", department: "Agriculture Engineering", image: "/facilities/STAFF/Dr. Sonali Swagatika (AGRI).jpg", email: "sonali.agri@becbbsr.ac.in", tag: "Faculty" },
+      { id: "9", name: "Mrs. Geetanjali Mohanty", role: "Assistant Professor", department: "Mechanical Engineering", image: "/facilities/STAFF/Geetanjali Mohanty (MECH).jpg", email: "geetanjali.mech@becbbsr.ac.in", tag: "Faculty" },
+      { id: "10", name: "Mr. Gyanaranjan Prusty", role: "Assistant Professor & Head", department: "Basic Science & Humanities", image: "/facilities/STAFF/Gyanaranjan Prusty (BS).jpg", email: "bsh@becbbsr.ac.in", tag: "HOD" },
+      { id: "11", name: "Mr. Hemanta Mahananda", role: "Assistant Professor", department: "Aeronautical Engineering", image: "/facilities/STAFF/HEMANTA MAHANANDA (AERO).jpg", email: "hemanta.aero@becbbsr.ac.in", tag: "Faculty" },
+      { id: "12", name: "Mrs. Lipsa Tanaya Mishra", role: "Professor", department: "Computer Science Engineering", image: "/facilities/STAFF/LIPSA TANAYA MISHRA(CSE).png", email: "lipsa.cse@becbbsr.ac.in", tag: "Faculty" },
+      { id: "13", name: "Mr. Manmeshu Kumar Swain", role: "Assistant Professor", department: "Computer Science Engineering", image: "/facilities/STAFF/MANMESHU KUMAR SWAIN (CSE).jpg", email: "manmeshu.cse@becbbsr.ac.in", tag: "Faculty" },
+      { id: "14", name: "Mr. Srikanta Kumar Sahoo", role: "Assistant Professor", department: "Computer Science Engineering", image: "/facilities/STAFF/MR. SRIKANTA KUMAR SAHOO (CSE).jpg", email: "srikanta.cse@becbbsr.ac.in", tag: "Faculty" },
+      { id: "15", name: "Miss Priyata Prangya Sahoo", role: "Assistant Professor", department: "Computer Science Engineering", image: "/facilities/STAFF/Miss PriyataPrangya Sahoo (CSE).jpg", email: "priyata.cse@becbbsr.ac.in", tag: "Faculty" },
+      { id: "16", name: "Mr. Saswat Mishra", role: "Assistant Professor & Head", department: "Civil Engineering", image: "/facilities/STAFF/Mr. Saswat Mishra(Civil hod).png", email: "civil@becbbsr.ac.in", tag: "HOD" },
+      { id: "17", name: "Mr. Pratik Kumar Mohapatra", role: "Assistant Professor", department: "Aeronautical Engineering", image: "/facilities/STAFF/Pratik kumar Mohapatra (AERO).jpg", email: "pratik.aero@becbbsr.ac.in", tag: "Faculty" },
+      { id: "18", name: "Mrs. Rupali Sahoo", role: "Assistant Professor", department: "Mechanical Engineering", image: "/facilities/STAFF/RUPALI SAHOO (MECH).jpg", email: "rupali.mech@becbbsr.ac.in", tag: "Faculty" },
+      { id: "19", name: "Mrs. Rasmita Sahoo", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Rasmita Sahoo (BS).png", email: "rasmita.bsh@becbbsr.ac.in", tag: "Faculty" },
+      { id: "20", name: "Dr. Sangram Keshari Samal", role: "Professor & Head", department: "Aeronautical Engineering", image: "/facilities/STAFF/SANGRAM KESHARI SAMAL (aero hod).jpg", email: "aero@becbbsr.ac.in", tag: "HOD" },
+      { id: "21", name: "Mr. Santanu Mohapatra", role: "Assistant Professor", department: "Mechanical Engineering", image: "/facilities/STAFF/SANTANU MOHAPATRA (MECH).jpg", email: "santanu.mech@becbbsr.ac.in", tag: "Faculty" },
+      { id: "22", name: "Mr. Sushil Harichandan", role: "Assistant Professor", department: "Agriculture Engineering", image: "/facilities/STAFF/SUSHILHARICHANDAN (AGRI).jpg", email: "sushil.agri@becbbsr.ac.in", tag: "Faculty" },
+      { id: "23", name: "Mrs. Snigdharani Jena", role: "Assistant Professor", department: "Agriculture Engineering", image: "/facilities/STAFF/Snigdharani Jena (AGRI).jpg", email: "snigdharani.agri@becbbsr.ac.in", tag: "Faculty" },
+      { id: "24", name: "Ms. Soyeenika Mishra", role: "Assistant Professor", department: "MBA", image: "/facilities/STAFF/Snigdharani Jena (MBA).jpg", email: "snigdharani.mba@becbbsr.ac.in", tag: "Faculty" },
+      { id: "25", name: "Mrs. Sumitra Sahoo", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Sumitra Sahoo (BS).jpg", email: "sumitra.bsh@becbbsr.ac.in", tag: "Faculty" },
+      { id: "26", name: "Mrs. Sunita Sahu", role: "Assistant Professor", department: "Computer Science Engineering", image: "/facilities/STAFF/SunitaSahu(CSE).jpg", email: "sunita.cse@becbbsr.ac.in", tag: "Faculty" },
+      { id: "27", name: "Mr. Suraj Kumar Sahoo", role: "Assistant Professor", department: "Aeronautical Engineering", image: "/facilities/STAFF/Suraj Kumar Sahoo (AERO).jpg", email: "suraj.aero@becbbsr.ac.in", tag: "Faculty" },
+      { id: "28", name: "Mr. Swagat Prasad Das", role: "Assistant Professor", department: "Aeronautical Engineering", image: "/facilities/STAFF/Swagat Prasad Das (AERO).jpg", email: "swagat.aero@becbbsr.ac.in", tag: "Faculty" },
+      { id: "29", name: "Mrs. Swetalina Das", role: "Assistant Professor", department: "Basic Science & Humanities", image: "/facilities/STAFF/Swetalina Das (BS).jpg", email: "swetalina.bsh@becbbsr.ac.in", tag: "Faculty" },
+      { id: "30", name: "Mr. Adarsh Pattnaik", role: "Assistant Professor", department: "Civil Engineering", image: "/facilities/STAFF/Mr.ADARSH PATTNAIK.jpg", email: "adarsh.civil@becbbsr.ac.in", tag: "Faculty" },
+      { id: "31", name: "Mrs. Harishankar Jeevan Dash", role: "Assistant Professor", department: "Civil Engineering", image: "/facilities/STAFF/Mrs.HARISHANKAR JEEVAN DASH.jpg", email: "harishankar.civil@becbbsr.ac.in", tag: "Faculty" },
+      { id: "32", name: "Ms. Ompriya Sahu", role: "Assistant Professor", department: "Civil Engineering", image: "/facilities/STAFF/Ms. OMPRIYA SAHU.jpg", email: "ompriya.civil@becbbsr.ac.in", tag: "Faculty" },
+      { id: "33", name: "Dr. Binaya Kumar Malika", role: "Associate Professor", department: "Electrical Engineering", image: "/facilities/STAFF/DR.BINAYA KUMAR MALIKA.jpg", email: "binaya.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "34", name: "Dr. Pabitra Mohan Dash", role: "Professor", department: "Electrical Engineering", image: "/facilities/STAFF/DR.PABITRA MOHAN DASH.jpg", email: "pabitra.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "35", name: "Mr. Jayaprakash Mishra", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/MR. JAYAPRAKASH MISHRA.jpg", email: "jayaprakash.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "36", name: "Mr. Aruna Kumar Rout", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/MR.ARUNA KUMAR ROUT.jpg", email: "aruna.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "37", name: "Mr. Sandeep Prasad Singh", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/MR.SANDEEP PRASAD SINGH.jpg", email: "sandeep.ee@becbbsr.ac.in", tag: "Faculty" },
+      { id: "38", name: "Mr. Gouri Sankar Behera", role: "Assistant Professor", department: "Electrical Engineering", image: "/facilities/STAFF/Mr.Gouri Sankar Behera.jpg", email: "gouri.ee@becbbsr.ac.in", tag: "Faculty" }
+    ]);
+
+    // 5. Placed Alumni
+    const unsubStudents = setupListener('selected-students-v2', setStudents, [
+      { id: "1", companyRole: "PIRAMAL GROUP", name: "ASHIS PANY", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629432/becweb/Piramal.png", photo: "/images/ASHIS PANY-MECH(Piramal Group).jpg", bgColor: "from-blue-700 to-blue-500" },
+      { id: "2", companyRole: "TECH MAHINDRA", name: "ASHIT MINZ", branch: "CSE", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png", photo: "/images/Ashit Minz-CSE(Tech Mahindra).jpg", bgColor: "from-red-600 to-orange-500" },
+      { id: "3", companyRole: "INFOSYS", name: "BIPLAB KUMAR SAMANTARAY", branch: "AERO", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629416/becweb/Infosys.png", photo: "/images/BIPLAB KUMAR SAMANTARAY-Aero(Infosys).jpg", bgColor: "from-indigo-700 to-indigo-500" },
+      { id: "4", companyRole: "WIPRO", name: "IPSITA KUMARI", branch: "CSE", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629459/becweb/wipro2018.png", photo: "/images/IPSITA KUMARI,CSE,Wipro.jpg", bgColor: "from-cyan-700 to-cyan-500" },
+      { id: "5", companyRole: "TECH MAHINDRA", name: "K. SWETA MADHURI", branch: "CSE", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629446/becweb/Tech.png", photo: "/images/K.Sweta Madhuri(Tech Mahindra).jpg", bgColor: "from-red-700 to-rose-500" },
+      { id: "6", companyRole: "INDIGO (INTERGLOBE)", name: "RAVISANKAR PAL", branch: "AERO", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629401/becweb/Airdit.jpg", photo: "/images/RAVISANKAR PAL-AERO (IndiGo).jpg", bgColor: "from-sky-700 to-sky-500" },
+      { id: "7", companyRole: "AMAZON", name: "ROHIT KUMAR", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "/images/alumni1.jpg", photo: "/images/ROHIT KUMAR,MECH,AMAZON.jpg", bgColor: "from-amber-700 to-yellow-500" },
+      { id: "8", companyRole: "PIRAMAL GROUP", name: "ROJALIN PHOTO", branch: "CIVIL", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629432/becweb/Piramal.png", photo: "/images/ROJALIN PHOTO, CIVIL,Piramal Group.jpg", bgColor: "from-emerald-700 to-green-500" },
+      { id: "9", companyRole: "CTTC-BBSR", name: "ANKIT MOHAPATRA", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "/images/events/tata.jpg", photo: "/images/alumni2.jpg", bgColor: "from-blue-600 to-cyan-500" }
+    ]);
+
+
+    // 6. Tour Panorama VR Scenes
+    const unsubScenes = setupListener('tour-scenes-v2', setScenes, [
+      {
+        id: 'exterior',
+        name: 'College Main Building',
+        image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg',
+        hotspots: [
+          { x: 45, y: 60, type: 'scene', text: 'Enter Building', targetId: 'interior' }
+        ]
+      }
+    ]);
+
+    // 7. Event Highlights Banners
+    const unsubHighlights = setupListener('events-highlights', setHighlights, [
+      { id: '1', title: 'Admission Open 2026-27', date: 'Enroll Now', image: 'https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg' }
+    ]);
+
+    // 8. Leadership Quotes
+    const unsubLeaders = setupListener('leadership-data', setLeaders, [
+      { id: '1', role: "CHAIRMAN", title: "VISIONARY FOUNDER", name: "Er. Alok Ranjan Mallick", subtitle: "Chairman, Ayush Group", quote: "Bhubaneswar Engineering College (BEC) is more than just an academic institution — it is a launchpad for visionaries who will shape the future of our nation.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629465/becweb/chairman.jpg", link: "/chairman-ayush-msg", color: "from-amber-400 to-amber-600" },
+      { id: '2', role: "DIRECTOR", title: "ACADEMICS & ADMINISTRATION", name: "Prof. Dr. B.N. Biswal", subtitle: "Director, BEC Bhubaneswar", quote: "At the end of your journey with BEC, we are certain that you will turn out to be a confident technocrat and stay blessed in all sphere of life.", image: "https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629467/becweb/director.jpg", link: "/director-profile", color: "from-blue-400 to-blue-600" }
+    ]);
+
+    // 9. Achievements Roll
+    const unsubAchievements = setupListener('achievements', setAchievements, []);
+
+    // 10. Aero Club
+    const unsubAeroclub = setupListener('aeroclub', setAeroclub, []);
+
+    // 11. Workshops
+    const unsubWorkshop = setupListener('workshop', setWorkshop, []);
+
+    // 12. Sports
+    const unsubSports = setupListener('sports', setSports, []);
+
+    // 14. Official Documents
+    const unsubOfficialDocs = setupListener('official-docs', setOfficialDocs, [
+      { id: 'mandatory-disclosure', name: 'Mandatory Disclosure', url: '/facilities/BEC Mandatory final.pdf?v=1.0.2', category: 'Disclosure' },
+      { id: 'aicte-approval', name: 'AICTE Approval', url: '/facilities/AICTE_Approval.pdf?v=1.0.1', category: 'Approval' },
+      { id: 'bput-affiliation', name: 'BPUT Affiliation', url: '/facilities/BPUT_Affiliation.pdf?v=2.0.0', category: 'Affiliation' },
+      { id: 'sctevt-affiliation', name: 'SCTE&VT Affiliation', url: '/facilities/SCTEVT_Affiliation.png?v=1.0.1', category: 'Affiliation' }
+    ]);
+
+    // 15. Lecture Notes
+    const unsubLectureNotes = setupListener('lecture-notes', setLectureNotes, []);
+
+    // 13. Chatbot Inquiries (Real-time Firestore Collection Listener with local Express API backup)
+    let firestoreFailed = false;
+    const inquiriesQuery = query(collection(db, "chatbot_inquiries"), orderBy("timestamp", "desc"));
+    const unsubInquiries = onSnapshot(inquiriesQuery, (snapshot) => {
+      const list: any[] = [];
+      snapshot.forEach(docSnap => {
+        list.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      setInquiries(list);
+      localStorage.setItem("chatbot-inquiries", JSON.stringify(list));
+    }, (err) => {
+      console.warn("Firestore inquiries listener failed, falling back to local API:", err.message);
+      firestoreFailed = true;
+      axios.get('/api/chatbot/inquiries')
+        .then(res => {
+          if (Array.isArray(res.data)) {
+            setInquiries(res.data);
+            localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+          }
+        })
+        .catch(() => {});
+    });
+
+    const backupInterval = setInterval(() => {
+      if (firestoreFailed) {
+        axios.get('/api/chatbot/inquiries')
+          .then(res => {
+            if (Array.isArray(res.data)) {
+              setInquiries(res.data);
+              localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+            }
+          })
+          .catch(() => {});
+      }
+    }, 5000);
+
+    // Clean up connections on unmount to prevent memory leaks
+    return () => {
+      unsubSlides();
+      unsubNotices();
+      unsubGallery();
+      unsubFaculties();
+      unsubStudents();
+      unsubScenes();
+      unsubHighlights();
+      unsubLeaders();
+      unsubAchievements();
+      unsubAeroclub();
+      unsubWorkshop();
+      unsubSports();
+      unsubOfficialDocs();
+      unsubLectureNotes();
+      unsubInquiries();
+      clearInterval(backupInterval);
+    };
+  }, []);
+
+  // Sync / set Doc writers (Firestore cloud database + Express local JSON filesystem fallback)
+  const updateNotices = (newNotices: Notice[]) => {
+    setNotices(newNotices);
+    axios.post('/api/config/university-notices', { items: newNotices }).catch(() => {});
+    localStorage.setItem("university-notices", JSON.stringify(newNotices));
+  };
+
+  const updateSlides = (newSlides: Slide[]) => {
+    setSlides(newSlides);
+    axios.post('/api/config/hero-slides', { items: newSlides }).catch(() => {});
+    localStorage.setItem("hero-slides", JSON.stringify(newSlides));
+  };
+
+  const updateGallery = (newGallery: GalleryImage[]) => {
+    setGallery(newGallery);
+    axios.post('/api/config/campus-gallery', { items: newGallery }).catch(() => {});
+    localStorage.setItem("campus-gallery", JSON.stringify(newGallery));
+  };
+
+  const updateFaculties = (newFaculties: Faculty[]) => {
+    setFaculties(newFaculties);
+    axios.post('/api/config/university-faculties', { items: newFaculties }).catch(() => {});
+    localStorage.setItem("university-faculties", JSON.stringify(newFaculties));
+  };
+
+  const updateStudents = (newStudents: SelectedStudent[]) => {
+    setStudents(newStudents);
+    axios.post('/api/config/selected-students-v2', { items: newStudents }).catch(() => {});
+    localStorage.setItem("selected-students-v2", JSON.stringify(newStudents));
+  };
+
+  const updateScenes = (newScenes: Scene[]) => {
+    setScenes(newScenes);
+    axios.post('/api/config/tour-scenes-v2', { items: newScenes }).catch(() => {});
+    localStorage.setItem("tour-scenes-v2", JSON.stringify(newScenes));
+  };
+
+  const updateHighlights = (newHighlights: Highlight[]) => {
+    setHighlights(newHighlights);
+    axios.post('/api/config/events-highlights', { items: newHighlights }).catch(() => {});
+    localStorage.setItem("events-highlights", JSON.stringify(newHighlights));
+  };
+
+  const updateLeaders = (newLeaders: Leader[]) => {
+    setLeaders(newLeaders);
+    axios.post('/api/config/leadership-data', { items: newLeaders }).catch(() => {});
+    localStorage.setItem("leadership-data", JSON.stringify(newLeaders));
+  };
+
+  const updateAchievements = (newAchievements: any[]) => {
+    setAchievements(newAchievements);
+    axios.post('/api/config/achievements', { items: newAchievements }).catch(() => {});
+    localStorage.setItem("achievements", JSON.stringify(newAchievements));
+  };
+
+  const updateAeroClub = (newAero: any[]) => {
+    setAeroclub(newAero);
+    axios.post('/api/config/aeroclub', { items: newAero }).catch(() => {});
+    localStorage.setItem("aeroclub", JSON.stringify(newAero));
+  };
+
+  const updateWorkshops = (newWorkshop: any[]) => {
+    setWorkshop(newWorkshop);
+    axios.post('/api/config/workshop', { items: newWorkshop }).catch(() => {});
+    localStorage.setItem("workshop", JSON.stringify(newWorkshop));
+  };
+
+  const updateSports = (newSports: any[]) => {
+    setSports(newSports);
+    axios.post('/api/config/sports', { items: newSports }).catch(() => {});
+    localStorage.setItem("sports", JSON.stringify(newSports));
+  };
+
+  const updateOfficialDocs = (newDocs: any[]) => {
+    setOfficialDocs(newDocs);
+    axios.post('/api/config/official-docs', { items: newDocs }).catch(() => {});
+    localStorage.setItem("official-docs", JSON.stringify(newDocs));
+  };
+
+  const updateLectureNotes = (newNotes: BranchData[]) => {
+    setLectureNotes(newNotes);
+    axios.post('/api/config/lecture-notes', { items: newNotes }).catch(() => {});
+    localStorage.setItem("lecture-notes", JSON.stringify(newNotes));
+  };
+
+  const updateInquiries = async (newInquiries: any[]) => {
+    const latestInquiry = newInquiries[0];
+    if (latestInquiry) {
+      try {
+        const { collection, addDoc } = await import('firebase/firestore');
+        await addDoc(collection(db, "chatbot_inquiries"), {
+          name: latestInquiry.name,
+          language: latestInquiry.language,
+          course: latestInquiry.course,
+          phone: latestInquiry.phone,
+          email: latestInquiry.email,
+          timestamp: latestInquiry.timestamp || new Date().toISOString(),
+          ip: latestInquiry.ip || "Client Portal"
+        });
+      } catch (firestoreErr) {
+        console.error("Firestore collection write failed:", firestoreErr);
+      }
+
+      try {
+        await axios.post('/api/chatbot/inquiry', latestInquiry);
+      } catch (expressErr) {
+        console.error("Express backup write failed:", expressErr);
+      }
+    }
+  };
+
+  return (
+    <DataContext.Provider value={{ 
+      notices, updateNotices, 
+      slides, updateSlides, 
+      gallery, updateGallery, 
+      faculties, updateFaculties,
+      students, updateStudents,
+      scenes, updateScenes,
+      highlights, updateHighlights,
+      leaders, updateLeaders,
+      achievements, updateAchievements,
+      aeroclub, updateAeroClub,
+      workshop, updateWorkshops,
+      sports, updateSports,
+      inquiries, updateInquiries,
+      officialDocs, updateOfficialDocs,
+      lectureNotes, updateLectureNotes
+    }}>
+      {children}
+    </DataContext.Provider>
+  );
+};
+
+export const useData = () => {
+  const context = useContext(DataContext);
+  if (!context) throw new Error('useData must be used within DataProvider');
+  return context;
+};

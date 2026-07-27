@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Cpu, Globe, Rocket, Shield, HardDrive, Smartphone, ChevronRight, GraduationCap, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+const Link = ({ to, ...props }: any) => <a href={to} {...props} />;
 import { cn } from '../lib/utils';
 import { useAdmission } from '../hooks/useAdmission';
 
@@ -71,15 +71,18 @@ export const Departments = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {departments.map((dept, index) => (
-            <motion.div
-              key={dept.name}
-              data-aos="fade-up"
-              data-aos-delay={index * 100}
-              className="flex"
-            >
-              <Link
-                to={dept.link}
+          {departments.map((dept, index) => {
+            const aosAnimations = ['fade-right', 'fade-up', 'fade-left', 'zoom-in', 'fade-up-right', 'fade-up-left'];
+            const anim = aosAnimations[index % aosAnimations.length];
+            return (
+              <motion.div
+                key={dept.name}
+                data-aos={anim}
+                data-aos-delay={index * 100}
+                className="flex"
+              >
+                <Link
+                  to={dept.link}
                 className="group relative w-full bg-white rounded-[32px] overflow-hidden border border-slate-100 transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(30,58,138,0.15)] hover:-translate-y-2 flex flex-col justify-between text-left"
               >
                 <div>
@@ -107,7 +110,8 @@ export const Departments = () => {
                 </div>
               </Link>
             </motion.div>
-          ))}
+          );
+          })}
         </div>
 
         <div className="mt-24 text-center">

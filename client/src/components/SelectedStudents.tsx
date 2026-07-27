@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { type SelectedStudent } from '../types';
+import { ScrollReveal } from './ScrollReveal';
 
 // Fallback component for student photos
 const StudentPhoto = ({ src, name }: { src: string; name: string }) => {
@@ -281,12 +282,12 @@ export const SelectedStudents = ({ students = [] }: { students?: SelectedStudent
 
   return (
     <section className="py-10 bg-slate-50 font-inter overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-8 text-center">
+      <ScrollReveal direction="up" className="max-w-7xl mx-auto px-6 lg:px-8 mb-8 text-center">
         <h2 className="section-title">
           Placement <span className="text-accent underline decoration-accent/30 underline-offset-8 font-poppins">Highlights</span>
         </h2>
         <p className="section-subtitle mx-auto">Our students are placed in top global technology and engineering firms.</p>
-      </div>
+      </ScrollReveal>
 
       <div className="relative w-full overflow-hidden py-10">
         <div className="absolute left-0 top-0 bottom-0 w-48 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />

@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { PlusCircle, Trash2, X, Monitor, LogOut, Navigation as MapNavigation, ArrowUp, ArrowDown, Upload, FileVideo, FileImage, Loader2, Users, FileBadge, BellRing, FileText } from 'lucide-react';
-import { type Highlight } from './EventsHighlight';
-import { type Leader } from './LeadershipSection';
 import { cn } from '../lib/utils';
 import axios from 'axios';
-import { type SelectedStudent, type Slide, type Scene, type GalleryImage, type Notice, type Faculty } from '../types';
+import { type SelectedStudent, type Slide, type Scene, type GalleryImage, type Notice, type Faculty, type Highlight, type Leader } from '../types';
 
 interface AdminDashboardProps {
    onClose: () => void;

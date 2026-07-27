@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight, GraduationCap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+const Link = ({ to, ...props }: any) => <a href={to} {...props} />;
 
 export const AdmissionPopup = () => {
   const [isOpen, setIsOpen] = useState(false);

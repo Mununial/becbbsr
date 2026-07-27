@@ -1,8 +1,17 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader, type BranchData } from '../types';
-import { db, auth } from '../lib/firebase';
-import { doc, onSnapshot, collection, query, orderBy } from 'firebase/firestore';
+import { type Notice, type Slide, type GalleryImage, type Faculty, type Scene, type SelectedStudent, type Highlight, type Leader, type BranchData } from '@/types';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot, collection, query, orderBy, setDoc } from 'firebase/firestore';
 import axios from 'axios';
+
+// Configure global API endpoint safely on client side
+if (typeof window !== 'undefined') {
+  axios.defaults.baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? `http://${window.location.hostname}:5000`
+    : `${window.location.protocol}//${window.location.hostname}`;
+}
 
 interface DataContextType {
   notices: Notice[];
@@ -63,16 +72,18 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       // Track if the Express server has already provided fresh data (server = ground truth)
       let serverHasResponded = false;
 
-      // 1. Synchronously load from localStorage first (offline-first, prevents layout shift/resets)
-      const local = localStorage.getItem(key);
+      // 1. Synchronously load from localStorage first (offline-first)
       let initialData = defaultData;
-      if (local) {
-        try {
-          const parsed = JSON.parse(local);
-          if (Array.isArray(parsed)) {
-            initialData = parsed;
-          }
-        } catch (_) {}
+      if (typeof window !== 'undefined') {
+        const local = localStorage.getItem(key);
+        if (local) {
+          try {
+            const parsed = JSON.parse(local);
+            if (Array.isArray(parsed)) {
+              initialData = parsed;
+            }
+          } catch (_) {}
+        }
       }
       setFn(initialData);
 
@@ -85,19 +96,21 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         return null;
       };
 
-      // 2. Fetch live config from the local Express server immediately on mount to override with server data if available
+      // 2. Fetch live config from the local Express server immediately on mount
       axios.get(`/api/config/${key}`)
         .then(res => {
           const serverItems = parseServerItems(res.data);
           if (serverItems) {
             serverHasResponded = true;
             setFn(serverItems);
-            localStorage.setItem(key, JSON.stringify(serverItems));
+            if (typeof window !== 'undefined') {
+              localStorage.setItem(key, JSON.stringify(serverItems));
+            }
           }
         })
         .catch(() => {});
 
-      // 3. Start backup background polling loop on local server JSON file (ensures reload-free cross-device updates)
+      // 3. Start backup background polling loop on local server JSON file
       const pollInterval = setInterval(() => {
         axios.get(`/api/config/${key}`)
           .then(res => {
@@ -105,20 +118,23 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
             if (serverItems) {
               serverHasResponded = true;
               setFn(serverItems);
-              localStorage.setItem(key, JSON.stringify(serverItems));
+              if (typeof window !== 'undefined') {
+                localStorage.setItem(key, JSON.stringify(serverItems));
+              }
             }
           })
           .catch(() => {});
-      }, 3000);
+      }, 30000);
 
       // 4. Parallel live Firestore websocket listener
-      // Always apply Firestore updates to enable instant real-time multi-device synchronization
       const docRef = doc(db, "configs", key);
       const unsubFirestore = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists() && docSnap.data() && Array.isArray(docSnap.data().items)) {
           const items = docSnap.data().items;
           setFn(items);
-          localStorage.setItem(key, JSON.stringify(items));
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(key, JSON.stringify(items));
+          }
         }
       }, (err) => {
         console.warn(`Firestore live sync suspended for key ${key}: ${err.message}`);
@@ -130,7 +146,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         unsubFirestore();
       };
     };
-
 
     // 1. Home Slides
     const unsubSlides = setupListener('hero-slides', setSlides, [
@@ -205,7 +220,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       { id: "9", companyRole: "CTTC-BBSR", name: "ANKIT MOHAPATRA", branch: "MECH", degree: "BTech", batch: "2024", packageInfo: "Placed", companyLogo: "/images/events/tata.jpg", photo: "/images/alumni2.jpg", bgColor: "from-blue-600 to-cyan-500" }
     ]);
 
-
     // 6. Tour Panorama VR Scenes
     const unsubScenes = setupListener('tour-scenes-v2', setScenes, [
       {
@@ -252,7 +266,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     // 15. Lecture Notes
     const unsubLectureNotes = setupListener('lecture-notes', setLectureNotes, []);
 
-    // 13. Chatbot Inquiries (Real-time Firestore Collection Listener with local Express API backup)
+    // 13. Chatbot Inquiries
     let firestoreFailed = false;
     const inquiriesQuery = query(collection(db, "chatbot_inquiries"), orderBy("timestamp", "desc"));
     const unsubInquiries = onSnapshot(inquiriesQuery, (snapshot) => {
@@ -261,7 +275,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         list.push({ id: docSnap.id, ...docSnap.data() });
       });
       setInquiries(list);
-      localStorage.setItem("chatbot-inquiries", JSON.stringify(list));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("chatbot-inquiries", JSON.stringify(list));
+      }
     }, (err) => {
       console.warn("Firestore inquiries listener failed, falling back to local API:", err.message);
       firestoreFailed = true;
@@ -269,7 +285,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
         .then(res => {
           if (Array.isArray(res.data)) {
             setInquiries(res.data);
-            localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+            if (typeof window !== 'undefined') {
+              localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+            }
           }
         })
         .catch(() => {});
@@ -281,14 +299,15 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
           .then(res => {
             if (Array.isArray(res.data)) {
               setInquiries(res.data);
-              localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+              if (typeof window !== 'undefined') {
+                localStorage.setItem("chatbot-inquiries", JSON.stringify(res.data));
+              }
             }
           })
           .catch(() => {});
       }
-    }, 5000);
+    }, 30000);
 
-    // Clean up connections on unmount to prevent memory leaks
     return () => {
       unsubSlides();
       unsubNotices();
@@ -309,89 +328,90 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
+  // Helper to persist config changes to Cloud Firestore (for instant multi-device sync) + Express + LocalStorage
+  const saveConfig = async (key: string, items: any[]) => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(key, JSON.stringify(items));
+      } catch (_) {}
+    }
+    axios.post(`/api/config/${key}`, { items }).catch(() => {});
+    try {
+      await setDoc(doc(db, "configs", key), { items, updatedAt: new Date().toISOString() });
+    } catch (err: any) {
+      console.warn(`Firestore cloud sync note for ${key}:`, err.message);
+    }
+  };
+
   // Sync / set Doc writers (Firestore cloud database + Express local JSON filesystem fallback)
   const updateNotices = (newNotices: Notice[]) => {
     setNotices(newNotices);
-    axios.post('/api/config/university-notices', { items: newNotices }).catch(() => {});
-    localStorage.setItem("university-notices", JSON.stringify(newNotices));
+    saveConfig('university-notices', newNotices);
   };
 
   const updateSlides = (newSlides: Slide[]) => {
     setSlides(newSlides);
-    axios.post('/api/config/hero-slides', { items: newSlides }).catch(() => {});
-    localStorage.setItem("hero-slides", JSON.stringify(newSlides));
+    saveConfig('hero-slides', newSlides);
   };
 
   const updateGallery = (newGallery: GalleryImage[]) => {
     setGallery(newGallery);
-    axios.post('/api/config/campus-gallery', { items: newGallery }).catch(() => {});
-    localStorage.setItem("campus-gallery", JSON.stringify(newGallery));
+    saveConfig('campus-gallery', newGallery);
   };
 
   const updateFaculties = (newFaculties: Faculty[]) => {
     setFaculties(newFaculties);
-    axios.post('/api/config/university-faculties', { items: newFaculties }).catch(() => {});
-    localStorage.setItem("university-faculties", JSON.stringify(newFaculties));
+    saveConfig('university-faculties', newFaculties);
   };
 
   const updateStudents = (newStudents: SelectedStudent[]) => {
     setStudents(newStudents);
-    axios.post('/api/config/selected-students-v2', { items: newStudents }).catch(() => {});
-    localStorage.setItem("selected-students-v2", JSON.stringify(newStudents));
+    saveConfig('selected-students-v2', newStudents);
   };
 
   const updateScenes = (newScenes: Scene[]) => {
     setScenes(newScenes);
-    axios.post('/api/config/tour-scenes-v2', { items: newScenes }).catch(() => {});
-    localStorage.setItem("tour-scenes-v2", JSON.stringify(newScenes));
+    saveConfig('tour-scenes-v2', newScenes);
   };
 
   const updateHighlights = (newHighlights: Highlight[]) => {
     setHighlights(newHighlights);
-    axios.post('/api/config/events-highlights', { items: newHighlights }).catch(() => {});
-    localStorage.setItem("events-highlights", JSON.stringify(newHighlights));
+    saveConfig('events-highlights', newHighlights);
   };
 
   const updateLeaders = (newLeaders: Leader[]) => {
     setLeaders(newLeaders);
-    axios.post('/api/config/leadership-data', { items: newLeaders }).catch(() => {});
-    localStorage.setItem("leadership-data", JSON.stringify(newLeaders));
+    saveConfig('leadership-data', newLeaders);
   };
 
   const updateAchievements = (newAchievements: any[]) => {
     setAchievements(newAchievements);
-    axios.post('/api/config/achievements', { items: newAchievements }).catch(() => {});
-    localStorage.setItem("achievements", JSON.stringify(newAchievements));
+    saveConfig('achievements', newAchievements);
   };
 
   const updateAeroClub = (newAero: any[]) => {
     setAeroclub(newAero);
-    axios.post('/api/config/aeroclub', { items: newAero }).catch(() => {});
-    localStorage.setItem("aeroclub", JSON.stringify(newAero));
+    saveConfig('aeroclub', newAero);
   };
 
   const updateWorkshops = (newWorkshop: any[]) => {
     setWorkshop(newWorkshop);
-    axios.post('/api/config/workshop', { items: newWorkshop }).catch(() => {});
-    localStorage.setItem("workshop", JSON.stringify(newWorkshop));
+    saveConfig('workshop', newWorkshop);
   };
 
   const updateSports = (newSports: any[]) => {
     setSports(newSports);
-    axios.post('/api/config/sports', { items: newSports }).catch(() => {});
-    localStorage.setItem("sports", JSON.stringify(newSports));
+    saveConfig('sports', newSports);
   };
 
   const updateOfficialDocs = (newDocs: any[]) => {
     setOfficialDocs(newDocs);
-    axios.post('/api/config/official-docs', { items: newDocs }).catch(() => {});
-    localStorage.setItem("official-docs", JSON.stringify(newDocs));
+    saveConfig('official-docs', newDocs);
   };
 
   const updateLectureNotes = (newNotes: BranchData[]) => {
     setLectureNotes(newNotes);
-    axios.post('/api/config/lecture-notes', { items: newNotes }).catch(() => {});
-    localStorage.setItem("lecture-notes", JSON.stringify(newNotes));
+    saveConfig('lecture-notes', newNotes);
   };
 
   const updateInquiries = async (newInquiries: any[]) => {

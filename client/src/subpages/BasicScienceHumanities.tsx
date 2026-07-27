@@ -1,0 +1,238 @@
+import { useState } from 'react';
+import { PageLayout } from '../components/PageLayout';
+import { DepartmentSidebar, type HODData } from '../components/DepartmentSidebar';
+import { X } from 'lucide-react';
+import { SEO } from '../components/SEO';
+import { motion } from 'framer-motion';
+import { DepartmentDetailsHub } from '../components/DepartmentDetailsHub';
+
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://becbbsr.ac.in/basic-science-humanities",
+      "url": "https://becbbsr.ac.in/basic-science-humanities",
+      "name": "Department of Basic Science & Humanities | BEC Bhubaneswar",
+      "description": "Explore the Department of Basic Science & Humanities at Bhubaneswar Engineering College (BEC). Laying the mathematical, scientific, and communication foundation for future engineering leaders under HOD Gyanaranjan Prusty.",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://becbbsr.ac.in/" },
+          { "@type": "ListItem", "position": 2, "name": "Departments", "item": "https://becbbsr.ac.in/departments" },
+          { "@type": "ListItem", "position": 3, "name": "Basic Science & Humanities", "item": "https://becbbsr.ac.in/basic-science-humanities" }
+        ]
+      },
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "https://becbbsr.ac.in" }
+    }
+  ]
+};
+
+const hodData: HODData = {
+  name: "Mr. Gyanaranjan Prusty",
+  designation: "Assistant Professor & Head",
+  qualification: "M.Sc. (Physics), M.Phil",
+  email: "bsh@becbbsr.ac.in",
+  image: "/facilities/STAFF/Gyanaranjan Prusty (BS).jpg",
+  specialization: "Applied Physics, Material Sciences",
+  researchInterest: "Condensed Matter Physics, Advanced Nanotechnology",
+  experience: "16+ Years",
+  teachingExp: "16 Years",
+  researchExp: "NIL",
+  industryExp: "NIL",
+  researchOutput: {
+    papers: 5,
+    phdGuided: "NIL",
+    books: "NIL",
+    patents: "NIL",
+    projects: "NIL"
+  }
+};
+
+const galleryImages = [
+  "/images/bec-labrotories.jpg",
+  "/images/bec-lecture-hals.jpg",
+  "/images/bec-wifi.jpg"
+];
+
+export const BasicScienceHumanities = () => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  return (
+    <PageLayout title="Basic Science & Humanities">
+      <SEO 
+        title="Basic Science &amp; Humanities | Foundation Sciences | BEC"
+        description="Explore the Department of Basic Science &amp; Humanities at Bhubaneswar Engineering College (BEC). Laying the mathematical, scientific, and communication foundation for future engineering leaders under HOD Gyanaranjan Prusty."
+        keywords={["Basic Science & Humanities", "Applied Physics", "Engineering Mathematics", "BEC Bhubaneswar"]}
+        schema={pageSchema}
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-4" id="labs">
+        
+        {/* ─── Left Column (Main Content) ─── */}
+        <div className="lg:col-span-8 flex flex-col gap-10">
+          
+          {/* Title and Main Image */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col gap-6 bg-white rounded-3xl p-8 border border-slate-100 shadow-xl"
+          >
+            <h1 className="text-2xl md:text-3xl font-black text-primary uppercase relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-accent after:rounded-full tracking-tight">
+              Basic Science & Humanities
+            </h1>
+            
+            <div 
+              className="w-full h-80 rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group cursor-pointer"
+              onClick={() => setSelectedImage("/images/bec-lecture-hals.jpg")}
+            >
+              <img 
+                src="/images/bec-lecture-hals.jpg" 
+                alt="Basic Science & Humanities Department" 
+                className="w-full h-full object-cover hover:scale-102 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              <div className="absolute bottom-4 left-4 bg-primary/95 backdrop-blur-sm text-accent text-xs font-black px-3.5 py-1.5 rounded-lg uppercase tracking-wider border border-accent/20">
+                Science Labs & Lecture Galleries
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="text-slate-600 leading-[1.8] text-sm md:text-base space-y-5 text-justify">
+              <p>
+                The Department of Basic Science & Humanities is the foundational pillar of engineering education at Bhubaneswar Engineering College. Every breakthrough in Aeronautical, Civil, CSE, Mechanical, or Agricultural engineering relies on the principles of Applied Physics, Engineering Chemistry, Mathematical Sciences, and Technical Communication.
+              </p>
+              <p>
+                First-year engineering students are mentored closely to bridge school-level science with advanced technological design. Under the leadership of Mr. Gyanaranjan Prusty, our experienced faculty members guide students through practical lab sessions, mathematical modeling, and interactive communication workshops to cultivate analytical thinking and scientific curiosity.
+              </p>
+              <p>
+                Equipped with modern laboratories for Physics and Chemistry, alongside a state-of-the-art English Communication Lab, BSH provides an active learning environment. We ensure students are equipped with strong core concepts and soft skills required to tackle complex engineering designs in their subsequent semesters.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Vision & Mission */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Vision */}
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-gradient-to-br from-slate-900 via-navy-950 to-slate-900 text-white rounded-3xl p-8 shadow-xl border-l-4 border-accent relative flex flex-col gap-4 overflow-hidden group"
+            >
+              <h4 className="text-lg font-black uppercase tracking-wider border-b border-white/10 pb-2 text-accent">Vision</h4>
+              <p className="text-xs md:text-sm leading-relaxed text-slate-200">
+                To achieve excellence in basic sciences and communication education, nurturing students with strong analytical capabilities, ethical values, and logical thinking to drive modern engineering innovation.
+              </p>
+            </motion.div>
+
+            {/* Mission */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-gradient-to-br from-slate-900 via-navy-950 to-slate-900 text-white rounded-3xl p-8 shadow-xl border-l-4 border-emerald-500 relative flex flex-col gap-4 overflow-hidden group"
+            >
+              <h4 className="text-lg font-black uppercase tracking-wider border-b border-white/10 pb-2 text-emerald-400">Mission</h4>
+              <ul className="text-xs leading-relaxed space-y-2.5 list-disc pl-4 text-slate-200">
+                <li>To deliver high quality instructions in Engineering Physics, Chemistry, and Advanced Mathematics.</li>
+                <li>To conduct continuous hands-on laboratory training to verify physical laws and chemical compounds.</li>
+                <li>To train students in language skills, professional ethics, and communication methods to bolster global placements.</li>
+              </ul>
+            </motion.div>
+          </div>
+
+          {/* Faculty Intro */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl"
+          >
+            <p className="text-slate-600 text-sm md:text-base leading-relaxed text-justify font-medium">
+              Our BSH faculty includes postgraduates and doctorates from premier institutes. They provide customized mentoring, counseling, and remedial support, assisting students in making a smooth transition into their engineering courses.
+            </p>
+          </motion.div>
+
+          {/* PEOs Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl flex flex-col gap-6"
+          >
+            <h2 className="text-xl md:text-2xl font-black text-primary uppercase relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-accent after:rounded-full tracking-tight">
+              PROGRAM EDUCATIONAL OBJECTIVES (PEOs)
+            </h2>
+            <div className="text-slate-600 text-xs md:text-sm font-medium space-y-4 pt-2">
+              <p><strong>PEO 1:</strong> To develop strong fundamental insights in physics, chemistry, and mathematics to troubleshoot and solve core engineering problems.</p>
+              <p><strong>PEO 2:</strong> To train students to communicate technical ideas, designs, and business models effectively in English.</p>
+              <p><strong>PEO 3:</strong> To instill lifelong learning practices, professional code of ethics, and sustainability considerations in research.</p>
+            </div>
+          </motion.div>
+
+          {/* Photo Gallery */}
+          <motion.div 
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl p-8 border border-slate-100 shadow-xl flex flex-col gap-6"
+          >
+            <h2 className="text-xl md:text-2xl font-black text-primary uppercase relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-20 after:bg-accent after:rounded-full tracking-tight">
+              PHOTO GALLERY
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              {galleryImages.map((img, idx) => (
+                <div 
+                  key={idx} 
+                  onClick={() => setSelectedImage(img)}
+                  className="h-28 rounded-xl overflow-hidden border border-slate-100 cursor-pointer group relative shadow-sm"
+                >
+                  <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-black uppercase tracking-widest bg-black/40">
+                    View
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+        </div>
+
+        {/* ─── Right Column (Sidebar) ─── */}
+        <div className="lg:col-span-4 flex flex-col gap-8">
+          <DepartmentSidebar hod={hodData} activeBranch="bsh" />
+        </div>
+
+      </div>
+
+      {/* ─── Redesigned Full Width Landscape Department Details Hub ─── */}
+      <div className="mt-12">
+        <DepartmentDetailsHub department="bsh" />
+      </div>
+
+      {/* ─── Image Lightbox modal ─── */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-navy-950/90 backdrop-blur-md" onClick={() => setSelectedImage(null)}>
+          <div className="relative max-w-4xl w-full max-h-[85vh] rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black">
+            <button 
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 z-10 p-2 bg-black/60 hover:bg-black/80 text-white rounded-xl transition-all border border-white/10"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img src={selectedImage} alt="Fullscreen View" className="w-full h-auto max-h-[85vh] object-contain mx-auto" />
+          </div>
+        </div>
+      )}
+
+    </PageLayout>
+  );
+};

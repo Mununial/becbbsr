@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { Twitter, Linkedin, Quote, ArrowUpRight, GraduationCap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+const Link = ({ to, ...props }: any) => <a href={to} {...props} />;
 import { type Leader } from '../types';
 
 interface LeadershipSectionProps {
@@ -58,8 +58,10 @@ export const LeadershipSection = ({ leaders }: LeadershipSectionProps) => {
           {leaders.map((leader, index) => (
             <motion.div 
               key={leader.name}
-              data-aos="fade-up"
-              data-aos-delay={index * 150}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -80 : 80, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.8, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="relative group h-full"
             >
               <div className="absolute top-0 right-5 md:right-6 -translate-y-1/2 z-20 px-3 md:px-4 py-1 bg-accent rounded-[8px] shadow-lg transition-all duration-500 group-hover:-translate-y-2">

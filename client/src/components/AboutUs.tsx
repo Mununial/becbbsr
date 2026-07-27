@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Target, Eye, MapPin, Award, GraduationCap, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+const Link = ({ to, ...props }: any) => <a href={to} {...props} />;
 import { cn } from '../lib/utils';
 
 const coreValues = [
@@ -69,27 +69,31 @@ export const AboutUs = () => {
           </motion.div>
 
           <div className="space-y-6">
-            {coreValues.map((value, idx) => (
-              <motion.div
-                key={value.title}
-                data-aos="fade-up"
-                data-aos-delay={idx * 150}
-                className="group p-10 bg-white rounded-[32px] border border-slate-50 shadow-sm flex flex-col sm:flex-row gap-8 items-center sm:items-start hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500"
-              >
-                <div className={cn(
-                  "w-16 h-16 shrink-0 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:rotate-12",
-                  value.accent
-                )}>
-                  <value.icon className="w-8 h-8 text-white" />
-                </div>
-                <div className="text-center sm:text-left">
-                  <h3 className="text-lg font-black text-primary mb-3 tracking-widest font-poppins uppercase">{value.title}</h3>
-                  <p className="text-slate-500 text-[13px] font-medium leading-relaxed font-inter">
-                    {value.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+            {coreValues.map((value, idx) => {
+              const aosAnims = ['fade-left', 'fade-right', 'fade-up'];
+              const anim = aosAnims[idx % aosAnims.length];
+              return (
+                <motion.div
+                  key={value.title}
+                  data-aos={anim}
+                  data-aos-delay={idx * 150}
+                  className="group p-10 bg-white rounded-[32px] border border-slate-50 shadow-sm flex flex-col sm:flex-row gap-8 items-center sm:items-start hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500"
+                >
+                  <div className={cn(
+                    "w-16 h-16 shrink-0 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:rotate-12",
+                    value.accent
+                  )}>
+                    <value.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-center sm:text-left">
+                    <h3 className="text-lg font-black text-primary mb-3 tracking-widest font-poppins uppercase">{value.title}</h3>
+                    <p className="text-slate-500 text-[13px] font-medium leading-relaxed font-inter">
+                      {value.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

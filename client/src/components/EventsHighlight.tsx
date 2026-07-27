@@ -12,15 +12,24 @@ export const EventsHighlight = ({ highlights }: { highlights: Highlight[] }) => 
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {highlights.map((item, index) => (
+          {highlights.map((item, index) => {
+            // Alternating animation patterns: left, up, right, zoom
+            const initials = [
+              { x: -80, y: 0, scale: 1, filter: 'blur(4px)' },
+              { x: 0, y: 60, scale: 0.95, filter: 'blur(4px)' },
+              { x: 80, y: 0, scale: 1, filter: 'blur(4px)' },
+              { x: 0, y: 0, scale: 0.8, filter: 'blur(6px)' },
+            ];
+            const init = initials[index % initials.length];
+            return (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, ...init }}
+              whileInView={{ opacity: 1, x: 0, y: 0, scale: 1, filter: 'blur(0px)' }}
               transition={{ 
-                duration: 0.8, 
-                delay: index * 0.15, 
-                ease: [0.21, 0.45, 0.32, 0.9] 
+                duration: 0.85, 
+                delay: index * 0.12, 
+                ease: [0.22, 1, 0.36, 1]
               }}
               viewport={{ once: true, margin: "-50px" }}
               className="group relative overflow-hidden rounded-[24px] bg-slate-900 shadow-2xl hover:shadow-accent/20 transition-all duration-700 h-[280px]"
@@ -60,7 +69,8 @@ export const EventsHighlight = ({ highlights }: { highlights: Highlight[] }) => 
                 </div>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

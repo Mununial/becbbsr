@@ -1,5 +1,51 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useRouter as useNextRouter } from 'next/navigation';
+import { prefetchRoute } from './SubpagesRouter';
+
+const Link = ({ to, onClick, children, ...props }: any) => {
+  let navigate: ((path: string) => void) | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    navigate = useNavigate();
+  } catch { navigate = null; }
+
+  let nextRouter: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    nextRouter = useNextRouter();
+  } catch { nextRouter = null; }
+
+  const isExternal = typeof to === 'string' && (to.startsWith('http') || to.startsWith('mailto:') || to.startsWith('tel:') || to.startsWith('#'));
+
+  const handleClick = (e: React.MouseEvent) => {
+    onClick?.(e);
+    if (isExternal || !to) return;
+    e.preventDefault();
+    if (navigate) {
+      navigate(to);
+    } else if (nextRouter?.push) {
+      nextRouter.push(to);
+    } else {
+      window.location.href = to;
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (!isExternal && to) {
+      prefetchRoute(to);
+      if (nextRouter?.prefetch) {
+        try { nextRouter.prefetch(to); } catch (_) {}
+      }
+    }
+  };
+
+  return (
+    <a href={to} onClick={handleClick} onMouseEnter={handleMouseEnter} {...props}>
+      {children}
+    </a>
+  );
+};
 import { User, GraduationCap, Mail, ChevronRight, BookOpen, ExternalLink, Award, FileDown, X } from 'lucide-react';
 
 export interface HODData {

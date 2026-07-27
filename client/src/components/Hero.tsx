@@ -8,16 +8,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '../lib/utils';
-
-interface Slide {
-  id: string;
-  type: 'image' | 'video';
-  url: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  ctaText: string;
-}
+import { type Slide } from '../types';
 
 const COURSES = ['B.Tech Engineering','Diploma in Engineering','MBA','M.Tech Research'];
 const BRANCHES = ['Aeronautical','Agriculture','Civil','Computer Science','Electrical','Mechanical','MBA'];

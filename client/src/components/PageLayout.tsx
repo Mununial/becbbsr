@@ -1,7 +1,53 @@
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { Home, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useRouter as useNextRouter } from 'next/navigation';
+import { prefetchRoute } from './SubpagesRouter';
+
+const Link = ({ to, onClick, children, ...props }: any) => {
+  let navigate: ((path: string) => void) | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    navigate = useNavigate();
+  } catch { navigate = null; }
+
+  let nextRouter: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    nextRouter = useNextRouter();
+  } catch { nextRouter = null; }
+
+  const isExternal = typeof to === 'string' && (to.startsWith('http') || to.startsWith('mailto:') || to.startsWith('tel:') || to.startsWith('#'));
+
+  const handleClick = (e: React.MouseEvent) => {
+    onClick?.(e);
+    if (isExternal || !to) return;
+    e.preventDefault();
+    if (navigate) {
+      navigate(to);
+    } else if (nextRouter?.push) {
+      nextRouter.push(to);
+    } else {
+      window.location.href = to;
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (!isExternal && to) {
+      prefetchRoute(to);
+      if (nextRouter?.prefetch) {
+        try { nextRouter.prefetch(to); } catch (_) {}
+      }
+    }
+  };
+
+  return (
+    <a href={to} onClick={handleClick} onMouseEnter={handleMouseEnter} {...props}>
+      {children}
+    </a>
+  );
+};
 
 interface PageLayoutProps {
   title: string;
@@ -50,12 +96,12 @@ export const PageLayout = ({ title, subtitle, children, badge, badgeColor = 'bg-
         <div className="relative z-10 max-w-[1700px] mx-auto px-6 lg:px-12 w-full pt-14 pb-12">
 
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 mb-6 text-[11px] font-bold uppercase tracking-widest" aria-label="breadcrumb">
-            <Link to="/" className="flex items-center gap-1 text-white/40 hover:text-secondary transition-colors">
-              <Home className="w-3 h-3" /> Home
+          <nav className="flex items-center gap-2 mb-6 text-[11px] font-bold uppercase tracking-widest" aria-label="breadcrumb">
+            <Link to="/" className="flex items-center gap-1.5 text-white/80 hover:text-accent transition-colors">
+              <Home className="w-3.5 h-3.5 text-accent" /> Home
             </Link>
-            <ChevronRight className="w-3 h-3 text-white/20" />
-            <span className="text-secondary/80">{title}</span>
+            <ChevronRight className="w-3.5 h-3.5 text-white/40" />
+            <span className="text-secondary font-black tracking-wider">{title}</span>
           </nav>
 
           {/* Badge */}
@@ -66,25 +112,25 @@ export const PageLayout = ({ title, subtitle, children, badge, badgeColor = 'bg-
           )}
 
           {/* Page Title */}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-[1.05] drop-shadow-lg mb-3">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-[1.05] drop-shadow-xl mb-3">
             {title.split(' ').map((word, i, arr) =>
               i === arr.length - 1
-                ? <span key={i} className="text-secondary"> {word}</span>
+                ? <span key={i} className="text-secondary drop-shadow"> {word}</span>
                 : <span key={i}>{word} </span>
             )}
           </h1>
 
           {subtitle && (
-            <p className="text-white/50 font-semibold text-sm md:text-base mt-2 max-w-2xl">
+            <p className="text-slate-200 font-medium text-sm md:text-base mt-2 max-w-2xl leading-relaxed">
               {subtitle}
             </p>
           )}
 
           {/* Accent line */}
           <div className="flex items-center gap-3 mt-6">
-            <div className="h-1 w-12 rounded-full bg-secondary" />
-            <div className="h-1 w-6 rounded-full bg-primary" />
-            <div className="h-1 w-3 rounded-full bg-white/20" />
+            <div className="h-1.5 w-14 rounded-full bg-secondary shadow-sm shadow-secondary/50" />
+            <div className="h-1.5 w-7 rounded-full bg-accent" />
+            <div className="h-1.5 w-3.5 rounded-full bg-white/40" />
           </div>
         </div>
       </div>

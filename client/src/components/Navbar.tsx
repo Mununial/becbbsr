@@ -1,9 +1,72 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, LayoutDashboard, Mail, Phone, ChevronDown, GraduationCap, Bell, Zap, Trophy, ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useRouter as useNextRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
+import { prefetchRoute } from './SubpagesRouter';
 import { cn } from '../lib/utils';
 import { useData } from '../context/DataContext';
+
+// ─── SPA NavLink: uses navigate / nextRouter for SPA transitions, prefetches chunk on hover ───
+const Link = ({ to, onClick, children, ...props }: {
+  to: string;
+  onClick?: () => void;
+  children?: React.ReactNode;
+  [key: string]: any;
+}) => {
+  let navigate: ((path: string) => void) | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    navigate = useNavigate();
+  } catch {
+    navigate = null;
+  }
+
+  let nextRouter: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    nextRouter = useNextRouter();
+  } catch {
+    nextRouter = null;
+  }
+
+  const isExternal = to.startsWith('http') || to.startsWith('mailto:') || to.startsWith('tel:') || to.startsWith('#');
+
+  const handleClick = (e: React.MouseEvent) => {
+    onClick?.();
+    if (isExternal) return; // let browser handle it
+    e.preventDefault();
+    if (navigate) {
+      navigate(to);
+    } else if (nextRouter?.push) {
+      nextRouter.push(to);
+    } else {
+      window.location.href = to;
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (!isExternal) {
+      prefetchRoute(to);
+      if (nextRouter?.prefetch) {
+        try { nextRouter.prefetch(to); } catch (_) {}
+      }
+    }
+  };
+
+  return (
+    <a
+      href={to}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      {...props}
+    >
+      {children}
+    </a>
+  );
+};
 
 interface NavItem {
   name: string;
@@ -14,11 +77,23 @@ interface NavItem {
 
 const DesktopMenuItem = ({ item }: { item: NavItem }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
+  // Prefetch all dropdown routes on menu hover
+  const handleMenuEnter = () => {
+    setIsHovered(true);
+    if (item.dropdown) {
+      item.dropdown.forEach(sub => {
+        if (!sub.href.startsWith('http')) prefetchRoute(sub.href);
+      });
+    } else if (!item.href.startsWith('http')) {
+      prefetchRoute(item.href);
+    }
+  };
+
   return (
-    <div 
+    <div
       className="relative flex items-center h-full group"
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={handleMenuEnter}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-center">
@@ -56,8 +131,8 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
               <div className="flex flex-col">
                   {item.dropdown.map((sub) => (
                   sub.href.startsWith('http') || sub.href.includes('/facilities/') ? (
-                    <a 
-                      key={sub.name} 
+                    <a
+                      key={sub.name}
                       href={sub.href}
                       target={sub.target || "_blank"}
                       rel="noopener noreferrer"
@@ -67,8 +142,8 @@ const DesktopMenuItem = ({ item }: { item: NavItem }) => {
                       <div className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover/sub:opacity-100 transition-opacity" />
                     </a>
                   ) : (
-                    <Link 
-                      key={sub.name} 
+                    <Link
+                      key={sub.name}
                       to={sub.href}
                       className="group/sub px-6 py-3 text-[12px] font-bold text-gray-600 hover:text-white hover:bg-primary flex items-center justify-between transition-all duration-300"
                     >

@@ -78,6 +78,70 @@ const upload = multer({
   limits: { fileSize: 100 * 1024 * 1024 } // Support larger files (100MB)
 });
 
+// Config JSON directory creation
+const configsDir = path.join(__dirname, 'configs');
+if (!fs.existsSync(configsDir)) {
+  fs.mkdirSync(configsDir, { recursive: true });
+}
+
+// Single File Upload endpoint with optional Cloudinary auto-sync
+app.post('/api/upload', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No file uploaded' });
+  }
+
+  // Attempt Cloudinary upload first if credentials are configured
+  if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'bec_web_assets',
+        resource_type: 'auto'
+      });
+      try { fs.unlinkSync(req.file.path); } catch (_) {}
+      return res.json({ success: true, url: result.secure_url });
+    } catch (cErr) {
+      console.warn('Cloudinary upload fallback to local static server:', cErr.message);
+    }
+  }
+
+  // Fallback to local static server HTTP URL
+  const protocol = req.protocol;
+  const host = req.get('host');
+  const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+  return res.json({ success: true, url: fileUrl });
+});
+
+// Config GET endpoint
+app.get('/api/config/:key', (req, res) => {
+  const { key } = req.params;
+  const filePath = path.join(configsDir, `${key}.json`);
+  if (fs.existsSync(filePath)) {
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      return res.json(JSON.parse(content));
+    } catch (e) {
+      return res.status(500).json({ error: 'Failed to read config' });
+    }
+  }
+  return res.status(404).json({ error: 'Config file not found' });
+});
+
+// Config POST endpoint
+app.post('/api/config/:key', (req, res) => {
+  const { key } = req.params;
+  const { items } = req.body;
+  if (!Array.isArray(items)) {
+    return res.status(400).json({ error: 'Items must be an array' });
+  }
+  const filePath = path.join(configsDir, `${key}.json`);
+  try {
+    fs.writeFileSync(filePath, JSON.stringify({ items, updatedAt: new Date().toISOString() }, null, 2));
+    return res.json({ success: true, message: `Config for ${key} saved successfully` });
+  } catch (e) {
+    return res.status(500).json({ error: 'Failed to save config file' });
+  }
+});
+
 // Routes
 app.get('/api/health', (req, res) => {
   res.json({ message: 'BEC University API is running' });

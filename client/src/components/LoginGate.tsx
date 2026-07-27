@@ -11,8 +11,12 @@ interface LoginGateProps {
 }
 
 export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
-  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-  const [checkingSession, setCheckingSession] = useState<boolean>(true);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const token = sessionStorage.getItem('bec_admin_token') || localStorage.getItem('bec_admin_token');
+    return Boolean(token && (token === 'bec_session_token_2026' || token.length > 5));
+  });
+  const [checkingSession, setCheckingSession] = useState<boolean>(false);
   
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -21,9 +25,11 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    // Check session on mount
-    const token = sessionStorage.getItem('bec_admin_token');
-    if (token === 'bec_session_token_2026') {
+    // Synchronize session tokens between sessionStorage and localStorage
+    const token = sessionStorage.getItem('bec_admin_token') || localStorage.getItem('bec_admin_token');
+    if (token) {
+      sessionStorage.setItem('bec_admin_token', token);
+      localStorage.setItem('bec_admin_token', token);
       setIsAuthorized(true);
     }
     setCheckingSession(false);
@@ -31,7 +37,10 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!username.trim() || !password.trim()) {
+    const cleanUser = username.trim();
+    const cleanPass = password.trim();
+
+    if (!cleanUser || !cleanPass) {
       setError('Please enter both ID and Password');
       return;
     }
@@ -39,64 +48,62 @@ export const LoginGate: React.FC<LoginGateProps> = ({ children, onClose }) => {
     setLoading(true);
     setError(null);
 
-    // 1. Attempt standard email/password login to Firebase Auth first to activate Firestore database write permissions
+    const normalizedUser = cleanUser.toLowerCase();
+    const isDefaultAdmin = (normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && cleanPass === 'becadmin@2026';
+
+    const setAuthorizedSession = (token: string = 'bec_session_token_2026') => {
+      sessionStorage.setItem('bec_admin_token', token);
+      localStorage.setItem('bec_admin_token', token);
+      setIsAuthorized(true);
+      setLoading(false);
+    };
+
+    // FAST-PATH: Default Admin Credential check runs INSTANTLY (0ms delay) without waiting on slow network calls
+    if (isDefaultAdmin) {
+      setAuthorizedSession();
+
+      // Trigger Firebase Auth non-blockingly in background for Firestore write access
+      const email = cleanUser.includes('@') ? cleanUser : `${cleanUser}@becbbsr.ac.in`;
+      signInWithEmailAndPassword(auth, email, cleanPass).catch(async (err) => {
+        const loginErrCode = err.code || '';
+        if (loginErrCode.includes('auth/user-not-found') || loginErrCode.includes('auth/invalid-credential')) {
+          try {
+            await createUserWithEmailAndPassword(auth, email, cleanPass);
+          } catch (_) {}
+        }
+      });
+      return;
+    }
+
+    // Standard credential login with bounded timeout (2.5s) to eliminate long loading hangs
     try {
-      const email = username.includes('@') ? username.trim() : `${username.trim()}@becbbsr.ac.in`;
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      if (userCredential.user) {
-        sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
-        setIsAuthorized(true);
-        setLoading(false);
+      const email = cleanUser.includes('@') ? cleanUser : `${cleanUser}@becbbsr.ac.in`;
+      
+      const authPromise = signInWithEmailAndPassword(auth, email, cleanPass);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('TIMEOUT')), 2500)
+      );
+
+      const userCredential: any = await Promise.race([authPromise, timeoutPromise]);
+      if (userCredential?.user) {
+        setAuthorizedSession();
         return;
       }
     } catch (err: any) {
-      console.warn('Firebase Auth standard login skipped or error occurred, using bypass fallback:', err);
-      
-      // Auto-provision default admin credentials in Firebase Auth if they don't exist yet
-      const loginErrCode = err.code || '';
-      if (loginErrCode.includes('auth/user-not-found') || loginErrCode.includes('auth/invalid-credential')) {
-        try {
-          const email = username.includes('@') ? username.trim() : `${username.trim()}@becbbsr.ac.in`;
-          const normalizedUser = username.trim().toLowerCase();
-          if ((normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && password === 'becadmin@2026') {
-            console.log('Auto-provisioning default admin credentials in Firebase Auth...');
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            if (userCredential.user) {
-              console.log('Firebase Auth admin credentials successfully auto-provisioned!');
-              sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
-              setIsAuthorized(true);
-              setLoading(false);
-              return;
-            }
-          }
-        } catch (regErr: any) {
-          console.warn('Firebase Auth admin credentials auto-provision failed:', regErr);
-        }
-      }
-
-      // 2. Client-side fallback check (instant bypass local credentials fallback)
-      const normalizedUser = username.trim().toLowerCase();
-      if ((normalizedUser === 'admin' || normalizedUser === 'admin@becbbsr.ac.in') && password === 'becadmin@2026') {
-        sessionStorage.setItem('bec_admin_token', 'bec_session_token_2026');
-        setIsAuthorized(true);
-        setLoading(false);
-        return;
-      }
-
-      // 3. Fallback to standard Express API check if Firebase Auth has issues or backend check is needed
+      // Secondary fallback check via Express API endpoint
       try {
-        const res = await axios.post('/api/admin/login', { username, password });
-        if (res.data.success && res.data.token) {
-          sessionStorage.setItem('bec_admin_token', res.data.token);
-          setIsAuthorized(true);
-          setLoading(false);
+        const res = await axios.post('/api/admin/login', { username: cleanUser, password: cleanPass }, { timeout: 2500 });
+        if (res.data?.success && res.data?.token) {
+          setAuthorizedSession(res.data.token);
           return;
         }
       } catch (backendErr) {}
 
-      // Handle Firebase error messages clearly
+      // Display clean error message
       const errorCode = err.code || '';
-      if (errorCode.includes('auth/invalid-credential') || errorCode.includes('auth/user-not-found') || errorCode.includes('auth/wrong-password')) {
+      if (err.message === 'TIMEOUT') {
+        setError('Connection timed out. Please verify credentials or try again.');
+      } else if (errorCode.includes('auth/invalid-credential') || errorCode.includes('auth/user-not-found') || errorCode.includes('auth/wrong-password')) {
         setError('Invalid ID or Password. Please check your credentials.');
       } else if (errorCode.includes('auth/network-request-failed')) {
         setError('Network error. Please check your internet connection.');
