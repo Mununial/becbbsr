@@ -1,8 +1,16 @@
+# ============================================================
+# BEC Website — Root Apache Server Configuration
+# Fixes 403 Forbidden on /admin/ & Subpage Routing
+# ============================================================
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # Prevent caching of index.html so updates are immediate on all devices
+  # 1. Prevent Apache directory listing 403 blocks
+  Options -Indexes
+
+  # 2. Never cache index.html so updates are instant across devices
   <FilesMatch "index\.html$">
       <IfModule mod_headers.c>
           Header set Cache-Control "no-cache, no-store, must-revalidate"
@@ -11,27 +19,17 @@
       </IfModule>
   </FilesMatch>
 
-  # 1. Bypass rewriting for API requests & reverse-proxy to Node Express server on port 5000 if mod_proxy is available
+  # 3. Bypass API endpoints to Express server
   <IfModule mod_proxy.c>
       RewriteCond %{REQUEST_URI} ^/api [NC]
       RewriteRule ^api/(.*)$ http://localhost:5000/api/$1 [P,L]
   </IfModule>
-  <IfModule !mod_proxy.c>
-      RewriteCond %{REQUEST_URI} ^/api [NC]
-      RewriteRule ^(.*)$ - [L]
-  </IfModule>
 
-  # 2. Rewrite root traffic to the React built files in client/dist/
-  # If a file exists under client/dist/, rewrite to it
+  # 4. If request is a physical static file under client/dist/, rewrite to it
   RewriteCond %{DOCUMENT_ROOT}/client/dist%{REQUEST_URI} -f
   RewriteRule ^(.*)$ /client/dist/$1 [L]
 
-  # If a directory exists under client/dist/, rewrite to it
-  RewriteCond %{DOCUMENT_ROOT}/client/dist%{REQUEST_URI} -d
-  RewriteRule ^(.*)$ /client/dist/$1 [L]
-
-  # 3. SPA Routing Fallback: Rewrite all other requests to client/dist/index.html
+  # 5. SPA Route Fallback: Rewrite ALL other requests (/admin, /about-college, etc.) to client/dist/index.html
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /client/dist/index.html [L]
 </IfModule>
