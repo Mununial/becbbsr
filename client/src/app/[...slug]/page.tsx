@@ -1,15 +1,57 @@
-'use client';
+import SlugClient from './SlugClient';
 
-import dynamic from 'next/dynamic';
+export function generateStaticParams() {
+  const routes = [
+    'about-college',
+    'chairman-ayush-msg',
+    'chairman-bec',
+    'director-profile',
+    'trusty',
+    'btech',
+    'mba',
+    'diploma',
+    'aeronautical-engg',
+    'agriculture-engg',
+    'civil-engg',
+    'cse-engg',
+    'ee-engg',
+    'mechanical-engg',
+    'ame',
+    'basic-science-humanities',
+    'faculties',
+    'about_placement',
+    'placement',
+    'facilities',
+    'contactus',
+    'career',
+    'photo-gallery',
+    'achievements',
+    'areo-club',
+    'seminar-workshop',
+    'sports-games',
+    'activities',
+    'syllabus',
+    'admission_query',
+    'fees',
+    'committees',
+    'e-learning',
+    'admission/news',
+    'admission/programme',
+    'admission/procedure',
+    'admission/documents',
+    'admission/bank-loan',
+    'admission/scholarship',
+    'admission/contacts',
+    'admission/prospectus',
+    'privacy-policy',
+    'admin'
+  ];
 
-// No loading spinner - SubpagesRouter shows its own thin progress bar
-const SubpagesRouter = dynamic(() => import('@/components/SubpagesRouter'), {
-  ssr: false,
-  loading: () => (
-    <div className="fixed top-0 left-0 z-[99999] h-[3px] w-1/3 bg-gradient-to-r from-accent via-yellow-400 to-accent animate-pulse" />
-  ),
-});
+  return routes.map(r => ({
+    slug: r.split('/')
+  }));
+}
 
 export default function CatchAllSlugPage() {
-  return <SubpagesRouter />;
+  return <SlugClient />;
 }

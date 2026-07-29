@@ -83,7 +83,7 @@ export const LatestEvents = ({ notices = [] }: LatestEventsProps) => {
           {/* 1. CAMPUS EMBLEM FRAME (Left - 4 columns) */}
           <div className="lg:col-span-4 relative group flex flex-col" data-aos="fade-right">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden p-3 bg-gradient-to-br from-navy-950 via-primary to-accent shadow-2xl border border-white/10 flex-1">
-              <div className="absolute inset-0 bg-[url('/leadership/abstract_gold.png')] opacity-25 bg-cover mix-blend-overlay" />
+              <div className="absolute inset-0 opacity-25 bg-cover mix-blend-overlay" style={{ backgroundImage: "url('/leadership/abstract_gold.png')" }} />
               <div className="relative h-full w-full rounded-2xl overflow-hidden border-2 border-amber-400/30 shadow-inner">
                 <img 
                   src="https://res.cloudinary.com/dpogq7cbe/image/upload/v1776629464/becweb/campus_bg.jpg" 

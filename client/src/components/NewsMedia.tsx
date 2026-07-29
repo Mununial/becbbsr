@@ -12,7 +12,7 @@ export const NewsMedia = () => {
 
   return (
     <section className="py-8 bg-white relative overflow-hidden font-inter">
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/pinstripe-light.png')]" />
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/pinstripe-light.png')" }} />
       
       <div className="max-w-[1200px] mx-auto px-6 relative z-10 text-center">
         <div className="mb-8">
