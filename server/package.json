@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "echo \"Server ready\"",
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('dist')) fs.mkdirSync('dist'); console.log('Server build complete');\"",
     "start": "node index.js",
     "dev": "node index.js"
   },
