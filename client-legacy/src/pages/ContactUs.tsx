@@ -16,14 +16,39 @@ export const ContactUs = () => {
     e.preventDefault();
     setStatus('loading');
     try {
-      await axios.post('/api/contact', {
-        name,
-        email,
-        phone,
-        course: 'General Inquiry',
-        branch: 'General Inquiry',
-        message
-      });
+      // 1. Save directly to Firebase Firestore
+      try {
+        const { collection, addDoc } = await import('firebase/firestore');
+        const { db } = await import('../lib/firebase');
+        await addDoc(collection(db, "chatbot_inquiries"), {
+          name,
+          email,
+          phone,
+          course: 'General Inquiry',
+          branch: 'General Inquiry',
+          message,
+          source: 'Contact Us Page',
+          timestamp: new Date().toISOString(),
+          ip: 'Client Website'
+        });
+      } catch (fErr) {
+        console.warn('Firestore write warning:', fErr);
+      }
+
+      // 2. Backup call to Express API
+      try {
+        await axios.post('/api/contact', {
+          name,
+          email,
+          phone,
+          course: 'General Inquiry',
+          branch: 'General Inquiry',
+          message
+        });
+      } catch (aErr) {
+        console.warn('Express backup call warning:', aErr);
+      }
+
       setStatus('success');
       setName('');
       setEmail('');

@@ -56,7 +56,34 @@ const AdmissionModal = ({ onClose }: { onClose: ()=>void }) => {
     }
     setStatus('loading');
     try {
-      await axios.post('/api/contact', form);
+      // 1. Save directly to Firebase Firestore
+      try {
+        const { collection, addDoc } = await import('firebase/firestore');
+        const { db } = await import('../lib/firebase');
+        await addDoc(collection(db, "chatbot_inquiries"), {
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          city: form.city,
+          course: form.course,
+          qualification: form.qualification,
+          branch: form.branch,
+          message: form.message || '',
+          source: 'Hero Form',
+          timestamp: new Date().toISOString(),
+          ip: 'Client Website'
+        });
+      } catch (fErr) {
+        console.warn('Firestore write warning:', fErr);
+      }
+
+      // 2. Backup call to Express API
+      try {
+        await axios.post('/api/contact', form);
+      } catch (aErr) {
+        console.warn('Express API backup warning:', aErr);
+      }
+
       setStatus('success');
       newCaptcha();
     } catch { 

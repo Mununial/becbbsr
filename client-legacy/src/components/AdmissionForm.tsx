@@ -162,7 +162,34 @@ export const AdmissionForm = () => {
 
     setStatus('loading');
     try {
-      await axios.post('/api/admission', form);
+      // 1. Save directly to Firebase Firestore
+      try {
+        const { collection, addDoc } = await import('firebase/firestore');
+        const { db } = await import('../lib/firebase');
+        await addDoc(collection(db, "chatbot_inquiries"), {
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          city: form.city,
+          course: form.course,
+          qualification: form.qualification,
+          branch: form.branch,
+          message: form.message || '',
+          source: 'Admission Form',
+          timestamp: new Date().toISOString(),
+          ip: 'Client Website'
+        });
+      } catch (fErr) {
+        console.warn('Firestore write warning:', fErr);
+      }
+
+      // 2. Backup API call to Express backend
+      try {
+        await axios.post('/api/admission', form);
+      } catch (aErr) {
+        console.warn('Express backup API warning:', aErr);
+      }
+
       setStatus('success');
       setForm({ name: '', phone: '', email: '', city: '', course: '', qualification: '', branch: '', message: '' });
       setTouched({});
