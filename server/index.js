@@ -1560,8 +1560,12 @@ app.get('/sitemap.xml', (req, res) => {
   }
 });
 
-// Serve static assets from React client build folder
-app.use(express.static(path.join(__dirname, '../client/dist')));
+// Serve static assets from React client build folder (supporting client/dist or client-legacy/dist)
+const distPath = fs.existsSync(path.join(__dirname, '../client/dist/index.html'))
+  ? path.join(__dirname, '../client/dist')
+  : path.join(__dirname, '../client-legacy/dist');
+
+app.use(express.static(distPath));
 
 // SPA Routing: any non-API route serves index.html from dist with strict no-cache headers to prevent loading stale chunks
 app.get('/{*splat}', (req, res) => {
@@ -1575,7 +1579,12 @@ app.get('/{*splat}', (req, res) => {
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
 
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  const indexPath = path.join(distPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Static build index.html not found');
+  }
 });
 
 app.listen(PORT, () => {
