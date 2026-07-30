@@ -111,6 +111,7 @@ const AdmissionsMaster      = React.lazy(() => import('@/subpages/AdmissionsMast
 const CatchAllPage          = React.lazy(() => import('@/subpages/CatchAllPage').then(m => ({ default: m.CatchAllPage })));
 
 import { AdmissionBot } from '@/components/AdmissionBot';
+import { FloatingSocials } from '@/components/FloatingSocials';
 import { AdmissionProvider } from '@/components/AdmissionContext';
 import ScrollToTop from '@/components/ScrollToTop';
 
@@ -238,6 +239,7 @@ function InnerRouter() {
         </Routes>
       </Suspense>
       <AdmissionBot />
+      <FloatingSocials />
     </>
   );
 }

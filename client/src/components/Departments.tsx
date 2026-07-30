@@ -87,19 +87,19 @@ export const Departments = () => {
               >
                 <div>
                   <div className={cn("h-3 w-full bg-gradient-to-r", dept.gradient)} />
-                  <div className="p-12 pb-0 pt-0 relative">
-                    <div className="w-16 h-16 rounded-2xl bg-white shadow-xl flex items-center justify-center mb-10 -mt-8 relative z-10 border border-slate-50 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6">
-                      <dept.icon className="w-8 h-8 text-primary group-hover:text-accent transition-colors" />
+                  <div className="p-6 sm:p-8 md:p-10 pb-0 pt-0 relative">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-xl flex items-center justify-center mb-6 sm:mb-8 -mt-6 sm:-mt-8 relative z-10 border border-slate-50 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6">
+                      <dept.icon className="w-7 h-7 sm:w-8 sm:h-8 text-primary group-hover:text-accent transition-colors" />
                     </div>
-                    <h3 className="text-xl font-bold text-primary mb-4 font-poppins tracking-tight uppercase leading-tight">{dept.name}</h3>
-                    <p className="text-[13px] text-slate-500 leading-relaxed mb-8 font-medium font-inter h-16 overflow-hidden">
+                    <h3 className="text-lg sm:text-xl font-bold text-primary mb-3 sm:mb-4 font-poppins tracking-tight uppercase leading-tight">{dept.name}</h3>
+                    <p className="text-[13px] text-slate-500 leading-relaxed mb-6 font-medium font-inter min-h-[3.5rem]">
                       {dept.desc}
                     </p>
                   </div>
                 </div>
 
-                <div className="px-12 pb-12">
-                  <div className="flex items-center justify-between border-t border-slate-50 pt-8">
+                <div className="px-6 sm:px-8 md:px-10 pb-6 sm:pb-8 md:pb-10">
+                  <div className="flex items-center justify-between border-t border-slate-50 pt-6 sm:pt-8">
                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-primary/40 group-hover:text-accent transition-all duration-300">
                       Explore Course <ChevronRight className="w-4 h-4" />
                     </div>

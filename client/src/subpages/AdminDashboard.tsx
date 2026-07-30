@@ -438,6 +438,10 @@ export const AdminDashboard = () => {
       const updated = highlights.filter(h => h.id !== id);
       await updateHighlights(updated);
     }
+    else if (type === 'leadership-data') {
+      const updated = leaders.filter(l => l.id !== id);
+      await updateLeaders(updated);
+    }
     else if (type === 'university-faculties') {
       const updated = faculties.filter(f => f.id !== id);
       await updateFaculties(updated);
@@ -906,8 +910,10 @@ export const AdminDashboard = () => {
                       </span>
                       <h4 className="font-bold text-2xl text-white mb-1 uppercase tracking-tight leading-none">{l.name}</h4>
                       <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest mb-4">{l.subtitle}</p>
-                      <p className="text-slate-500 text-xs leading-relaxed italic line-clamp-3 mb-6 font-medium">"{l.quote}"</p>
-                      <button onClick={() => setEditingLeader(l)} className="py-2.5 px-6 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit Profile</button>
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditingLeader(l)} className="py-2.5 px-6 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Edit Profile</button>
+                        <button onClick={() => handleDeleteItem('leadership-data', l.id)} className="p-2.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-4 h-4" /></button>
+                      </div>
                     </div>
                   </div>
                 ))}

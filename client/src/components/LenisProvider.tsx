@@ -19,16 +19,15 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
     // Detect touch/mobile device at runtime
     const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    // Initialize AOS globally
+    // Initialize AOS globally (safe for mobile & desktop)
     AOS.init({
       duration: 700,
       easing: 'ease-out-cubic',
       once: true,
-      offset: 60,
+      offset: 40,
       delay: 0,
-      // Disable AOS on mobile for better performance (Framer Motion handles it)
-      disable: isMobile,
     });
+    AOS.refresh();
 
     // Skip Lenis bridge on mobile - native scroll is fastest
     if (isMobile) return;

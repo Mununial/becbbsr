@@ -128,25 +128,10 @@ export default function HomePageContent() {
       { x: "-20%", y: "-10%", duration: 30, repeat: -1, yoyo: true, ease: "sine.inOut" }
     );
 
-    // 4. Staggered Sections Reveal using ScrollTrigger
-    const revealSections = document.querySelectorAll('.scroll-reveal-section');
-    revealSections.forEach((section) => {
-      gsap.fromTo(section,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.0,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 85%",
-            toggleActions: "play none none none"
-          }
-        }
-      );
-    });
-
+    // Refresh ScrollTrigger after DOM load
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
   }, []);
 
   return (
@@ -301,7 +286,6 @@ export default function HomePageContent() {
           </section>
         </main>
 
-        <FloatingSocials />
         <Footer />
       </div>
     </>

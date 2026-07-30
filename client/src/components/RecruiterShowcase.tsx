@@ -63,21 +63,21 @@ export const RecruiterShowcase = () => {
              </motion.div>
           </div>
 
-          {/* Right: 3D Perspective Marquee */}
-          <div className="w-full lg:w-2/3 h-[500px] relative">
+          {/* Right: Marquee Showcase */}
+          <div className="w-full lg:w-2/3 h-[360px] md:h-[480px] relative overflow-hidden">
              <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white z-20 pointer-events-none" />
              
-             <div className="h-full flex items-center overflow-hidden [perspective:1000px]">
-                <div className="[transform:rotateY(-25deg)_rotateX(15deg)] w-full">
+             <div className="h-full flex items-center overflow-hidden lg:[perspective:1000px]">
+                <div className="w-full lg:[transform:rotateY(-12deg)_rotateX(8deg)]">
                    {/* Row 1: Left to Right */}
-                   <div className="flex gap-10 mb-10 overflow-hidden">
+                   <div className="flex gap-4 sm:gap-6 md:gap-8 mb-4 sm:mb-6 md:mb-8 overflow-hidden">
                       <motion.div 
-                        animate={{ x: [0, -2500] }}
-                        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                        className="flex gap-10 shrink-0"
+                        animate={{ x: [0, -2000] }}
+                        transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+                        className="flex gap-4 sm:gap-6 md:gap-8 shrink-0"
                       >
                          {[...RECRUITERS, ...RECRUITERS, ...RECRUITERS].map((logo, i) => (
-                           <div key={i} className="w-56 h-36 bg-white rounded-[2rem] border border-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.08)] p-8 flex items-center justify-center hover:shadow-[0_40px_80px_rgba(0,0,0,0.15)] hover:-translate-y-3 transition-all duration-500 cursor-pointer group/logo relative overflow-hidden">
+                           <div key={i} className="w-40 h-24 sm:w-48 sm:h-28 md:w-56 md:h-36 bg-white rounded-2xl sm:rounded-[2rem] border border-slate-100 shadow-md p-4 sm:p-6 md:p-8 flex items-center justify-center hover:shadow-xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group/logo relative overflow-hidden">
                               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/[0.02] to-primary/[0.02] opacity-0 group-hover/logo:opacity-100 transition-opacity" />
                               <img loading="lazy" src={logo} className="w-full h-full object-contain relative z-10 scale-100 group-hover/logo:scale-110 transition-transform duration-500" alt="" />
                            </div>
@@ -86,14 +86,14 @@ export const RecruiterShowcase = () => {
                    </div>
 
                    {/* Row 2: Right to Left */}
-                   <div className="flex gap-10 overflow-hidden">
+                   <div className="flex gap-4 sm:gap-6 md:gap-8 overflow-hidden">
                       <motion.div 
-                        animate={{ x: [-2500, 0] }}
-                        transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-                        className="flex gap-10 shrink-0"
+                        animate={{ x: [-2000, 0] }}
+                        transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
+                        className="flex gap-4 sm:gap-6 md:gap-8 shrink-0"
                       >
                          {[...[...RECRUITERS].reverse(), ...[...RECRUITERS].reverse(), ...[...RECRUITERS].reverse()].map((logo, i) => (
-                           <div key={i} className="w-56 h-36 bg-white rounded-[2rem] border border-slate-100 shadow-[0_25px_60px_rgba(0,0,0,0.08)] p-8 flex items-center justify-center hover:shadow-[0_40px_80px_rgba(0,0,0,0.15)] hover:-translate-y-3 transition-all duration-500 cursor-pointer group/logo relative overflow-hidden">
+                           <div key={i} className="w-40 h-24 sm:w-48 sm:h-28 md:w-56 md:h-36 bg-white rounded-2xl sm:rounded-[2rem] border border-slate-100 shadow-md p-4 sm:p-6 md:p-8 flex items-center justify-center hover:shadow-xl hover:-translate-y-2 transition-all duration-500 cursor-pointer group/logo relative overflow-hidden">
                               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/[0.02] to-primary/[0.02] opacity-0 group-hover/logo:opacity-100 transition-opacity" />
                               <img loading="lazy" src={logo} className="w-full h-full object-contain relative z-10 scale-100 group-hover/logo:scale-110 transition-transform duration-500" alt="" />
                            </div>

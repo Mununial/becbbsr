@@ -1,0 +1,53 @@
+# ============================================================
+# BEC Website — Apache Server Configuration
+# Fixes 403 Forbidden on /admin/ & Subpage Routing
+# ============================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Prevent Apache directory listing 403 blocks
+  Options -Indexes
+
+  # 2. Never cache index.html so updates are instant across devices
+  <FilesMatch "index\.html$">
+      <IfModule mod_headers.c>
+          Header set Cache-Control "no-cache, no-store, must-revalidate"
+          Header set Pragma "no-cache"
+          Header set Expires 0
+      </IfModule>
+  </FilesMatch>
+
+  # 3. Bypass API endpoints to Express server if proxied
+  <IfModule mod_proxy.c>
+      RewriteCond %{REQUEST_URI} ^/api [NC]
+      RewriteRule ^api/(.*)$ http://localhost:5000/api/$1 [P,L]
+  </IfModule>
+
+  # 4. If request is a physical file (e.g. .css, .js, .png, .pdf), serve it
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # 5. SPA Route Fallback: Rewrite ALL pages (/admin, /about-college, etc.) to index.html
+  RewriteRule ^ /index.html [L]
+</IfModule>
+
+# --- MIME Types ---
+<IfModule mod_mime.c>
+  AddType image/x-icon                  .ico
+  AddType image/png                     .png
+  AddType application/manifest+json     .webmanifest
+</IfModule>
+
+# --- Security Headers ---
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Compression ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json application/manifest+json image/svg+xml
+</IfModule>
