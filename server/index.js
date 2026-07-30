@@ -25,18 +25,86 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Email Transporter setup (Robust SMTP Configuration for Production cloud servers)
+const smtpPort = parseInt(process.env.SMTP_PORT || '465', 10);
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // SSL/TLS
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: smtpPort,
+  secure: process.env.SMTP_SECURE !== undefined ? process.env.SMTP_SECURE === 'true' : (smtpPort === 465),
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
   tls: {
-    rejectUnauthorized: false // Bypasses self-signed certificate blocks on certain VPS networks
+    rejectUnauthorized: false // Bypasses self-signed certificate blocks on certain VPS/cloud networks
   }
 });
+
+// Safe Mail Dispatcher Helper (prevents endpoint crash if SMTP fails)
+const sendMailSafe = async (mailOptions) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn("⚠️ Email credentials (EMAIL_USER / EMAIL_PASS) missing in process.env.");
+    return { success: false, error: 'EMAIL_USER or EMAIL_PASS environment variable is not configured.' };
+  }
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("✅ Email sent successfully:", info.messageId);
+    return { success: true, info };
+  } catch (err) {
+    console.error("❌ Transporter sendMail error:", err.message);
+    return { success: false, error: err.message };
+  }
+};
+
+// Diagnostic Email Test Endpoint
+app.get('/api/test-email', async (req, res) => {
+  try {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      return res.status(400).json({
+        success: false,
+        error: 'EMAIL_USER or EMAIL_PASS missing in environment variables.',
+        envStatus: {
+          EMAIL_USER: !!process.env.EMAIL_USER,
+          EMAIL_PASS: !!process.env.EMAIL_PASS,
+          SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
+          SMTP_PORT: process.env.SMTP_PORT || 465
+        }
+      });
+    }
+
+    const verification = await new Promise((resolve) => {
+      transporter.verify((err, success) => {
+        if (err) resolve({ success: false, error: err.message });
+        else resolve({ success: true, result: success });
+      });
+    });
+
+    if (!verification.success) {
+      return res.status(500).json({
+        success: false,
+        message: 'SMTP Verification Failed',
+        error: verification.error,
+        smtpConfig: {
+          host: process.env.SMTP_HOST || 'smtp.gmail.com',
+          port: process.env.SMTP_PORT || 465,
+          user: process.env.EMAIL_USER
+        }
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'SMTP Transporter verified successfully!',
+      smtpConfig: {
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: process.env.SMTP_PORT || 465,
+        user: process.env.EMAIL_USER
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 
 // Create uploads and facilities directories if they don't exist (temporary/public storage)
 const uploadDir = 'uploads';
@@ -393,17 +461,44 @@ app.post('/api/contact', async (req, res) => {
     `
   };
 
+  // 1. Save inquiry locally first so no submission is lost if SMTP fails
   try {
-    // Send both emails simultaneously
-    await Promise.all([
-      transporter.sendMail(adminMailOptions),
-      transporter.sendMail(studentMailOptions)
-    ]);
-    res.json({ success: true, message: 'Inquiry sent and auto-reply triggered successfully' });
-  } catch (error) {
-    console.error("Mail error:", error);
-    res.status(500).json({ success: false, error: error.message });
+    const inquiries = getInquiries();
+    const newInquiry = {
+      id: Date.now().toString(),
+      name: name || 'Anonymous',
+      language: 'English',
+      course: course || 'General Inquiry',
+      branch: branch || 'General Inquiry',
+      phone: phone || '',
+      email: email || '',
+      message: message || '',
+      source: 'Contact Us Form',
+      timestamp: new Date().toISOString(),
+      ip: req.ip || req.headers['x-forwarded-for'] || '127.0.0.1'
+    };
+    inquiries.unshift(newInquiry);
+    saveInquiries(inquiries);
+  } catch (saveErr) {
+    console.error("Failed to save contact inquiry locally:", saveErr.message);
   }
+
+  // 2. Dispatch emails using sendMailSafe
+  const [adminResult, studentResult] = await Promise.all([
+    sendMailSafe(adminMailOptions),
+    sendMailSafe(studentMailOptions)
+  ]);
+
+  res.json({
+    success: true,
+    message: 'Inquiry received and saved successfully.',
+    emailStatus: {
+      adminEmailSent: adminResult.success,
+      studentEmailSent: studentResult.success,
+      adminError: adminResult.error || null,
+      studentError: studentResult.error || null
+    }
+  });
 });
 
 // Admission Query/Form submission
@@ -649,17 +744,46 @@ app.post('/api/admission', async (req, res) => {
     `
   };
 
+  // 1. Save admission query locally first
   try {
-    // Send both emails simultaneously
-    await Promise.all([
-      transporter.sendMail(adminMailOptions),
-      transporter.sendMail(studentMailOptions)
-    ]);
-    res.json({ success: true, message: 'Admission query sent and auto-reply triggered successfully' });
-  } catch (error) {
-    console.error("Mail error:", error);
-    res.status(500).json({ success: false, error: error.message });
+    const inquiries = getInquiries();
+    const newInquiry = {
+      id: Date.now().toString(),
+      name: name || 'Anonymous Applicant',
+      language: 'English',
+      course: course || 'B.Tech',
+      branch: branch || 'CSE',
+      phone: phone || '',
+      email: email || '',
+      city: city || '',
+      qualification: qualification || '',
+      message: message || '',
+      source: 'Admission Query Form',
+      timestamp: new Date().toISOString(),
+      ip: req.ip || req.headers['x-forwarded-for'] || '127.0.0.1'
+    };
+    inquiries.unshift(newInquiry);
+    saveInquiries(inquiries);
+  } catch (saveErr) {
+    console.error("Failed to save admission query locally:", saveErr.message);
   }
+
+  // 2. Dispatch emails using sendMailSafe
+  const [adminResult, studentResult] = await Promise.all([
+    sendMailSafe(adminMailOptions),
+    sendMailSafe(studentMailOptions)
+  ]);
+
+  res.json({
+    success: true,
+    message: 'Admission query received and saved successfully.',
+    emailStatus: {
+      adminEmailSent: adminResult.success,
+      studentEmailSent: studentResult.success,
+      adminError: adminResult.error || null,
+      studentError: studentResult.error || null
+    }
+  });
 });
 
 // Newsletter Subscription Route
@@ -829,16 +953,43 @@ app.post('/api/subscribe', async (req, res) => {
     `
   };
 
+  // 1. Save subscriber email locally
   try {
-    await Promise.all([
-      transporter.sendMail(adminMailOptions),
-      transporter.sendMail(subscriberMailOptions)
-    ]);
-    res.json({ success: true, message: 'Subscribed successfully and notifications sent' });
-  } catch (error) {
-    console.error("Subscription mail error:", error);
-    res.status(500).json({ success: false, error: error.message });
+    const inquiries = getInquiries();
+    const newSubscriber = {
+      id: Date.now().toString(),
+      name: 'Newsletter Subscriber',
+      language: 'English',
+      course: 'Newsletter',
+      branch: 'Newsletter',
+      phone: '',
+      email: email,
+      source: 'Website Footer Subscription',
+      timestamp: new Date().toISOString(),
+      ip: req.ip || req.headers['x-forwarded-for'] || '127.0.0.1'
+    };
+    inquiries.unshift(newSubscriber);
+    saveInquiries(inquiries);
+  } catch (saveErr) {
+    console.error("Failed to save subscriber locally:", saveErr.message);
   }
+
+  // 2. Dispatch emails using sendMailSafe
+  const [adminResult, subscriberResult] = await Promise.all([
+    sendMailSafe(adminMailOptions),
+    sendMailSafe(subscriberMailOptions)
+  ]);
+
+  res.json({
+    success: true,
+    message: 'Subscribed successfully.',
+    emailStatus: {
+      adminEmailSent: adminResult.success,
+      subscriberEmailSent: subscriberResult.success,
+      adminError: adminResult.error || null,
+      subscriberError: subscriberResult.error || null
+    }
+  });
 });
 
 // Cloudinary Upload Route
